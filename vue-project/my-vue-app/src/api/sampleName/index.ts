@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from "axios";
 // Djangoからcsrftokenクッキーを取得する
 const csrftoken = document.cookie.replace(
   /(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*).*$)|^.*$/,
-  '$1'
+  "$1"
 );
 
 export const apiClient: AxiosInstance = axios.create({
@@ -15,4 +15,4 @@ export const djangoApiClient: AxiosInstance = axios.create({
 });
 
 // djangoApiClientのリクエストにCSRFトークンを追加する
-djangoApiClient.defaults.headers.common['X-CSRFToken'] = csrftoken;
+djangoApiClient.defaults.headers.common["X-CSRFToken"] = csrftoken;

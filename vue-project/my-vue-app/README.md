@@ -39,3 +39,6 @@ vue create my-vue-app で作成し、package.json 等のファイルが作成さ
 
 vscode の vue 自動整形拡張機能の追加
 https://www.bnote.net/front-end/vscode_prettier.html
+
+フォルダ単位のフォーマット
+npx prettier --write .

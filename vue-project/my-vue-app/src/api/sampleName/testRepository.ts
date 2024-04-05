@@ -15,7 +15,7 @@ export default {
   },
 
   async testDjangoApi(params: testRequest): Promise<testResponse> {
-    console.log(params)
+    console.log(params);
     return await djangoApiClient
       .post("/", null, {
         headers: { "Content-Type": "application/json" },

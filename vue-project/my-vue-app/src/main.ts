@@ -6,7 +6,4 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "@/assets/main.scss";
 import store from "./store"; // この行を追加
 
-createApp(App)
-  .use(router)
-  .use(store)
-  .mount("#app");
+createApp(App).use(router).use(store).mount("#app");
