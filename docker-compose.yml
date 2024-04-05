@@ -44,7 +44,11 @@ services:
     build:
       context: .
       dockerfile: ./docker/django/Dockerfile
-    command: python manage.py runserver --settings=myproject.settings.development 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate --settings=myproject.settings.development &&
+            python manage.py makemigrations --settings=myproject.settings.development &&
+            python manage.py migrate --settings=myproject.settings.development &&
+            python manage.py runserver --settings=myproject.settings.development 0.0.0.0:8000"
     volumes:
       - ./django-project/myproject:/app
     ports:

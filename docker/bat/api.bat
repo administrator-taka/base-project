@@ -1,3 +1,3 @@
 cd ../../
-docker-compose exec api bash
+docker-compose exec spring bash
 cmd /k
