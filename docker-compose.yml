@@ -1,0 +1,55 @@
+services:
+  spring:
+    container_name: spring-api
+    # 一旦docker-compose.ymlに書くためコメントアウト
+    # build: ./docker/api
+    # OpenJDKでもAmazon Correttoでもどっちでも
+    image: amazoncorretto:11
+    command: /bin/sh -c "./gradlew build -x test && java -jar build/libs/mywebapp-0.0.1-SNAPSHOT.jar --spring.profiles.active=develop"
+    ports:
+      - 8080:8080
+    tty: true
+    volumes:
+      - ./spring-project:/srv:cached
+    working_dir: /srv/mywebapp
+  view:
+    container_name: view
+    build: ./docker/view
+    command: /bin/sh -c "if [ ! -e node_modules ]; then npm install --check-files; fi && npm run serve-develop"
+    ports:
+      - 3000:3000
+    tty: true
+    volumes:
+      - ./vue-project:/app:cached
+    working_dir: /app/my-vue-app
+  db:
+    container_name: postgresql
+    image: postgres:13.4
+    # いるかわからん
+    # restart: always
+    ports:
+      - 5432:5432
+    environment:
+      # TODO:環境変数から取得するように修正
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # 初期データ投入用
+      - ./docker/db/scripts:/docker-entrypoint-initdb.d
+      - ./docker/db/sql:/sql
+  django:
+    container_name: django-api
+    build:
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    command: python manage.py runserver --settings=myproject.settings.development 0.0.0.0:8000
+    volumes:
+      - ./django-project/myproject:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+volumes:
+  postgres_data:

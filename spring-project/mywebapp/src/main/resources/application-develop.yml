@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    #    TODO:環境変数から取得するよう修正
+    url: jdbc:postgresql://postgresql:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver

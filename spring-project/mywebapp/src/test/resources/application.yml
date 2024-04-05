@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    #    test_dbは自分で決めるが今回は何でもよさそう
+    url: jdbc:h2:mem:test_db;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=TRUE;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    platform: h2

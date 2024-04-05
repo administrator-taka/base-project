@@ -1,0 +1,21 @@
+# バイトコンパイルされた Python ファイル
+__pycache__/
+*.pyc
+
+# Django メディアとスタティックファイル
+media/
+static/
+
+# ローカル設定ファイル
+*.sqlite3
+*.pyc
+
+# ログファイル
+*.log
+
+# VS Code 設定フォルダ
+.vscode/
+
+# その他の機密情報を含むファイル
+.env
+.idea
