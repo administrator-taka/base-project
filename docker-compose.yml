@@ -45,8 +45,7 @@ services:
       context: .
       dockerfile: ./docker/django/Dockerfile
     command: >
-      sh -c "python manage.py migrate --settings=myproject.settings.development &&
-            python manage.py makemigrations --settings=myproject.settings.development &&
+      sh -c "python manage.py makemigrations --settings=myproject.settings.development &&
             python manage.py migrate --settings=myproject.settings.development &&
             python manage.py runserver --settings=myproject.settings.development 0.0.0.0:8000"
     volumes:
