@@ -16,21 +16,21 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref } from 'vue'
 
 export default {
   setup() {
     const sidebarLinks = ref([
-      { name: "Home", routeName: "TopComponent" },
-      { name: "Test Home", routeName: "TestHome" },
+      { name: 'Home', routeName: 'TopComponent' },
+      { name: 'Test Home', routeName: 'TestHome' }
       // 他のリンク情報をここに追加
-    ]);
+    ])
 
     return {
-      sidebarLinks,
-    };
-  },
-};
+      sidebarLinks
+    }
+  }
+}
 </script>
 
 <style scoped>

@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import Sidebar from "@/components/SidebarComponent.vue"; // SidebarComponent.vue をインポート
+import Sidebar from '@/components/SidebarComponent.vue' // SidebarComponent.vue をインポート
 
 export default {
   components: {
-    Sidebar, // コンポーネントを登録
-  },
-};
+    Sidebar // コンポーネントを登録
+  }
+}
 </script>
 
 <style scoped></style>
