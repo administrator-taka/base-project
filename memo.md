@@ -15,3 +15,9 @@
 - VSCode 上で CRLF を LF に設定することで、一時的な対処が可能。
 - spring-project\mywebapp\gradlew
 - docker\db\scripts\init.sh
+
+ORM（Object-Relational Mapping）
+
+先にデプロイするか、機能を作り進めるか、
+
+Python、その他のバージョンが古いので最新に近い安定版で作ることを考える。
