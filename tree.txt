@@ -1,3 +1,6 @@
+├─.gitignore
+├─.vscode
+│   └─settings.json
 ├─README.md
 ├─django-project
 │   └─myproject
@@ -9,6 +12,7 @@
 │       │   ├─admin.py
 │       │   ├─apps.py
 │       │   ├─migrations
+│       │   │   ├─0001_initial.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer.py
@@ -28,14 +32,15 @@
 │       ├─requirements.txt
 │       └─sample.env
 ├─docker
-│   ├─Dockerfile
 │   ├─api
 │   │   └─Dockerfile
 │   ├─bat
 │   │   ├─_____docker-delete.bat
 │   │   ├─api.bat
 │   │   ├─docker-compose-up.bat
-│   │   └─docker-restart.bat
+│   │   ├─docker-restart.bat
+│   │   ├─tree_update.bat
+│   │   └─view-local.bat
 │   ├─db
 │   │   ├─Dockerfile
 │   │   ├─scripts
@@ -49,6 +54,7 @@
 ├─docker-compose.dev.yml
 ├─docker-compose.yml
 ├─generate_sample_env.py
+├─memo.md
 ├─spring-project
 │   └─mywebapp
 │       ├─.gitignore
@@ -130,6 +136,7 @@
         ├─.env.local
         ├─.eslintrc.js
         ├─.gitignore
+        ├─.prettierrc
         ├─README.md
         ├─babel.config.js
         ├─package-lock.json
@@ -168,5 +175,4 @@
         │       ├─AboutView.vue
         │       └─HomeView.vue
         ├─tsconfig.json
-        ├─vue.config.js
-        └─yarn.lock
+        └─vue.config.js
