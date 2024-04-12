@@ -1,5 +1,5 @@
 # 使用するNode.jsのバージョンを指定
-FROM node:alpine
+FROM node:21.7.3-alpine
 
 # 必要なファイルやディレクトリをコンテナ内にコピーします
 COPY . /app
@@ -9,6 +9,6 @@ WORKDIR /app
 
 # npmおよびVue CLIのインストール
 RUN apk update && \
-    npm install -g npm@latest && \
-    npm install -g @vue/cli@latest && \
-    npm install -g serve@latest
+    npm install -g npm@10.5.2 && \
+    npm install -g @vue/cli@5.0.8 && \
+    npm install -g serve@14.2.1
