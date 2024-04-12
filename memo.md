@@ -21,3 +21,6 @@ ORM（Object-Relational Mapping）
 先にデプロイするか、機能を作り進めるか、
 
 Python、その他のバージョンが古いので最新に近い安定版で作ることを考える。
+
+Vue.js ホットリロード
+https://www.io-architect.com/wp/archives/5831
