@@ -1,6 +1,4 @@
 cd ../../
-docker compose down
-docker container prune -f
+docker compose down --volumes
 docker image prune -a -f
-docker volume prune -f
 @REM cmd /k
