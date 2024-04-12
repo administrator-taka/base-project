@@ -9,6 +9,7 @@
       <div>Django疎通確認</div>
       <div>{{ djangoResult }}</div>
       <button @click="testVuex">Vuex動作確認</button>
+      <div>{{ testVuexData }}</div>
     </main>
   </div>
 </template>
@@ -55,22 +56,34 @@ export default {
           console.log(error)
         })
     }
+    const testVuexData = ref(store.dispatch('test/getUserData'))
+    const testInitialData = async () => {
+      // getUserDataアクションを呼び出してデータを取得する
+      const userData = await store.dispatch('test/getUserData')
+
+      // データをコンソールに出力する
+      console.log('Fetched User Data:', userData)
+      testVuexData.value = userData
+    }
 
     const testVuex = async () => {
-      await store.dispatch('test/setUserDataAction', {
-        username: 'example',
-        email: 'example@example.com'
-      })
+      // setUserDataActionアクションを呼び出す
+      await store.dispatch('test/setUserDataAction', 'example')
+
+      // getUserDataアクションを呼び出してデータを取得する
       const userData = await store.dispatch('test/getUserData')
+
+      // データをコンソールに出力する
       console.log('Fetched User Data:', userData)
     }
 
     onMounted(() => {
       test()
       testDjango()
+      testInitialData()
     })
 
-    return { result, djangoResult, testVuex }
+    return { result, djangoResult, testVuex, testVuexData }
   }
 }
 </script>

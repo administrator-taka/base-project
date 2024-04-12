@@ -4,6 +4,9 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import '@/assets/main.scss'
-import store from './store' // この行を追加
+import store from './store'
 
-createApp(App).use(router).use(store).mount('#app')
+const app = createApp(App)
+app.use(router)
+app.use(store)
+app.mount('#app')
