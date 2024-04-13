@@ -75,6 +75,7 @@ export default {
 
       // データをコンソールに出力する
       console.log('Fetched User Data:', userData)
+      testInitialData()
     }
 
     onMounted(() => {
