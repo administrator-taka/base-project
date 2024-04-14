@@ -2,6 +2,13 @@
 ├─.vscode
 │   └─settings.json
 ├─README.md
+├─bat
+│   ├─clean_node_modules.bat
+│   ├─docker_cleanup.bat
+│   ├─docker_restart.bat
+│   ├─docker_start.bat
+│   ├─start_vue_local_server.bat
+│   └─tree_update.bat
 ├─django-project
 │   └─myproject
 │       ├─.gitignore
@@ -34,13 +41,6 @@
 ├─docker
 │   ├─api
 │   │   └─Dockerfile
-│   ├─bat
-│   │   ├─_____docker-delete.bat
-│   │   ├─api.bat
-│   │   ├─docker-compose-up.bat
-│   │   ├─docker-restart.bat
-│   │   ├─tree_update.bat
-│   │   └─view-local.bat
 │   ├─db
 │   │   ├─Dockerfile
 │   │   ├─scripts
