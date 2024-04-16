@@ -24,3 +24,15 @@ Python、その他のバージョンが古いので最新に近い安定版で�
 
 Vue.js ホットリロード
 https://www.io-architect.com/wp/archives/5831
+
+Django
+Viewset で提供されるアクション一覧
+https://qiita.com/okoppe8/items/c58bb3faaf26c9e2f27f
+
+役割 エンドポイント HTTP メソッド アクション名
+リソースの取得（複数） リソース名/ GET list
+リソースの作成 リソース名/ POST create
+リソースの取得（個別） リソース名/id/ GET retrieve
+リソースの更新（全部） リソース名/id/ PUT update
+リソースの更新（一部） リソース名/id/ PATCH partial_update
+リソースの削除 リソース名/id/ DELETE destroy
