@@ -36,3 +36,7 @@ https://qiita.com/okoppe8/items/c58bb3faaf26c9e2f27f
 リソースの更新（全部） リソース名/id/ PUT update
 リソースの更新（一部） リソース名/id/ PATCH partial_update
 リソースの削除 リソース名/id/ DELETE destroy
+
+python、フォルダの移動とインポート
+
+windows 側でフォルダを管理するとして、ファイル名はどうするか。一つの階層に一意な名前で登録するほうがいいのか、フォルダで分割したりしてもよいか。

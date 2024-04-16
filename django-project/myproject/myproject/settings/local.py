@@ -1,4 +1,4 @@
-from .base import *
+from myproject.settings.base import *
 
 DATABASES['default'].update({
     'HOST': 'localhost',

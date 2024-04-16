@@ -28,8 +28,8 @@ def my_view(request):
 
 
 from rest_framework.viewsets import ModelViewSet
-from .models import Test
-from .serializer import TestSerializer
+from myapp.models import Test
+from myapp.serializer import TestSerializer
 
 
 # モデルビューセットを定義
