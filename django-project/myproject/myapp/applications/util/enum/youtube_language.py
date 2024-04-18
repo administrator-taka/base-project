@@ -1,4 +1,5 @@
 from enum import Enum
+import unittest
 
 
 class YouTubeLanguage(Enum):
@@ -17,12 +18,20 @@ def set_language(language_code):
     raise ValueError("Invalid language code")
 
 
-# 使用例
-code = "ja"
-enum_obj = set_language(code)
-print(enum_obj.value)  # 出力: ja
+class TestYouTubeLanguage(unittest.TestCase):
+    def test_set_language_valid(self):
+        code = "ja"
+        enum_obj = set_language(code)
+        self.assertEqual(enum_obj, YouTubeLanguage.JAPANESE)
 
-# Enumを直接指定する
-korean_enum = YouTubeLanguage.KOREAN
+    def test_set_language_invalid(self):
+        with self.assertRaises(ValueError):
+            set_language("fr")
 
-print(korean_enum.value)  # 出力: ko
+    def test_enum_direct_assignment(self):
+        korean_enum = YouTubeLanguage.KOREAN
+        self.assertEqual(korean_enum, YouTubeLanguage.KOREAN)
+
+
+if __name__ == "__main__":
+    unittest.main()

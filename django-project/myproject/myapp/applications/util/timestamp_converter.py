@@ -1,3 +1,6 @@
+import unittest
+
+
 class TimestampConverter:
     def __init__(self, timestamp: str = "", seconds: float = 0.0) -> None:
         self.timestamp: str = timestamp
@@ -42,41 +45,41 @@ class TimestampConverter:
         return self.timestamp
 
 
-def test_timestamp_converter():
-    # テストケース1: タイムスタンプから秒数への変換
-    converter1 = TimestampConverter(timestamp="01:23:45.678")
-    assert converter1.from_timestamp_to_seconds() == 5025.678
+class TestTimestampConverter(unittest.TestCase):
 
-    # テストケース2: タイムスタンプから秒数への変換（秒数部が整数）
-    converter2 = TimestampConverter(timestamp="00:01:30")
-    assert converter2.from_timestamp_to_seconds() == 90
+    def test_from_timestamp_to_seconds(self):
+        # テストケース1: タイムスタンプから秒数への変換
+        converter1 = TimestampConverter(timestamp="01:23:45.678")
+        self.assertAlmostEqual(converter1.from_timestamp_to_seconds(), 5025.678)
 
-    # テストケース3: タイムスタンプから秒数への変換（時間部がない）
-    converter3 = TimestampConverter(timestamp="45.678")
-    assert converter3.from_timestamp_to_seconds() == 45.678
+        # テストケース2: タイムスタンプから秒数への変換（秒数部が整数）
+        converter2 = TimestampConverter(timestamp="00:01:30")
+        self.assertAlmostEqual(converter2.from_timestamp_to_seconds(), 90)
 
-    # テストケース4: 秒数からタイムスタンプへの変換
-    converter4 = TimestampConverter(seconds=12345.678)
-    assert converter4.from_seconds_to_timestamp() == "03:25:45.678"
+        # テストケース3: タイムスタンプから秒数への変換（時間部がない）
+        converter3 = TimestampConverter(timestamp="45.678")
+        self.assertAlmostEqual(converter3.from_timestamp_to_seconds(), 45.678)
 
-    # テストケース5: 秒数からタイムスタンプへの変換（秒数部が整数）
-    converter5 = TimestampConverter(seconds=90)
-    assert converter5.from_seconds_to_timestamp() == "00:01:30"
+        # テストケース7: タイムスタンプが与えられていない場合のテスト
+        converter7 = TimestampConverter()
+        self.assertAlmostEqual(converter7.from_timestamp_to_seconds(), 0.0)
 
-    # # テストケース6: 秒数からタイムスタンプへの変換（小数点以下の桁数が多い）
-    # converter6 = TimestampConverter(seconds=12345.67891234)
-    # assert converter6.from_seconds_to_timestamp() == "03:25:45.678"
+        # テストケース4: 秒数からタイムスタンプへの変換
+        converter4 = TimestampConverter(seconds=12345.678)
+        self.assertEqual(converter4.from_seconds_to_timestamp(), "03:25:45.678")
 
-    # テストケース7: タイムスタンプが与えられていない場合のテスト
-    converter7 = TimestampConverter()
-    assert converter7.from_timestamp_to_seconds() == 0.0
+        # テストケース5: 秒数からタイムスタンプへの変換（秒数部が整数）
+        converter5 = TimestampConverter(seconds=90)
+        self.assertEqual(converter5.from_seconds_to_timestamp(), "00:01:30")
 
-    # テストケース8: 秒数が与えられていない場合のテスト
-    converter8 = TimestampConverter()
-    assert converter8.from_seconds_to_timestamp() == "00:00:00.000"
+        # # テストケース6: 秒数からタイムスタンプへの変換（小数点以下の桁数が多い）
+        # converter6 = TimestampConverter(seconds=12345.67891234)
+        # self.assertEqual(converter6.from_seconds_to_timestamp(), "03:25:45.678")
 
-    print("All tests pass.")
+        # テストケース8: 秒数が与えられていない場合のテスト
+        converter8 = TimestampConverter()
+        self.assertEqual(converter8.from_seconds_to_timestamp(), "00:00:00.000")
 
 
-# テストの実行
-test_timestamp_converter()
+if __name__ == '__main__':
+    unittest.main()
