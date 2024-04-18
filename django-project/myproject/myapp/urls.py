@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from myapp.views import TestViewSet
+from myapp.views.test_views import TestViewSet
 
 # デフォルトのルーターを作成
 router = DefaultRouter()
