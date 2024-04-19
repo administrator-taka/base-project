@@ -1,3 +1,4 @@
+import logging
 import os
 import unittest
 
@@ -8,14 +9,13 @@ from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myproject.settings.base import FFMPEG_PATH, TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
 
-# TODO:標準出力からloggingに変える/エラーをもみ消さない
 class YouTubeDownloadLogic:
     def __init__(self):
         # FFMPEG_PATHを設定ファイルから取得
         ffmpeg_location = FFMPEG_PATH
         if not ffmpeg_location:
             # FFMPEG_PATHが設定されていない場合、エラーメッセージを表示してydl_optsをNoneに設定
-            print("FFMPEG_LOCATIONが設定されていません。デフォルトのパスまたはエラーハンドリングを行ってください。")
+            logging.error("FFMPEG_LOCATIONが設定されていません。デフォルトのパスまたはエラーハンドリングを行ってください。")
             self.ydl_opts = None
         else:
             # FFMPEG_PATHが設定されている場合、ydl_optsを設定
@@ -30,7 +30,7 @@ class YouTubeDownloadLogic:
     def download_video_mp4(self, video_id, output_path):
         if self.ydl_opts is None:
             # FFMPEG_LOCATIONが設定されていない場合、エラーメッセージを表示してダウンロードを中止
-            print("FFMPEG_LOCATIONが設定されていないため、ダウンロードできません。")
+            logging.error("FFMPEG_LOCATIONが設定されていないため、ダウンロードできません。")
             return
 
         # ダウンロード対象のYouTube URLを生成
@@ -46,10 +46,9 @@ class YouTubeDownloadLogic:
             with YoutubeDL(self.ydl_opts) as ydl:
                 ydl.download(URL)
         except Exception as e:
-            # ダウンロード中にエラーが発生した場合、エラーメッセージを表示
-            print('ビデオのダウンロード中にエラーが発生しました:')
-            print(e)
-        print('download_video_mp4 end')
+            # ダウンロード中にエラーが発生した場合、エラーメッセージをログに記録
+            logging.error('ビデオのダウンロード中にエラーが発生しました:', exc_info=True)
+        logging.info('download_video_mp4 end')
 
     def download_subtitle_vtt(self, video_id: str, lang: str, output_path: str, encoding='utf-8') -> str:
         """指定したYouTubeビデオの字幕ファイルをダウンロードする
@@ -87,11 +86,11 @@ class YouTubeDownloadLogic:
 
                 return subtitles_content
             else:
-                print(f'字幕ファイルが見つかりませんでした: {file_path}')
+                logging.error(f'字幕ファイルが見つかりませんでした: {file_path}')
                 return ''
         except Exception as e:
-            # 例外が発生した場合は、エラーを出力する
-            print(f'エラーが発生しました: {e}')
+            # 例外が発生した場合は、エラーをログに記録する
+            logging.error(f'エラーが発生しました: {e}', exc_info=True)
             return ''
 
 
