@@ -7,7 +7,7 @@ import json
 import logging
 from datetime import datetime
 
-
+# TODO:最新のopenaiは構文が違うので修正したい。
 class ChatGPTApiLogic:
     def __init__(self):
         # APIキーをリストに登録
