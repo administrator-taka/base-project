@@ -35,3 +35,6 @@ python manage.py shell
 
 MinIO
 docker-composeでMinIO(S3互換)環境
+
+requirements.txtの更新
+ pip freeze > requirements.txt
