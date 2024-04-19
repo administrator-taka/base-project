@@ -11,6 +11,10 @@ class DeepLLanguage(Enum):
     INDONESIAN = "id"  # インドネシア語
 
 
+# メモ
+# 原文の言語は中国語（繁体字および簡体字）
+# 訳文の言語は中国語（簡体字のみ）となります。
+
 class TestDeepLLanguage(unittest.TestCase):
     def test_enum_values(self):
         self.assertEqual(DeepLLanguage.JAPANESE.value, "ja")
