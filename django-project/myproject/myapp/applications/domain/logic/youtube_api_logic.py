@@ -1,6 +1,7 @@
 # 必要なモジュールをインポート
 from myapp.applications.infrastructure.repository.web_client import WebClient
-from myproject.settings.base import YOUTUBE_API_KEY
+from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
+    TEST_YOUTUBE_PLAYLIST_ID
 import unittest
 
 
@@ -90,7 +91,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
     # 動画の詳細を取得するメソッドのテスト
     def test_get_video_details(self):
         # テスト用の動画IDを指定
-        video_id = "YOUR_VIDEO_ID_HERE"
+        video_id = TEST_YOUTUBE_VIDEO_ID
         # 動画の詳細を取得
         video_details = self.youtube_logic.get_video_details(video_id)
         # 取得した動画の詳細を出力
@@ -99,7 +100,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
     # チャンネルの詳細を取得するメソッドのテスト
     def test_get_channel_details(self):
         # テスト用のチャンネルIDを指定
-        channel_id = "YOUR_CHANNEL_ID_HERE"
+        channel_id = TEST_YOUTUBE_CHANNEL_ID
         # チャンネルの詳細を取得
         channel_details = self.youtube_logic.get_channel_details(channel_id)
         # 取得したチャンネルの詳細を出力
@@ -108,7 +109,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
     # プレイリスト内の全ての動画を取得するメソッドのテスト
     def test_get_all_playlist_videos(self):
         # テスト用のプレイリストIDを指定
-        playlist_id = "YOUR_PLAYLIST_ID_HERE"
+        playlist_id = TEST_YOUTUBE_PLAYLIST_ID
         # プレイリスト内の全ての動画を取得
         playlist_videos = self.youtube_logic.get_all_playlist_videos(playlist_id)
         # 取得したプレイリストの動画を出力
