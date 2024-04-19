@@ -1,9 +1,11 @@
 import unittest
 
-from myproject.settings.base import CHATGPT_API_KEY, CHATGPT_API_KEY_1, CHATGPT_API_KEY_2
+from myapp.applications.util.file_handler import FileHandler
+from myproject.settings.base import CHATGPT_API_KEY, CHATGPT_API_KEY_1, CHATGPT_API_KEY_2, BASE_DIR
 import openai
 import json
 import logging
+from datetime import datetime
 
 
 class ChatGPTLogic:
@@ -11,8 +13,8 @@ class ChatGPTLogic:
         # APIキーをリストに登録
         self.api_keys = []
         self.api_keys.append(CHATGPT_API_KEY)
-        # self.api_keys.append(CHATGPT_API_KEY_1)
-        # self.api_keys.append(CHATGPT_API_KEY_2)
+        self.api_keys.append(CHATGPT_API_KEY_1)
+        self.api_keys.append(CHATGPT_API_KEY_2)
         self.api_key_index = 0
 
     def generate_response(self, message):
@@ -24,6 +26,7 @@ class ChatGPTLogic:
                     messages=[
                         {"role": "system", "content": message},
                     ])
+                self._write_json_response(response)
                 return response
             except openai.error.RateLimitError as e:
                 # エラーをログに出力
@@ -33,6 +36,13 @@ class ChatGPTLogic:
         # すべてのAPIキーを試行しても成功しない場合
         logging.error("すべてのAPIキーがレート制限に達しました。レスポンスを生成できません。")
         raise Exception("すべてのAPIキーがレート制限に達しました。")
+
+    def _write_json_response(self, response):
+        # 現在の日時を取得し、フォーマットを指定して文字列に変換
+        current_datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"chat_gpt_data_{current_datetime}.json"
+        test_data_path = str(BASE_DIR) + '/test_data'
+        FileHandler.write_json(response, test_data_path, file_name)
 
 
 class TestChatGPTLogic(unittest.TestCase):
