@@ -45,7 +45,7 @@ class ChatGPTApiLogic:
         FileHandler.write_json(response, test_data_path, file_name)
 
 
-class TestChatGPTLogic(unittest.TestCase):
+class TestChatGPTApiLogic(unittest.TestCase):
     def setUp(self):
         self.chatgpt_logic = ChatGPTApiLogic()
 

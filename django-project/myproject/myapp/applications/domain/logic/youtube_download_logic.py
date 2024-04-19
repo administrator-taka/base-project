@@ -6,8 +6,9 @@ import os
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myproject.settings.base import FFMPEG_PATH, TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
+
 # TODO:標準出力からloggingに変える/エラーをもみ消さない
-class YtDlpLogic:
+class YouTubeDownloadLogic:
     def __init__(self):
         # FFMPEG_PATHを設定ファイルから取得
         ffmpeg_location = FFMPEG_PATH
@@ -93,18 +94,17 @@ class YtDlpLogic:
             return ''
 
 
-class TestYtDlpLogic(unittest.TestCase):
+class TestYouTubeDownloadLogic(unittest.TestCase):
 
     def test_download_subtitle_vtt(self):
-        yt_dlp_logic = YtDlpLogic()
-        subtitles_content = yt_dlp_logic.download_subtitle_vtt(TEST_YOUTUBE_VIDEO_ID, YouTubeLanguage.JAPANESE.value,
+        youtube_download_logic = YouTubeDownloadLogic()
+        subtitles_content = youtube_download_logic.download_subtitle_vtt(TEST_YOUTUBE_VIDEO_ID, YouTubeLanguage.JAPANESE.value,
                                                                TEST_DIR + TEST_YOUTUBE_VIDEO_ID)
         print(subtitles_content)
 
     def test_download_video_mp4(self):
-        yt_dlp_logic = YtDlpLogic()
-        yt_dlp_logic.download_video_mp4(TEST_YOUTUBE_VIDEO_ID, TEST_DIR + TEST_YOUTUBE_VIDEO_ID)
-
+        youtube_download_logic = YouTubeDownloadLogic()
+        youtube_download_logic.download_video_mp4(TEST_YOUTUBE_VIDEO_ID, TEST_DIR + TEST_YOUTUBE_VIDEO_ID)
 
 # if __name__ == '__main__':
 #     unittest.main()
