@@ -8,7 +8,7 @@ import logging
 from datetime import datetime
 
 
-class ChatGPTLogic:
+class ChatGPTApiLogic:
     def __init__(self):
         # APIキーをリストに登録
         self.api_keys = []
@@ -47,7 +47,7 @@ class ChatGPTLogic:
 
 class TestChatGPTLogic(unittest.TestCase):
     def setUp(self):
-        self.chatgpt_logic = ChatGPTLogic()
+        self.chatgpt_logic = ChatGPTApiLogic()
 
     def test_generate_response(self):
         message = "Hello, how are you?"
