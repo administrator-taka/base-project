@@ -1,7 +1,7 @@
 import unittest
 
 from myapp.applications.util.file_handler import FileHandler
-from myproject.settings.base import CHATGPT_API_KEY, CHATGPT_API_KEY_1, CHATGPT_API_KEY_2, BASE_DIR
+from myproject.settings.base import CHATGPT_API_KEY, CHATGPT_API_KEY_1, CHATGPT_API_KEY_2, TEST_DIR
 import openai
 import json
 import logging
@@ -41,7 +41,7 @@ class ChatGPTApiLogic:
         # 現在の日時を取得し、フォーマットを指定して文字列に変換
         current_datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"chat_gpt_data_{current_datetime}.json"
-        test_data_path = str(BASE_DIR) + '/test_data'
+        test_data_path = TEST_DIR
         FileHandler.write_json(response, test_data_path, file_name)
 
 

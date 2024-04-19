@@ -165,3 +165,7 @@ TEST_YOUTUBE_CHANNEL_ID = config('TEST_YOUTUBE_CHANNEL_ID')
 # テスト用プレイリストID
 TEST_YOUTUBE_PLAYLIST_ID = config('TEST_YOUTUBE_PLAYLIST_ID')
 
+# ffmpegの場所を指定
+FFMPEG_PATH = config('FFMPEG_PATH')
+
+TEST_DIR = str(BASE_DIR) + '/test_data'

@@ -3,7 +3,7 @@ import os
 import json
 import unittest
 
-from myproject.settings.base import BASE_DIR
+from myproject.settings.base import TEST_DIR
 
 
 class FileHandler:
@@ -77,7 +77,7 @@ class FileHandler:
 
 class TestFileHandler(unittest.TestCase):
     def setUp(self):
-        self.directory = str(BASE_DIR) + '/test_data'
+        self.directory = TEST_DIR
 
     def test_write_json(self):
         data = [{"name": "John", "age": 30, "city": "New York"}, {"name": "Alice", "age": 25, "city": "London"}]
