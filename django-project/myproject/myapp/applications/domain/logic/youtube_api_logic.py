@@ -2,7 +2,7 @@
 import json
 
 from myapp.applications.infrastructure.repository.web_client import WebClient
-from myapp.applications.util.enum.youtube_language import YouTubeLanguage
+from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
     TEST_YOUTUBE_PLAYLIST_ID
 import unittest
