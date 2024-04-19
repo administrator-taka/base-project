@@ -46,5 +46,5 @@ class TestChatGPTLogic(unittest.TestCase):
         print("Generated response:", formatted_response)
 
 
-if __name__ == '__main__':
-    unittest.main()
+# if __name__ == '__main__':
+#     unittest.main()
