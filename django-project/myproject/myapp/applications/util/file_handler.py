@@ -1,6 +1,6 @@
 import csv
-import os
 import json
+import os
 import unittest
 
 from myproject.settings.base import TEST_DIR

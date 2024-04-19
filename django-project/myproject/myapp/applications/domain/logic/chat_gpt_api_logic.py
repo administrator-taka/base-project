@@ -1,11 +1,13 @@
+import json
+import logging
 import unittest
+from datetime import datetime
+
+import openai
 
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import CHATGPT_API_KEY, CHATGPT_API_KEY_1, CHATGPT_API_KEY_2, TEST_DIR
-import openai
-import json
-import logging
-from datetime import datetime
+
 
 # TODO:最新のopenaiは構文が違うので修正したい。
 class ChatGPTApiLogic:
@@ -54,7 +56,6 @@ class TestChatGPTApiLogic(unittest.TestCase):
         response = self.chatgpt_logic.generate_response(message)
         formatted_response = json.dumps(response, indent=4)
         print("Generated response:", formatted_response)
-
 
 # if __name__ == '__main__':
 #     unittest.main()

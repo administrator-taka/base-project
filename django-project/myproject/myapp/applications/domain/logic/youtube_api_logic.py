@@ -1,11 +1,11 @@
 # 必要なモジュールをインポート
 import json
+import unittest
 
 from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
     TEST_YOUTUBE_PLAYLIST_ID
-import unittest
 
 
 # YouTubeのAPIを操作するクラス
@@ -120,7 +120,6 @@ class TestYouTubeApiLogic(unittest.TestCase):
         playlist_videos = self.youtube_logic.get_all_playlist_videos(playlist_id, language=YouTubeLanguage.JAPANESE)
         # 取得したプレイリストの動画を出力
         print("Playlist videos:", json.dumps(playlist_videos, indent=4, ensure_ascii=False))
-
 
 # if __name__ == '__main__':
 #     # テストを実行

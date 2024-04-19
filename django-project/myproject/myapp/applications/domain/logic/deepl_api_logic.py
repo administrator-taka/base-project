@@ -64,6 +64,5 @@ class TestDeepLApiLogic(unittest.TestCase):
         translated_word = deepl_logic.translation(self.word, lang.value)
         print(f"{lang.name}への翻訳: {translated_word}")
 
-
 # if __name__ == '__main__':
 #     unittest.main()

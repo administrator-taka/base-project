@@ -28,13 +28,11 @@ python manage.py inspectdb > myapp/test.py
 データを適切な形に整形するもので、基本的に views に定義してもよいです。複数ある場合は views フォルダを作成し、そこにファイルを作成していくことで分けることができます。
 ```
 
-
 python manage.py shell
 環境変数を読み込んだ入りした状態のpythonを実行することができる。
-
 
 MinIO
 docker-composeでMinIO(S3互換)環境
 
 requirements.txtの更新
- pip freeze > requirements.txt
+pip freeze > requirements.txt

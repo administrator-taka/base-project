@@ -1,6 +1,7 @@
-import time
-import requests
 import logging
+import time
+
+import requests
 
 
 class WebClient:

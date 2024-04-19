@@ -1,7 +1,8 @@
-import unittest
-from yt_dlp import YoutubeDL
-import yt_dlp
 import os
+import unittest
+
+import yt_dlp
+from yt_dlp import YoutubeDL
 
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myproject.settings.base import FFMPEG_PATH, TEST_YOUTUBE_VIDEO_ID, TEST_DIR
@@ -98,8 +99,9 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
 
     def test_download_subtitle_vtt(self):
         youtube_download_logic = YouTubeDownloadLogic()
-        subtitles_content = youtube_download_logic.download_subtitle_vtt(TEST_YOUTUBE_VIDEO_ID, YouTubeLanguage.JAPANESE.value,
-                                                               TEST_DIR + TEST_YOUTUBE_VIDEO_ID)
+        subtitles_content = youtube_download_logic.download_subtitle_vtt(TEST_YOUTUBE_VIDEO_ID,
+                                                                         YouTubeLanguage.JAPANESE.value,
+                                                                         TEST_DIR + TEST_YOUTUBE_VIDEO_ID)
         print(subtitles_content)
 
     def test_download_video_mp4(self):
