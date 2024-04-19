@@ -6,7 +6,7 @@ import os
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myproject.settings.base import FFMPEG_PATH, TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
-
+# TODO:標準出力からloggingに変える/エラーをもみ消さない
 class YtDlpLogic:
     def __init__(self):
         # FFMPEG_PATHを設定ファイルから取得
