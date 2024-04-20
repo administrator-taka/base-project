@@ -54,8 +54,7 @@ class TestChatGPTApiLogic(unittest.TestCase):
     def test_generate_response(self):
         message = "Hello, how are you?"
         response = self.chatgpt_logic.generate_response(message)
-        formatted_response = json.dumps(response, indent=4)
-        print("Generated response:", formatted_response)
+        FileHandler.format_json_print(response)
 
 # if __name__ == '__main__':
 #     unittest.main()

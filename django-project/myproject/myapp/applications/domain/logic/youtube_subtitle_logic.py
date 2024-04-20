@@ -7,6 +7,7 @@ import yt_dlp
 from yt_dlp import YoutubeDL
 
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
+from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
 
@@ -84,7 +85,7 @@ class YouTubeSubtitleLogic:
                 # 字幕情報を取得して変数に格納
                 subtitles_info = result.get('subtitles', {})  # 字幕情報がない場合は空の辞書を返す
                 automatic_captions_info = result.get('automatic_captions', {})  # 字幕情報がない場合は空の辞書を返す
-                return json.dumps(result, indent=4, ensure_ascii=False)
+                return result
 
         except Exception as e:
             # 例外が発生した場合は、エラーをログに記録する
@@ -104,7 +105,7 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
     def test_download_subtitles_info(self):
         youtube_download_logic = YouTubeSubtitleLogic()
         subtitles_content = youtube_download_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
-        print(subtitles_content)
+        FileHandler.format_json_print(subtitles_content)
 
 # if __name__ == '__main__':
 #     unittest.main()

@@ -74,6 +74,12 @@ class FileHandler:
         with open(file_path, 'w', encoding=encoding) as txt_file:
             txt_file.write(data)
 
+    @staticmethod
+    def format_json_print(data):
+        # JSONデータを整形して返す
+        formatted_json = json.dumps(data, indent=4, ensure_ascii=False)
+        print(formatted_json)
+
 
 class TestFileHandler(unittest.TestCase):
     def setUp(self):
