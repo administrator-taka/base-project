@@ -62,9 +62,6 @@ class YouTubeSubtitleLogic:
 
         Args:
             video_id (str): YouTubeのビデオID
-            lang (YouTubeLanguage): 字幕の言語
-            output_path (str): 保存先のファイルパス
-            encoding (str, optional): 字幕ファイルのエンコーディング（デフォルトは 'utf-8'）
 
         Returns:
             str: 字幕の内容
