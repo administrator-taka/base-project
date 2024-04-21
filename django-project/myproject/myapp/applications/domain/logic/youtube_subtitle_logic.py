@@ -1,10 +1,8 @@
-import json
 import logging
 import os
 import unittest
 
 import yt_dlp
-from yt_dlp import YoutubeDL
 
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler

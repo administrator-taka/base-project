@@ -1,5 +1,4 @@
 # 必要なモジュールをインポート
-import json
 import unittest
 
 from myapp.applications.infrastructure.repository.web_client import WebClient

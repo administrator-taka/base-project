@@ -1,11 +1,8 @@
 import logging
-import os
 import unittest
 
-import yt_dlp
 from yt_dlp import YoutubeDL
 
-from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myproject.settings.base import FFMPEG_PATH, TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
 
