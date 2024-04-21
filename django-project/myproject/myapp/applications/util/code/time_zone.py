@@ -1,7 +1,10 @@
 import unittest
-from datetime import datetime
+from datetime import datetime  # datetimeモジュールのみをインポート
 from enum import Enum
 
+from zoneinfo import ZoneInfo
+
+import pytz
 from pytz import timezone
 
 
@@ -44,6 +47,51 @@ class TestTimeZoneConversion(unittest.TestCase):
         utc_time = datetime(2024, 4, 21, 12, 0, 0)
         cst_time = convert_to_timezone(utc_time, TimeZone.CST)
         self.assertEqual(cst_time.hour, 20)  # China is 8 hours ahead of UTC at this time
+
+    def test_timezone(self):
+        print('★★★★★★★★★★★★★★★')
+        # タイムゾーンを指定して現在の日時を取得
+        now = datetime.now(pytz.timezone('Asia/Tokyo'))
+        print(now)
+        print(now.strftime("%Y-%m-%d %H:%M:%S %Z"))
+        print(now.strftime("%Y/%m/%d %H:%M:%S"))
+
+        print('★★★★★★★★★★★★★★★')
+        # タイムゾーンを指定して現在の日時を取得
+        now = datetime.now(pytz.timezone('Asia/Tokyo'))
+        print(now)
+        print(now.strftime("%Y-%m-%d %H:%M:%S %Z"))
+        print(now.strftime("%Y/%m/%d %H:%M:%S"))
+
+        print('★★★★★★★★★★★★★★★')
+        jst = ZoneInfo("Asia/Tokyo")
+        utc = ZoneInfo("UTC")
+
+        # naive_jst：naiveなJST
+        naive_jst = datetime.now()
+        print(naive_jst)
+        # naive_utc：naiveなUTC
+        naive_utc = datetime.utcnow()
+        print(naive_utc)
+        # aware_jst：awareなJST
+        aware_jst = datetime.now(jst)
+        print(aware_jst)
+        # aware_utc：awareなUTC
+        aware_utc = datetime.now(utc)
+        print(aware_utc)
+
+        print('★★★★★★★★★★★★★★★')
+        # 与えられた形式の文字列
+        input_string = "2022-09-17T16:45:12Z"
+
+        # UTCとして解釈
+        utc_time = datetime.strptime(input_string, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=pytz.utc)
+
+        # UTCからAsia/Tokyoに変換
+        tokyo_time = utc_time.astimezone(pytz.timezone('Asia/Tokyo'))
+        print(tokyo_time)
+        print(tokyo_time.strftime("%Y-%m-%d %H:%M:%S %Z"))
+        print(tokyo_time.strftime("%Y/%m/%d %H:%M:%S"))
 
 
 if __name__ == '__main__':
