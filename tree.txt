@@ -7,6 +7,7 @@
 │   ├─docker_cleanup.bat
 │   ├─docker_restart.bat
 │   ├─docker_start.bat
+│   ├─env__sample_update.bat
 │   ├─start_vue_local_server.bat
 │   └─tree_update.bat
 ├─django-project
@@ -17,15 +18,45 @@
 │       ├─myapp
 │       │   ├─__init__.py
 │       │   ├─admin.py
+│       │   ├─applications
+│       │   │   ├─application
+│       │   │   │   └─__init__.py
+│       │   │   ├─domain
+│       │   │   │   ├─__init__.py
+│       │   │   │   └─logic
+│       │   │   │       ├─__init__.py
+│       │   │   │       ├─chat_gpt_api_logic.py
+│       │   │   │       ├─deepl_api_logic.py
+│       │   │   │       ├─youtube_api_logic.py
+│       │   │   │       ├─youtube_download_logic.py
+│       │   │   │       └─youtube_subtitle_logic.py
+│       │   │   ├─infrastructure
+│       │   │   │   ├─__init__.py
+│       │   │   │   └─repository
+│       │   │   │       ├─__init__.py
+│       │   │   │       └─web_client.py
+│       │   │   └─util
+│       │   │       ├─__init__.py
+│       │   │       ├─code
+│       │   │       │   ├─__init__.py
+│       │   │       │   ├─character_code.py
+│       │   │       │   ├─deepl_language.py
+│       │   │       │   └─youtube_language.py
+│       │   │       ├─file_handler.py
+│       │   │       └─timestamp_converter.py
 │       │   ├─apps.py
 │       │   ├─migrations
 │       │   │   ├─0001_initial.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
-│       │   ├─serializer.py
+│       │   ├─serializer
+│       │   │   ├─__init__.py
+│       │   │   └─test_serializer.py
 │       │   ├─tests.py
 │       │   ├─urls.py
-│       │   └─views.py
+│       │   └─views
+│       │       ├─__init__.py
+│       │       └─test_views.py
 │       ├─myproject
 │       │   ├─__init__.py
 │       │   ├─asgi.py
