@@ -41,6 +41,7 @@
 │       │   │       │   ├─__init__.py
 │       │   │       │   ├─character_code.py
 │       │   │       │   ├─deepl_language.py
+│       │   │       │   ├─time_zone.py
 │       │   │       │   └─youtube_language.py
 │       │   │       ├─file_handler.py
 │       │   │       └─timestamp_converter.py
