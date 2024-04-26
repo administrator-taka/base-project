@@ -1,12 +1,14 @@
 import logging
 import unittest
 
+from django.conf import settings
+
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
-from django.conf import settings
+from myapp.serializer.youtube_subtitle_serializer import process_result
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
 
 
@@ -44,7 +46,8 @@ class YoutubeDownloadService:
                 json_data = [item for item in captions_info if item.get("ext") == "json3"]
                 if json_data:
                     result_json = WebClient.make_api_request(json_data[0]["url"], None)
-                    FileHandler.format_json_print(result_json)
+                    result = process_result(result_json)
+                    FileHandler.format_json_print(result)
                 else:
                     logging.debug("手動作成字幕のためのJSONデータが見つかりませんでした。")
             else:
@@ -59,7 +62,8 @@ class YoutubeDownloadService:
                 json_data = [item for item in captions_info if item.get("ext") == "json3"]
                 if json_data:
                     result_json = WebClient.make_api_request(json_data[0]["url"], None)
-                    FileHandler.format_json_print(result_json)
+                    result = process_result(result_json)
+                    FileHandler.format_json_print(result)
                 else:
                     logging.debug("翻訳言語の手動作成字幕のためのJSONデータが見つかりませんでした。")
             else:
