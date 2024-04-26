@@ -36,3 +36,5 @@ docker-composeでMinIO(S3互換)環境
 
 requirements.txtの更新
 pip freeze > requirements.txt
+特定のライブラリのみ
+pip freeze | findstr google-api-python-client >> requirements.txt

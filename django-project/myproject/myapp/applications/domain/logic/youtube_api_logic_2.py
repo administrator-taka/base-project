@@ -1,54 +1,64 @@
 # 必要なモジュールをインポート
 import unittest
 
-import googleapiclient.discovery
 from django.conf import settings
+from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
+from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
+from myapp.serializer.youtube_api_serializer import YouTubeVideoSerializer
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
     TEST_YOUTUBE_PLAYLIST_ID
 
 
 # YouTubeのAPIを操作するクラス
-class YouTubeApiLogic:
+class YouTubeApiLogic2:
     def __init__(self):
         # YouTubeのAPIキーを読み込む
         self.api_key = YOUTUBE_API_KEY
+        # YouTubeのAPIのベースURL
+        self.base_url = "https://www.googleapis.com/youtube/v3/"
 
+    # https://developers.google.com/youtube/v3/docs/videos?hl=ja
     # 動画の詳細を取得するメソッド
     def get_video_details(self, video_id, language=YouTubeLanguage.ENGLISH):
-        try:
-            # YouTube Data APIを使用して動画情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.videos().list(
-                part="snippet,liveStreamingDetails,localizations",
-                id=video_id,
-                hl=language.value  # 言語を指定するパラメータを追加
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # APIのエンドポイントURLを設定
+        api_url = self.base_url + "videos"
+
+        # リクエストパラメータを設定
+        params = {
+            'id': video_id,
+            'key': self.api_key,
+            'part': 'snippet',
+            # 'part': 'snippet,liveStreamingDetails,localizations',
+            'hl': language.value  # 言語を指定するパラメータを追加
+        }
+
+        # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
+        data = WebClient.make_api_request(api_url, params)
+        serializer = YouTubeVideoSerializer(data=data)
+        if serializer.is_valid():
+            serialized_data = serializer.data
+            return ReturnDict(serialized_data, serializer=serializer)  # serializer キーワード引数を追加
+        else:
+            return ReturnList(serializer.errors)
 
     # チャンネルの詳細を取得するメソッド
     def get_channel_details(self, channel_id, language=YouTubeLanguage.ENGLISH):
-        try:
-            # YouTube Data APIを使用してチャンネル情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.channels().list(
-                part="snippet",
-                id=channel_id,
-                hl=language.value  # 言語を指定するパラメータを追加
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # APIのエンドポイントURLを設定
+        api_url = self.base_url + "channels"
+
+        # リクエストパラメータを設定
+        params = {
+            'id': channel_id,
+            'key': self.api_key,
+            'part': 'snippet',
+            'hl': language.value  # 言語を指定するパラメータを追加
+        }
+
+        # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
+        return WebClient.make_api_request(api_url, params)
 
     # プレイリスト内の全ての動画を取得するメソッド
     def get_all_playlist_videos(self, playlist_id, language=YouTubeLanguage.ENGLISH):
@@ -70,44 +80,54 @@ class YouTubeApiLogic:
 
     # プレイリスト内の動画をページングしながら取得するメソッド
     def get_playlist_videos_page(self, playlist_id, page_token=None, language=YouTubeLanguage.ENGLISH):
-        try:
-            # YouTube Data APIを使用してプレイリスト内の動画情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.playlistItems().list(
-                part="snippet",
-                playlistId=playlist_id,
-                maxResults=50,
-                pageToken=page_token,
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # APIのエンドポイントURLを設定
+        api_url = self.base_url + "playlistItems"
 
+        # リクエストパラメータを設定
+        params = {
+            'playlistId': playlist_id,
+            'key': self.api_key,
+            'part': 'snippet',
+            'maxResults': 50,
+            'hl': language.value  # 言語を指定するパラメータを追加
+        }
+
+        # ページングのトークンを設定
+        if page_token:
+            params['pageToken'] = page_token
+
+        # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
+        return WebClient.make_api_request(api_url, params)
+
+    # https://developers.google.com/youtube/v3/docs/captions?hl=ja
     # 動画の字幕情報を取得するメソッド
     def get_video_captions(self, video_id):
         try:
-            # YouTube Data APIを使用して動画の字幕情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.captions().list(
-                part="snippet",
-                videoId=video_id
-            )
-            response = request.execute()
-            return response
+            # APIのエンドポイントURLを設定
+            api_url = self.base_url + "captions"
+
+            # リクエストパラメータを設定
+            params = {
+                'videoId': video_id,
+                'key': self.api_key,
+                'part': 'snippet',
+            }
+
+            # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
+            captions_response = WebClient.make_api_request(api_url, params)
+
+            # 字幕情報を返す
+            return captions_response
+
         except Exception as e:
             print('An error occurred:', str(e))
-            return None
 
 
 # YouTubeApiLogicクラスのテスト
-class TestYouTubeApiLogic(unittest.TestCase):
+class TestYouTubeApiLogic2(unittest.TestCase):
     def setUp(self):
         # テスト前の準備
-        self.youtube_logic = YouTubeApiLogic()
+        self.youtube_logic = YouTubeApiLogic2()
         settings.configure()
 
     # 動画の詳細を取得するメソッドのテスト
