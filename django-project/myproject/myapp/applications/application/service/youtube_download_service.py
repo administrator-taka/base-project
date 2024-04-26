@@ -6,6 +6,7 @@ from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtit
 from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
+from django.conf import settings
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
 
 
@@ -66,14 +67,17 @@ class YoutubeDownloadService:
 
 
 class TestYoutubeDownloadService(unittest.TestCase):
+    def setUp(self):
+        # テスト前の準備
+        self.youtube_download_service = YoutubeDownloadService()
+        settings.configure()
 
     def test_download_video_subtitle(self):
-        youtube_download_service = YoutubeDownloadService()
         video_id = TEST_YOUTUBE_VIDEO_ID
         default_audio_language = YouTubeLanguage.KOREAN
         translation_language = YouTubeLanguage.JAPANESE
 
-        youtube_download_service.download_video_subtitle(video_id, default_audio_language, translation_language)
+        self.youtube_download_service.download_video_subtitle(video_id, default_audio_language, translation_language)
 
 # if __name__ == '__main__':
 #     unittest.main()
