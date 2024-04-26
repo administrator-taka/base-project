@@ -16,6 +16,7 @@ class YouTubeApiLogic:
         # YouTubeのAPIのベースURL
         self.base_url = "https://www.googleapis.com/youtube/v3/"
 
+    # https://developers.google.com/youtube/v3/docs/videos?hl=ja
     # 動画の詳細を取得するメソッド
     def get_video_details(self, video_id, language=YouTubeLanguage.ENGLISH):
         # APIのエンドポイントURLを設定
@@ -87,6 +88,7 @@ class YouTubeApiLogic:
         # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
         return WebClient.make_api_request(api_url, params)
 
+    # https://developers.google.com/youtube/v3/docs/captions?hl=ja
     # 動画の字幕情報を取得するメソッド
     def get_video_captions(self, video_id):
         try:
