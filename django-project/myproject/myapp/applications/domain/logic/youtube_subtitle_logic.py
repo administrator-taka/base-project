@@ -94,15 +94,15 @@ class YouTubeSubtitleLogic:
 class TestYouTubeDownloadLogic(unittest.TestCase):
 
     def test_download_subtitle_vtt(self):
-        youtube_download_logic = YouTubeSubtitleLogic()
-        subtitles_content = youtube_download_logic.download_subtitle_vtt(TEST_YOUTUBE_VIDEO_ID,
+        youtube_subtitle_logic = YouTubeSubtitleLogic()
+        subtitles_content = youtube_subtitle_logic.download_subtitle_vtt(TEST_YOUTUBE_VIDEO_ID,
                                                                          YouTubeLanguage.JAPANESE,
                                                                          TEST_DIR + TEST_YOUTUBE_VIDEO_ID)
         print(subtitles_content)
 
     def test_download_subtitles_info(self):
-        youtube_download_logic = YouTubeSubtitleLogic()
-        subtitles_content = youtube_download_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
+        youtube_subtitle_logic = YouTubeSubtitleLogic()
+        subtitles_content = youtube_subtitle_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
         FileHandler.format_json_print(subtitles_content)
 
 # if __name__ == '__main__':
