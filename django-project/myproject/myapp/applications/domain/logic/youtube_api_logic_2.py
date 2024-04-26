@@ -30,7 +30,6 @@ class YouTubeApiLogic2:
         params = {
             'id': video_id,
             'key': self.api_key,
-            # 'part': 'snippet',
             'part': 'snippet,liveStreamingDetails,localizations',
             'hl': language.value  # 言語を指定するパラメータを追加
         }
