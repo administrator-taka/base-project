@@ -87,6 +87,28 @@ class YouTubeApiLogic:
         # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
         return WebClient.make_api_request(api_url, params)
 
+    # 動画の字幕情報を取得するメソッド
+    def get_video_captions(self, video_id):
+        try:
+            # APIのエンドポイントURLを設定
+            api_url = self.base_url + "captions"
+
+            # リクエストパラメータを設定
+            params = {
+                'videoId': video_id,
+                'key': self.api_key,
+                'part': 'snippet',
+            }
+
+            # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
+            captions_response = WebClient.make_api_request(api_url, params)
+
+            # 字幕情報を返す
+            return captions_response
+
+        except Exception as e:
+            print('An error occurred:', str(e))
+
 
 # YouTubeApiLogicクラスのテスト
 class TestYouTubeApiLogic(unittest.TestCase):
@@ -120,6 +142,15 @@ class TestYouTubeApiLogic(unittest.TestCase):
         playlist_videos = self.youtube_logic.get_all_playlist_videos(playlist_id, language=YouTubeLanguage.JAPANESE)
         # 取得したプレイリストの動画を出力
         FileHandler.format_json_print(playlist_videos)
+
+    # 動画の字幕情報を取得するメソッドのテスト
+    def test_get_video_captions(self):
+        # テスト用の動画IDを指定
+        video_id = TEST_YOUTUBE_VIDEO_ID
+        # 動画の字幕情報を取得
+        captions_info = self.youtube_logic.get_video_captions(video_id)
+        # 取得した字幕情報を出力
+        FileHandler.format_json_print(captions_info)
 
 # if __name__ == '__main__':
 #     # テストを実行
