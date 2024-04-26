@@ -1,9 +1,13 @@
 # 必要なモジュールをインポート
 import unittest
 
+from django.conf import settings
+from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
+
 from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
+from myapp.serializer.youtube_api_serializer import YouTubeVideoSerializer
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
     TEST_YOUTUBE_PLAYLIST_ID
 
@@ -26,12 +30,19 @@ class YouTubeApiLogic:
         params = {
             'id': video_id,
             'key': self.api_key,
-            'part': 'snippet,liveStreamingDetails,localizations',
+            'part': 'snippet',
+            # 'part': 'snippet,liveStreamingDetails,localizations',
             'hl': language.value  # 言語を指定するパラメータを追加
         }
 
         # WebClientクラスを使ってAPIリクエストを送信し、レスポンスを取得
-        return WebClient.make_api_request(api_url, params)
+        data = WebClient.make_api_request(api_url, params)
+        serializer = YouTubeVideoSerializer(data=data)
+        if serializer.is_valid():
+            serialized_data = serializer.data
+            return ReturnDict(serialized_data, serializer=serializer)  # serializer キーワード引数を追加
+        else:
+            return ReturnList(serializer.errors)
 
     # チャンネルの詳細を取得するメソッド
     def get_channel_details(self, channel_id, language=YouTubeLanguage.ENGLISH):
@@ -117,6 +128,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
     def setUp(self):
         # テスト前の準備
         self.youtube_logic = YouTubeApiLogic()
+        settings.configure()
 
     # 動画の詳細を取得するメソッドのテスト
     def test_get_video_details(self):
@@ -154,6 +166,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # 取得した字幕情報を出力
         FileHandler.format_json_print(captions_info)
 
-# if __name__ == '__main__':
-#     # テストを実行
-#     unittest.main()
+
+if __name__ == '__main__':
+    # テストを実行
+    unittest.main()
