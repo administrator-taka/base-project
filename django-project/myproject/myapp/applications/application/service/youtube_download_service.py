@@ -11,11 +11,12 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
 
 class YoutubeDownloadService:
     def __init__(self):
-        # APIキーをリストに登録
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
-    def download_video_subtitle(self, video_id,default_audio_language=YouTubeLanguage,translation_language=YouTubeLanguage):
+    def download_video_subtitle(self, video_id: str,
+                                default_audio_language: YouTubeLanguage,
+                                translation_language: YouTubeLanguage) -> None:
         subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
 
         # デフォルト言語:自動生成字幕
@@ -66,13 +67,13 @@ class YoutubeDownloadService:
 
 class TestYoutubeDownloadService(unittest.TestCase):
 
-    def test_download_all_subtitle(self):
+    def test_download_video_subtitle(self):
         youtube_download_service = YoutubeDownloadService()
         video_id = TEST_YOUTUBE_VIDEO_ID
         default_audio_language = YouTubeLanguage.KOREAN
         translation_language = YouTubeLanguage.JAPANESE
 
-        youtube_download_service.download_video_subtitle(video_id,default_audio_language,translation_language)
+        youtube_download_service.download_video_subtitle(video_id, default_audio_language, translation_language)
 
 # if __name__ == '__main__':
 #     unittest.main()
