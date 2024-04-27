@@ -80,11 +80,6 @@ class YouTubeSubtitleLogic:
             with yt_dlp.YoutubeDL() as ydl:
                 # 動画のURLを指定
                 result = ydl.extract_info('https://youtu.be/' + video_id, download=False)
-                # print(result)
-                # print("★★★")
-                # 字幕情報を取得して変数に格納
-                subtitles_info = result.get('subtitles', {})  # 字幕情報がない場合は空の辞書を返す
-                automatic_captions_info = result.get('automatic_captions', {})  # 字幕情報がない場合は空の辞書を返す
                 return result
 
         except Exception as e:

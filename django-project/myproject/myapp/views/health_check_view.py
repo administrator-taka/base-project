@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 
 from myapp.applications.application.service.youtube_download_service import YoutubeDownloadService
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
+from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID
 
 
 @api_view(['GET'])
@@ -25,7 +25,7 @@ def test_1():
 
 def test_2():
     youtube_download_service = YoutubeDownloadService()
-    default_audio_language = YouTubeLanguage.KOREAN
-    translation_language = YouTubeLanguage.JAPANESE
 
-    youtube_download_service.download_channel_subtitles(None, default_audio_language, translation_language)
+    channel_id = TEST_YOUTUBE_CHANNEL_ID
+
+    youtube_download_service.download_channel_subtitles(channel_id)
