@@ -138,7 +138,12 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
+        # "level": "NOTSET",
         "level": "DEBUG",
+        # "level": "INFO",
+        # "level": "WARNING",
+        # "level": "ERROR",
+        # "level": "CRITICAL",
     },
 }
 
