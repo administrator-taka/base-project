@@ -89,6 +89,43 @@ class FileHandler:
         test_data_path = TEST_DIR
         FileHandler.write_json(data, test_data_path, file_name)
 
+    @staticmethod
+    def read_json(file_path, encoding='utf-8'):
+        """
+        指定されたJSONファイルを読み込み、その内容を返す。
+
+        Args:
+            file_path (str): 読み込むJSONファイルのパス
+            encoding (str): ファイルのエンコーディング（デフォルトは utf-8）
+
+        Returns:
+            dict: 読み込んだJSONファイルの内容
+        """
+        with open(file_path, 'r', encoding=encoding) as json_file:
+            data = json.load(json_file)
+        return data
+
+    @staticmethod
+    def get_json_response(file_path):
+        """
+        指定されたJSONファイルのパスを受け取り、その内容をJSON形式のレスポンスとして返す。
+
+        Args:
+            file_path (str): JSONファイルのパス
+
+        Returns:
+            dict: JSON形式のレスポンス
+        """
+        try:
+            # JSONファイルを読み込む
+            data = FileHandler.read_json(file_path)
+            return data
+        except FileNotFoundError:
+            # ファイルが見つからない場合はエラーメッセージを返す
+            return {"error": "File not found"}
+        except Exception as e:
+            # その他のエラーが発生した場合はエラーメッセージを返す
+            return {"error": str(e)}
 
 class TestFileHandler(unittest.TestCase):
     def setUp(self):
