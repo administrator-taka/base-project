@@ -24,8 +24,14 @@ ORDER BY
 video_subtitle.t_start_ms ASC,
 video_subtitle.subtitle_id DESC;
 
---単純検索
+--完全一致
 SELECT * FROM public.video_subtitle
 JOIN video_subtitle_info
 ON video_subtitle_info.subtitle_id = video_subtitle.subtitle_id
 WHERE video_subtitle.subtitle_text='모르겠는데';
+
+--部分一致
+SELECT * FROM public.video_subtitle
+JOIN video_subtitle_info
+ON video_subtitle_info.subtitle_id = video_subtitle.subtitle_id
+WHERE video_subtitle.subtitle_text LIKE '%모르겠는데%';
