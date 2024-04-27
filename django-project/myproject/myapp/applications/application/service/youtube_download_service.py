@@ -5,7 +5,7 @@ from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
-from myapp.models import VideoSubtitleInfo
+from myapp.models import VideoSubtitleInfo, VideoSubtitle
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
 
 
@@ -50,7 +50,9 @@ class YoutubeDownloadService:
             # 自動生成字幕
             has_subtitle, subtitle = self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info,
                                                                                               subtitle_type,
-                                                                                              language)
+                                                                            language)
+            if has_subtitle:
+                self.insert_subtitle_data(video_id, subtitle, subtitle_type, language)
             # サブタイトル情報がある場合、備考にサブタイトルを設定する
             remarks_value = subtitle if not has_subtitle else None
             VideoSubtitleInfo.objects.create(
@@ -59,6 +61,20 @@ class YoutubeDownloadService:
                 language_code=language.value,
                 has_subtitle=has_subtitle,
                 remarks=remarks_value
+            )
+
+
+    def insert_subtitle_data(self, video_id, subtitle, subtitle_type, language):
+        # 辞書型リストのデータを順番に処理してデータベースに挿入
+        for data in subtitle:
+            VideoSubtitle.objects.create(
+                video_id=video_id,
+                subtitle_type=subtitle_type.value,
+                language_code=language.value,
+                t_start_ms=data['t_start_ms'],
+                d_duration_ms=data['d_duration_ms'],
+                t_offset_ms=data['t_offset_ms'],
+                subtitle_text=data['subtitle_text']
             )
 
 

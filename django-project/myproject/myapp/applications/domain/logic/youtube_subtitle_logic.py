@@ -141,50 +141,50 @@ class YouTubeSubtitleLogic:
                 if len(segs) == 1:
                     seg = segs[0]
                     t_offset_ms = seg.get("tOffsetMs")
-                    text = seg.get("utf8")
+                    subtitle_text = seg.get("utf8")
                     # テキストの確認と処理
-                    if text is None:
-                        logging.debug("text は None です。")
+                    if subtitle_text is None:
+                        logging.debug("subtitle_text は None です。")
                         continue
-                    elif text.strip() == "":
-                        logging.debug("text は空文字列です。")
+                    elif subtitle_text.strip() == "":
+                        logging.debug("subtitle_text は空文字列または空白文字です。")
                         continue
-                    elif text.strip() == "\n":
-                        logging.debug("text は改行文字のみです。")
+                    elif subtitle_text.strip() == "\n":
+                        logging.debug("subtitle_text は改行文字のみです。")
                         continue
                     else:
-                        logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {text}")
+                        logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {subtitle_text}")
                         # 辞書に情報をまとめてリストに追加
                         event_dict = {
                             "t_start_ms": t_start_ms,
                             "d_duration_ms": d_duration_ms,
                             "t_offset_ms": t_offset_ms,
-                            "text": text
+                            "subtitle_text": subtitle_text
                         }
                         event_list.append(event_dict)
                 else:
                     for seg in segs:
                         # 複数ある場合は初期値を与える
                         t_offset_ms = seg.get("tOffsetMs") or 0
-                        text = seg.get("utf8")
+                        subtitle_text = seg.get("utf8")
                         # テキストの確認と処理
-                        if text is None:
-                            logging.debug("text は None です。")
+                        if subtitle_text is None:
+                            logging.debug("subtitle_text は None です。")
                             continue
-                        elif text.strip() == "":
-                            logging.debug("text は空文字列です。")
+                        elif subtitle_text.strip() == "":
+                            logging.debug("subtitle_text は空文字列または空白文字です。")
                             continue
-                        elif text.strip() == "\n":
-                            logging.debug("text は改行文字のみです。")
+                        elif subtitle_text.strip() == "\n":
+                            logging.debug("subtitle_text は改行文字のみです。")
                             continue
                         else:
-                            logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {text}")
+                            logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {subtitle_text}")
                             # 辞書に情報をまとめてリストに追加
                             event_dict = {
                                 "t_start_ms": t_start_ms,
                                 "d_duration_ms": d_duration_ms,
                                 "t_offset_ms": t_offset_ms,
-                                "text": text
+                                "subtitle_text": subtitle_text
                             }
                             event_list.append(event_dict)
 

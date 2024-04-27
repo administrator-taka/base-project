@@ -36,3 +36,28 @@ class VideoSubtitleInfo(models.Model):
     class Meta:
         db_table = 'video_subtitle_info'
         unique_together = ['video_id', 'subtitle_type', 'language_code']
+
+class VideoSubtitle(models.Model):
+    # 動画ID
+    video_id = models.CharField(max_length=50, verbose_name='動画ID')
+
+    # 字幕の種類 (自動/手動)
+    subtitle_type = models.CharField(max_length=10, verbose_name='自動/手動')
+
+    # 字幕の言語コード
+    language_code = models.CharField(max_length=10, verbose_name='言語コード')
+
+    # 開始時間（ミリ秒）
+    t_start_ms = models.IntegerField(verbose_name='開始時間（ミリ秒）', null=True, blank=True)
+
+    # 持続時間（ミリ秒）
+    d_duration_ms = models.IntegerField(verbose_name='持続時間（ミリ秒）', null=True, blank=True)
+
+    # オフセット時間（ミリ秒）
+    t_offset_ms = models.IntegerField(verbose_name='オフセット時間（ミリ秒）', null=True, blank=True)
+
+    # 字幕
+    subtitle_text = models.TextField(blank=False, null=False, verbose_name='字幕')
+
+    class Meta:
+        db_table = 'video_subtitle'
