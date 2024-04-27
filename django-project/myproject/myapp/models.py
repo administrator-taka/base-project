@@ -22,7 +22,7 @@ class VideoSubtitleInfo(models.Model):
     video_id = models.CharField(max_length=50, verbose_name='動画ID')
 
     # 字幕の種類 (自動/手動)
-    subtitle_type = models.CharField(max_length=10, verbose_name='自動/手動')
+    subtitle_type = models.IntegerField(verbose_name='自動/手動')
 
     # 字幕の言語コード
     language_code = models.CharField(max_length=10, verbose_name='言語コード')
@@ -42,7 +42,7 @@ class VideoSubtitle(models.Model):
     video_id = models.CharField(max_length=50, verbose_name='動画ID')
 
     # 字幕の種類 (自動/手動)
-    subtitle_type = models.CharField(max_length=10, verbose_name='自動/手動')
+    subtitle_type = models.IntegerField(verbose_name='自動/手動')
 
     # 字幕の言語コード
     language_code = models.CharField(max_length=10, verbose_name='言語コード')
