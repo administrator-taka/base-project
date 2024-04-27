@@ -152,7 +152,13 @@ class YouTubeSubtitleLogic:
                     elif subtitle_text.strip() == "\n":
                         logging.debug("subtitle_text は改行文字のみです。")
                         continue
+                    # ゼロ幅スペースのみの文字列を検出してcontinueする
+                    elif subtitle_text == "\u200b":  # ゼロ幅スペースのUnicodeコードポイント
+                        logging.debug("subtitle_text はゼロ幅スペースのみです。")
+                        continue
                     else:
+                        if subtitle_text==" ​ ​思い向くまま飛べ​ ​":
+                            print("これ？")
                         logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {subtitle_text}")
                         # 辞書に情報をまとめてリストに追加
                         event_dict = {
@@ -176,6 +182,10 @@ class YouTubeSubtitleLogic:
                             continue
                         elif subtitle_text.strip() == "\n":
                             logging.debug("subtitle_text は改行文字のみです。")
+                            continue
+                        # ゼロ幅スペースのみの文字列を検出してcontinueする
+                        elif subtitle_text == "\u200b":  # ゼロ幅スペースのUnicodeコードポイント
+                            logging.debug("subtitle_text はゼロ幅スペースのみです。")
                             continue
                         else:
                             logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {subtitle_text}")
