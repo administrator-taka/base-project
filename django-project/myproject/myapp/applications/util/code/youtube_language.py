@@ -10,27 +10,37 @@ class YouTubeLanguage(Enum):
     INDONESIAN = "id"  # インドネシア語
 
 
-# Enumの値を入れる処理
-def set_language(language_code):
-    for lang in YouTubeLanguage:
-        if lang.value == language_code:
-            return lang
-    raise ValueError("Invalid language code")
-
-
 class TestYouTubeLanguage(unittest.TestCase):
-    def test_set_language_valid(self):
-        code = "ja"
-        enum_obj = set_language(code)
-        self.assertEqual(enum_obj, YouTubeLanguage.JAPANESE)
 
-    def test_set_language_invalid(self):
-        with self.assertRaises(ValueError):
-            set_language("fr")
+    def test_japanese_code_value(self):
+        self.assertEqual(YouTubeLanguage.JAPANESE.value, "ja")
 
-    def test_enum_direct_assignment(self):
-        korean_enum = YouTubeLanguage.KOREAN
-        self.assertEqual(korean_enum, YouTubeLanguage.KOREAN)
+    def test_english_code_value(self):
+        self.assertEqual(YouTubeLanguage.ENGLISH.value, "en")
+
+    def test_korean_code_value(self):
+        self.assertEqual(YouTubeLanguage.KOREAN.value, "ko")
+
+    def test_chinese_code_value(self):
+        self.assertEqual(YouTubeLanguage.CHINESE.value, "zh")
+
+    def test_indonesian_code_value(self):
+        self.assertEqual(YouTubeLanguage.INDONESIAN.value, "id")
+
+    def test_japanese_enum_value(self):
+        self.assertEqual(YouTubeLanguage("ja"), YouTubeLanguage.JAPANESE)
+
+    def test_english_enum_value(self):
+        self.assertEqual(YouTubeLanguage("en"), YouTubeLanguage.ENGLISH)
+
+    def test_korean_enum_value(self):
+        self.assertEqual(YouTubeLanguage("ko"), YouTubeLanguage.KOREAN)
+
+    def test_chinese_enum_value(self):
+        self.assertEqual(YouTubeLanguage("zh"), YouTubeLanguage.CHINESE)
+
+    def test_indonesian_enum_value(self):
+        self.assertEqual(YouTubeLanguage("id"), YouTubeLanguage.INDONESIAN)
 
 
 if __name__ == "__main__":
