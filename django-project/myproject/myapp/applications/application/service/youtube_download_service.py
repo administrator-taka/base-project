@@ -1,5 +1,6 @@
 import logging
 import unittest
+from typing import List
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
@@ -8,8 +9,7 @@ from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID
-from typing import List
+from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
 
 
 class YoutubeDownloadService:
@@ -22,8 +22,8 @@ class YoutubeDownloadService:
         default_audio_language = YouTubeLanguage.KOREAN
         translation_languages = [YouTubeLanguage.JAPANESE]
 
-        video_details = self.youtube_api_logic.get_video_details(video_id, language=YouTubeLanguage.JAPANESE)
-        channel_details = self.youtube_api_logic.get_channel_details(channel_id, language=YouTubeLanguage.JAPANESE)
+        video_details = self.youtube_api_logic.get_video_details(video_id)
+        channel_details = self.youtube_api_logic.get_channel_details(channel_id)
 
         # 取得した動画の詳細を出力
         FileHandler.format_json_print(channel_details)
