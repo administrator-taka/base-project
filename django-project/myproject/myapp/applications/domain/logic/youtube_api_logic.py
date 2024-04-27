@@ -4,7 +4,6 @@ import unittest
 import googleapiclient.discovery
 from django.conf import settings
 
-from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
     TEST_YOUTUBE_PLAYLIST_ID
@@ -171,6 +170,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # 取得したチャンネルの詳細を出力
         print(playlist_videos)
 
-if __name__ == '__main__':
-    # テストを実行
-    unittest.main()
+
+# if __name__ == '__main__':
+#     # テストを実行
+#     unittest.main()
