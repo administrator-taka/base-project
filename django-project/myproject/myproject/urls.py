@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from myapp.views.test_views import my_view
+from myapp.views.test_views import my_view, health_check
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # adminパネルへのURL
     path('api/', my_view, name='my-view'),  # '/api/'へのリクエストをmy_view関数にルーティングし、'my-view'という名前を付けます
     path('db/', include('myapp.urls')),  # '/db/'へのリクエストをmyappアプリケーションのURL設定に含まれるものにルーティングします
+    path("health/", health_check, name="health"),
+
 ]
