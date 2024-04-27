@@ -1,13 +1,12 @@
-import unittest
 import logging
+import unittest
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
-from myapp.applications.util.file_handler import FileHandler
 from myapp.models import VideoSubtitleInfo
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
+from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
 
 
 class YoutubeDownloadService:
@@ -31,8 +30,10 @@ class YoutubeDownloadService:
             self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
                                                       default_audio_language)
             # 手動作成字幕
-            self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL, default_audio_language)
-            self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL, translation_language)
+            self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
+                                                      default_audio_language)
+            self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
+                                                      translation_language)
         else:
             logging.debug(f"{video_id}:登録済み")
 
