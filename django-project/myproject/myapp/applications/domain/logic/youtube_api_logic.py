@@ -17,7 +17,7 @@ class YouTubeApiLogic:
         self.api_key = YOUTUBE_API_KEY
 
     # 動画の詳細を取得するメソッド
-    def get_video_details(self, video_id, language=YouTubeLanguage.ENGLISH):
+    def get_video_details(self, video_id):
         try:
             # YouTube Data APIを使用して動画情報を取得する
             youtube = googleapiclient.discovery.build(
@@ -25,7 +25,6 @@ class YouTubeApiLogic:
             request = youtube.videos().list(
                 part="snippet,liveStreamingDetails,localizations",
                 id=video_id,
-                hl=language.value  # 言語を指定するパラメータを追加
             )
             response = request.execute()
             return response
@@ -34,15 +33,14 @@ class YouTubeApiLogic:
             return None
 
     # チャンネルの詳細を取得するメソッド
-    def get_channel_details(self, channel_id, language=YouTubeLanguage.ENGLISH):
+    def get_channel_details(self, channel_id):
         try:
             # YouTube Data APIを使用してチャンネル情報を取得する
             youtube = googleapiclient.discovery.build(
                 'youtube', 'v3', developerKey=self.api_key)
             request = youtube.channels().list(
-                part="snippet",
+                part="snippet,contentDetails",
                 id=channel_id,
-                hl=language.value  # 言語を指定するパラメータを追加
             )
             response = request.execute()
             return response
@@ -51,13 +49,13 @@ class YouTubeApiLogic:
             return None
 
     # プレイリスト内の全ての動画を取得するメソッド
-    def get_all_playlist_videos(self, playlist_id, language=YouTubeLanguage.ENGLISH):
+    def get_all_playlist_videos(self, playlist_id):
         all_videos = []
         next_page_token = None
 
         # ページングを考慮してプレイリスト内の全ての動画を取得
         while True:
-            response = self.get_playlist_videos_page(playlist_id, next_page_token, language=language)
+            response = self.get_playlist_videos_page(playlist_id, next_page_token)
             if response is not None:
                 all_videos.extend(response.get("items", []))
                 next_page_token = response.get("nextPageToken")
@@ -69,13 +67,13 @@ class YouTubeApiLogic:
         return all_videos
 
     # プレイリスト内の動画をページングしながら取得するメソッド
-    def get_playlist_videos_page(self, playlist_id, page_token=None, language=YouTubeLanguage.ENGLISH):
+    def get_playlist_videos_page(self, playlist_id, page_token=None):
         try:
             # YouTube Data APIを使用してプレイリスト内の動画情報を取得する
             youtube = googleapiclient.discovery.build(
                 'youtube', 'v3', developerKey=self.api_key)
             request = youtube.playlistItems().list(
-                part="snippet",
+                part="snippet,contentDetails",
                 playlistId=playlist_id,
                 maxResults=50,
                 pageToken=page_token,
@@ -85,6 +83,24 @@ class YouTubeApiLogic:
         except Exception as e:
             print('An error occurred:', str(e))
             return None
+
+    def get_channel_id_playlist_id(self, channel_id):
+        channel_details = self.get_channel_details(channel_id)
+        playlist_id = channel_details["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+        return playlist_id
+
+    def get_channel_videos(self, playlist_id):
+        playlist_data = self.get_all_playlist_videos(playlist_id)
+        videos = []
+
+        for item in playlist_data:
+            video_id = item.get("contentDetails", {}).get("videoId")
+            title = item.get("snippet", {}).get("title")
+            # TODO:他の項目も含める
+            if video_id and title:
+                videos.append({"video_id": video_id, "title": title})
+
+        return videos
 
     # 動画の字幕情報を取得するメソッド
     def get_video_captions(self, video_id):
@@ -115,7 +131,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # テスト用の動画IDを指定
         video_id = TEST_YOUTUBE_VIDEO_ID
         # 動画の詳細を取得
-        video_details = self.youtube_logic.get_video_details(video_id, language=YouTubeLanguage.JAPANESE)
+        video_details = self.youtube_logic.get_video_details(video_id)
         # 取得した動画の詳細を出力
         FileHandler.format_json_print(video_details)
 
@@ -124,7 +140,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # テスト用のチャンネルIDを指定
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         # チャンネルの詳細を取得
-        channel_details = self.youtube_logic.get_channel_details(channel_id, language=YouTubeLanguage.JAPANESE)
+        channel_details = self.youtube_logic.get_channel_details(channel_id)
         # 取得したチャンネルの詳細を出力
         FileHandler.format_json_print(channel_details)
 
@@ -133,7 +149,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # テスト用のプレイリストIDを指定
         playlist_id = TEST_YOUTUBE_PLAYLIST_ID
         # プレイリスト内の全ての動画を取得
-        playlist_videos = self.youtube_logic.get_all_playlist_videos(playlist_id, language=YouTubeLanguage.JAPANESE)
+        playlist_videos = self.youtube_logic.get_all_playlist_videos(playlist_id)
         # 取得したプレイリストの動画を出力
         FileHandler.format_json_print(playlist_videos)
 
@@ -146,6 +162,14 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # 取得した字幕情報を出力
         FileHandler.format_json_print(captions_info)
 
+    def test_get_channel_videos(self):
+        # テスト用のチャンネルIDを指定
+        channel_id = TEST_YOUTUBE_CHANNEL_ID
+        # チャンネルの動画一覧を取得
+        playlist_id = self.youtube_logic.get_channel_id_playlist_id(channel_id)
+        playlist_videos = self.youtube_logic.get_channel_videos(playlist_id)
+        # 取得したチャンネルの詳細を出力
+        print(playlist_videos)
 
 if __name__ == '__main__':
     # テストを実行
