@@ -1,5 +1,6 @@
 import logging
 import os
+import traceback
 import unittest
 
 import yt_dlp
@@ -102,7 +103,16 @@ class YouTubeSubtitleLogic:
                 if json_data:
                     url = json_data[0]["url"]
                     # 取得したURLを処理する
-                    return True, self.format_subtitle(url)
+                    try:
+                        # メソッドの処理を試行
+                        subtitle = self.format_subtitle(url)
+                        return True, subtitle
+                    except Exception as e:
+                        traceback.print_exc()
+                        # エラーが発生した場合はログに出力して False とエラーメッセージを返す
+                        error_message = f"字幕取得処理でエラーが発生しました: {str(e)} ({type(e).__name__})"
+                        logging.warning(error_message)
+                        return False, error_message
                 else:
                     # JSONデータが見つからない場合
                     logging.debug("字幕のためのJSONデータが見つかりませんでした。")

@@ -1,3 +1,4 @@
+import unittest
 from enum import Enum
 
 
@@ -12,9 +13,14 @@ class SubtitleType(Enum):
             return "subtitles"
 
 
-# Enum要素から文字列への変換
-auto_string = SubtitleType.AUTOMATIC.to_string()
-print(auto_string)  # "automatic_captions"
+class TestSubtitleType(unittest.TestCase):
+    def test_to_string(self):
+        auto_string = SubtitleType.AUTOMATIC.to_string()
+        self.assertEqual(auto_string, "automatic_captions")
 
-manual_string = SubtitleType.MANUAL.to_string()
-print(manual_string)  # "subtitles"
+        manual_string = SubtitleType.MANUAL.to_string()
+        self.assertEqual(manual_string, "subtitles")
+
+
+if __name__ == "__main__":
+    unittest.main()
