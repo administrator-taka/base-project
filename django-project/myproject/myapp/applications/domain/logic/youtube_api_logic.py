@@ -117,6 +117,22 @@ class YouTubeApiLogic:
             print('An error occurred:', str(e))
             return None
 
+    # 動画のカテゴリ情報を取得する
+    def get_video_category(self, category_id):
+        try:
+            # YouTube Data APIを使用して動画カテゴリを取得する
+            youtube = googleapiclient.discovery.build(
+                'youtube', 'v3', developerKey=self.api_key)
+            request = youtube.videoCategories().list(
+                part="snippet",
+                id=category_id
+            )
+            response = request.execute()
+            return response
+        except Exception as e:
+            print('An error occurred:', str(e))
+            return None
+
 
 # YouTubeApiLogicクラスのテスト
 class TestYouTubeApiLogic(unittest.TestCase):
@@ -161,6 +177,15 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # 取得した字幕情報を出力
         FileHandler.format_json_print(captions_info)
 
+    # 動画のカテゴリ情報を取得するテスト
+    def test_get_video_category(self):
+        # テスト用の動画IDを指定
+        category_id = 10
+        # 動画のカテゴリ情報を取得
+        category_info = self.youtube_logic.get_video_category(category_id)
+        # 取得した字幕情報を出力
+        FileHandler.format_json_print(category_info)
+
     def test_get_channel_videos(self):
         # テスト用のチャンネルIDを指定
         channel_id = TEST_YOUTUBE_CHANNEL_ID
@@ -169,7 +194,6 @@ class TestYouTubeApiLogic(unittest.TestCase):
         playlist_videos = self.youtube_logic.get_channel_videos(playlist_id)
         # 取得したチャンネルの詳細を出力
         print(playlist_videos)
-
 
 # if __name__ == '__main__':
 #     # テストを実行
