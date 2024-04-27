@@ -9,7 +9,7 @@ from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
+from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
 
 
 class YoutubeDownloadService:
@@ -18,25 +18,24 @@ class YoutubeDownloadService:
         self.youtube_api_logic = YouTubeApiLogic()
 
     def download_channel_subtitles(self, channel_id: str) -> None:
-        video_id = TEST_YOUTUBE_VIDEO_ID
         default_audio_language = YouTubeLanguage.KOREAN
         translation_languages = [YouTubeLanguage.JAPANESE]
 
-        video_details = self.youtube_api_logic.get_video_details(video_id)
-        channel_details = self.youtube_api_logic.get_channel_details(channel_id)
+        # playlist_id = self.youtube_api_logic.get_channel_id_playlist_id(channel_id)
+        playlist_id = TEST_YOUTUBE_PLAYLIST_ID
+        playlist_videos = self.youtube_api_logic.get_channel_videos(playlist_id)
 
-        # 取得した動画の詳細を出力
-        FileHandler.format_json_print(channel_details)
-
-        # 既に登録されているかのチェック
-        existing_subtitle_info = VideoSubtitleInfo.objects.filter(
-            video_id=video_id
-        ).first()
-        # 既に処理を行っている場合実行しない
-        if not existing_subtitle_info:
-            self.download_video_subtitle(video_id, default_audio_language, translation_languages)
-        else:
-            logging.debug(f"{video_id}:登録済み")
+        for video in playlist_videos:
+            video_id=video.get("video_id")
+            # 既に登録されているかのチェック
+            existing_subtitle_info = VideoSubtitleInfo.objects.filter(
+                video_id=video_id
+            ).first()
+            # 既に処理を行っている場合実行しない
+            if not existing_subtitle_info:
+                self.download_video_subtitle(video_id, default_audio_language, translation_languages)
+            else:
+                logging.debug(f"{video_id}:登録済み")
 
     def download_video_subtitle(self, video_id: str,
                                 default_audio_language: YouTubeLanguage,
