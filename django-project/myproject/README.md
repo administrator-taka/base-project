@@ -1,14 +1,14 @@
 ```
+## マイグレーションファイルを作成する
+
+python manage.py makemigrations
+```
+```
 ## モデルをデータベースに反映させる
 
 python manage.py migrate
 ```
 
-```
-## マイグレーションファイルを作成する
-
-python manage.py makemigrations
-```
 
 ```
 ## 管理者ユーザー (スーパーユーザー) を作成
