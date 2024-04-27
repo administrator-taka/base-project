@@ -1,7 +1,6 @@
 import unittest
 from datetime import datetime  # datetimeモジュールのみをインポート
 from enum import Enum
-
 from zoneinfo import ZoneInfo
 
 import pytz

@@ -2,9 +2,9 @@ import csv
 import json
 import os
 import unittest
+from datetime import datetime
 
 from myproject.settings.base import TEST_DIR
-from datetime import datetime
 
 
 class FileHandler:
@@ -126,6 +126,7 @@ class FileHandler:
         except Exception as e:
             # その他のエラーが発生した場合はエラーメッセージを返す
             return {"error": str(e)}
+
 
 class TestFileHandler(unittest.TestCase):
     def setUp(self):

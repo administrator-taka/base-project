@@ -3,12 +3,12 @@
 
 python manage.py makemigrations
 ```
+
 ```
 ## モデルをデータベースに反映させる
 
 python manage.py migrate
 ```
-
 
 ```
 ## 管理者ユーザー (スーパーユーザー) を作成
