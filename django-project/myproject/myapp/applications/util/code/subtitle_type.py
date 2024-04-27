@@ -21,6 +21,13 @@ class TestSubtitleType(unittest.TestCase):
         manual_string = SubtitleType.MANUAL.to_string()
         self.assertEqual(manual_string, "subtitles")
 
+    def test_set_from_integer(self):
+        auto_from_int = SubtitleType(0)
+        self.assertEqual(auto_from_int, SubtitleType.AUTOMATIC)
+
+        manual_from_int = SubtitleType(1)
+        self.assertEqual(manual_from_int, SubtitleType.MANUAL)
+
 
 if __name__ == "__main__":
     unittest.main()
