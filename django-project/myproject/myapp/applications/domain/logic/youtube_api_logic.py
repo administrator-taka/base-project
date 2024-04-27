@@ -179,7 +179,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
 
     # 動画のカテゴリ情報を取得するテスト
     def test_get_video_category(self):
-        # テスト用の動画IDを指定
+        # カテゴリIDを指定
         category_id = 10
         # 動画のカテゴリ情報を取得
         category_info = self.youtube_logic.get_video_category(category_id)
