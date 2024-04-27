@@ -4,6 +4,7 @@ from django.conf import settings
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
+from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
@@ -22,11 +23,13 @@ class YoutubeDownloadService:
         subtitle_info = FileHandler.get_json_response(TEST_DIR + "test_20240427_141430.json")
 
         # 自動生成字幕
-        self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info, "automatic_captions",
+        self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info, SubtitleType.AUTOMATIC,
                                                                  default_audio_language)
         # 手動作成字幕
-        self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info, "subtitles", default_audio_language)
-        self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info, "subtitles", translation_language)
+        self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info, SubtitleType.MANUAL,
+                                                                 default_audio_language)
+        self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info, SubtitleType.MANUAL,
+                                                                 translation_language)
 
 
 class TestYoutubeDownloadService(unittest.TestCase):

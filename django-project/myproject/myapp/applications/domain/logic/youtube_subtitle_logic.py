@@ -93,7 +93,7 @@ class YouTubeSubtitleLogic:
 
     # 字幕詳細からjsonのurlを取得し、処理する
     def extract_and_process_subtitle(self, subtitle_info, subtitle_type, language):
-        subtitles = subtitle_info.get(subtitle_type)
+        subtitles = subtitle_info.get(subtitle_type.to_string())
         if subtitles:
             captions_info = subtitles.get(language.value)
             if captions_info:
