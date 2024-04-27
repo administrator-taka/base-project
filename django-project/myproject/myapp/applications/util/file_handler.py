@@ -4,6 +4,7 @@ import os
 import unittest
 
 from myproject.settings.base import TEST_DIR
+from datetime import datetime
 
 
 class FileHandler:
@@ -79,6 +80,14 @@ class FileHandler:
         # JSONデータを整形して返す
         formatted_json = json.dumps(data, indent=4, ensure_ascii=False)
         print(formatted_json)
+
+    @staticmethod
+    def write_json_response(data, file_name="test"):
+        # 現在の日時を取得し、フォーマットを指定して文字列に変換
+        current_datetime = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"{file_name}_{current_datetime}.json"
+        test_data_path = TEST_DIR
+        FileHandler.write_json(data, test_data_path, file_name)
 
 
 class TestFileHandler(unittest.TestCase):
