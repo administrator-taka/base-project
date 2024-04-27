@@ -38,17 +38,22 @@ class YoutubeDownloadService:
                 json_data = [item for item in captions_info if item.get("ext") == "json3"]
                 if json_data:
                     url = json_data[0]["url"]
-                    self.format_subtitle(url)
+                    return True, self.format_subtitle(url)
                 else:
                     logging.debug("字幕のためのJSONデータが見つかりませんでした。")
+                    return False, None
             else:
                 logging.debug("字幕のキャプション情報が見つかりませんでした。")
+                return False, None
         else:
             logging.debug("字幕が見つかりませんでした。")
+            return False, None
 
     def format_subtitle(self, url):
         result_json = WebClient.make_api_request(url, None)
         events = result_json.get("events")
+        # リストの初期化
+        event_list = []
         for event in events:
             # 開始時間
             t_start_ms = event.get("tStartMs")
@@ -57,20 +62,54 @@ class YoutubeDownloadService:
             segs = event.get("segs")
             if segs:
                 if len(segs) == 1:
-                    print("この下★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★")
-                    print(segs[0].get("utf8"))
-                    print("★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★")
+                    seg = segs[0]
+                    t_offset_ms = seg.get("tOffsetMs")
+                    text = seg.get("utf8")
+                    if text is None:
+                        logging.debug("text は None です。")
+                        continue
+                    elif text.strip() == "":
+                        logging.debug("text は空文字列です。")
+                        continue
+                    elif text.strip() == "\n":
+                        logging.debug("text は改行文字のみです。")
+                        continue
+                    else:
+                        logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {text}")
+                        # 辞書に情報をまとめてリストに追加
+                        event_dict = {
+                            "t_start_ms": t_start_ms,
+                            "d_duration_ms": d_duration_ms,
+                            "t_offset_ms": t_offset_ms,
+                            "text": text
+                        }
+                        event_list.append(event_dict)
                 else:
-                    print("複数ある！！！")
                     for seg in segs:
-                        t_offset_ms = seg.get("tOffsetMs")
+                        # 複数ある場合は初期値を与える
+                        t_offset_ms = seg.get("tOffsetMs") or 0
                         text = seg.get("utf8")
-                        print(t_offset_ms, text)
-            # print(t_start_ms,d_duration_ms,segs)
+                        if text is None:
+                            logging.debug("text は None です。")
+                            continue
+                        elif text.strip() == "":
+                            logging.debug("text は空文字列です。")
+                            continue
+                        elif text.strip() == "\n":
+                            logging.debug("text は改行文字のみです。")
+                            continue
+                        else:
+                            logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {text}")
+                            # 辞書に情報をまとめてリストに追加
+                            event_dict = {
+                                "t_start_ms": t_start_ms,
+                                "d_duration_ms": d_duration_ms,
+                                "t_offset_ms": t_offset_ms,
+                                "text": text
+                            }
+                            event_list.append(event_dict)
 
-        # result=segs
-        # FileHandler.write_json_response(result)
-        # FileHandler.format_json_print(result)
+        return event_list
 
 
 class TestYoutubeDownloadService(unittest.TestCase):
