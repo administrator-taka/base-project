@@ -18,6 +18,9 @@ class Test(models.Model):
 
 
 class VideoSubtitleInfo(models.Model):
+    # 字幕ID
+    subtitle_id = models.CharField(primary_key=True, max_length=50, verbose_name='字幕ID')
+
     # 動画ID
     video_id = models.CharField(max_length=50, verbose_name='動画ID')
 
@@ -37,15 +40,13 @@ class VideoSubtitleInfo(models.Model):
         db_table = 'video_subtitle_info'
         unique_together = ['video_id', 'subtitle_type', 'language_code']
 
+
 class VideoSubtitle(models.Model):
-    # 動画ID
-    video_id = models.CharField(max_length=50, verbose_name='動画ID')
+    # 字幕テキストID
+    subtitle_text_id = models.CharField(primary_key=True, max_length=50, verbose_name='字幕テキストID')
 
-    # 字幕の種類 (自動/手動)
-    subtitle_type = models.IntegerField(verbose_name='自動/手動')
-
-    # 字幕の言語コード
-    language_code = models.CharField(max_length=10, verbose_name='言語コード')
+    # 字幕ID
+    subtitle_id = models.CharField(max_length=50, verbose_name='字幕ID')
 
     # 開始時間（ミリ秒）
     t_start_ms = models.IntegerField(verbose_name='開始時間（ミリ秒）', null=True, blank=True)

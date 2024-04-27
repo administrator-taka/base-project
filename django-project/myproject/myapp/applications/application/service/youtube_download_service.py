@@ -5,6 +5,7 @@ from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
+from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID
 
@@ -40,9 +41,7 @@ class YoutubeDownloadService:
     def create_or_update_video_subtitle_info(self, video_id, subtitle_info, subtitle_type, language):
         # 既に登録されているかのチェック
         existing_subtitle_info = VideoSubtitleInfo.objects.filter(
-            video_id=video_id,
-            subtitle_type=subtitle_type.value,
-            language_code=language.value
+            subtitle_id=generate_subtitle_id(video_id, subtitle_type, language),
         ).first()
 
         # ビデオサブタイトル情報が存在しない場合に新しいレコードを作成
@@ -56,6 +55,7 @@ class YoutubeDownloadService:
             # サブタイトル情報がある場合、備考にサブタイトルを設定する
             remarks_value = subtitle if not has_subtitle else None
             VideoSubtitleInfo.objects.create(
+                subtitle_id=generate_subtitle_id(video_id,subtitle_type,language),
                 video_id=video_id,
                 subtitle_type=subtitle_type.value,
                 language_code=language.value,
@@ -68,9 +68,8 @@ class YoutubeDownloadService:
         # 辞書型リストのデータを順番に処理してデータベースに挿入
         for data in subtitle:
             VideoSubtitle.objects.create(
-                video_id=video_id,
-                subtitle_type=subtitle_type.value,
-                language_code=language.value,
+                subtitle_text_id=generate_uuid(),
+                subtitle_id=generate_subtitle_id(video_id,subtitle_type,language),
                 t_start_ms=data['t_start_ms'],
                 d_duration_ms=data['d_duration_ms'],
                 t_offset_ms=data['t_offset_ms'],
