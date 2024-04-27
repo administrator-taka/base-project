@@ -143,29 +143,14 @@ class YouTubeSubtitleLogic:
                     t_offset_ms = seg.get("tOffsetMs")
                     subtitle_text = seg.get("utf8")
                     # テキストの確認と処理
-                    if subtitle_text is None:
-                        logging.debug("subtitle_text は None です。")
-                        continue
-                    elif subtitle_text.strip() == "":
-                        logging.debug("subtitle_text は空文字列または空白文字です。")
-                        continue
-                    elif subtitle_text.strip() == "\n":
-                        logging.debug("subtitle_text は改行文字のみです。")
-                        continue
-                    # ゼロ幅スペースのみの文字列を検出してcontinueする
-                    elif subtitle_text == "\u200b":  # ゼロ幅スペースのUnicodeコードポイント
-                        logging.debug("subtitle_text はゼロ幅スペースのみです。")
-                        continue
-                    else:
-                        if subtitle_text==" ​ ​思い向くまま飛べ​ ​":
-                            print("これ？")
+                    if self.is_valid_subtitle(subtitle_text):
                         logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {subtitle_text}")
                         # 辞書に情報をまとめてリストに追加
                         event_dict = {
                             "t_start_ms": t_start_ms,
                             "d_duration_ms": d_duration_ms,
                             "t_offset_ms": t_offset_ms,
-                            "subtitle_text": subtitle_text
+                            "subtitle_text": self.format_subtitle_text(subtitle_text)
                         }
                         event_list.append(event_dict)
                 else:
@@ -174,31 +159,38 @@ class YouTubeSubtitleLogic:
                         t_offset_ms = seg.get("tOffsetMs") or 0
                         subtitle_text = seg.get("utf8")
                         # テキストの確認と処理
-                        if subtitle_text is None:
-                            logging.debug("subtitle_text は None です。")
-                            continue
-                        elif subtitle_text.strip() == "":
-                            logging.debug("subtitle_text は空文字列または空白文字です。")
-                            continue
-                        elif subtitle_text.strip() == "\n":
-                            logging.debug("subtitle_text は改行文字のみです。")
-                            continue
-                        # ゼロ幅スペースのみの文字列を検出してcontinueする
-                        elif subtitle_text == "\u200b":  # ゼロ幅スペースのUnicodeコードポイント
-                            logging.debug("subtitle_text はゼロ幅スペースのみです。")
-                            continue
-                        else:
+                        if self.is_valid_subtitle(subtitle_text):
                             logging.debug(f"{t_start_ms}, {d_duration_ms}, {t_offset_ms}, {subtitle_text}")
                             # 辞書に情報をまとめてリストに追加
                             event_dict = {
                                 "t_start_ms": t_start_ms,
                                 "d_duration_ms": d_duration_ms,
                                 "t_offset_ms": t_offset_ms,
-                                "subtitle_text": subtitle_text
+                                "subtitle_text": self.format_subtitle_text(subtitle_text)
                             }
                             event_list.append(event_dict)
 
         return event_list
+
+    def is_valid_subtitle(self,subtitle_text):
+        if subtitle_text is None:
+            logging.debug("subtitle_text は None です。")
+            return False
+        elif subtitle_text.strip() == "":
+            logging.debug("subtitle_text は空文字列または空白文字です。")
+            return False
+        elif subtitle_text.strip() == "\n":
+            logging.debug("subtitle_text は改行文字のみです。")
+            return False
+        elif subtitle_text == "\u200b":  # ゼロ幅スペースのUnicodeコードポイント
+            logging.debug("subtitle_text はゼロ幅スペースのみです。")
+            return False
+        return True
+
+    def format_subtitle_text(self,subtitle_text):
+        # 前後の空白とゼロ幅スペースを削除して返す
+        return subtitle_text.strip("\u200b").strip()
+
 
 
 class TestYouTubeDownloadLogic(unittest.TestCase):
