@@ -210,36 +210,34 @@ class YouTubeSubtitleLogic:
 
     # 字幕データをフォーマットする
     def format_subtitle_vtt(self, url):
+        # 字幕データを取得
         text = WebClient.fetch_text_content(url)
 
+        # 改行で分割して空行を除外
         lines = re.split("\n+", text)
         lines = list(filter(lambda x: x.strip() != "", lines))
 
-        subtitles = []
-        # 自動の場合は以下
-        # time_column_check = r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3} align:start position:0%'
-        # 手動の場合は以下
-        # time_column_check = r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}'
-        # 末尾はワイルドカードで動作確認
+        # 時間の正規表現パターン
         time_column_check = r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}.*'
         time_stamp_check = r'<\d{2}:\d{2}:\d{2}\.\d{3}>'
+
+        subtitles = []
         word_list = []
         time = ""
 
-        for i in range(len(lines)):
-            # 時間の変換
-            if (re.search(time_column_check, lines[i])):
+        for line in lines:
+            if re.search(time_column_check, line):
+                # 時間の行の場合
                 subtitles.append({'time': time, 'word': word_list})
                 word_list = []
-                time = lines[i]
-
-            # 字幕の変換
+                time = line
             else:
-                if (re.search(time_stamp_check, lines[i])):
+                # 字幕の行の場合
+                if re.search(time_stamp_check, line):
                     word_list = []
-                    word_list.append(lines[i])
+                    word_list.append(line)
                 else:
-                    word_list.append(lines[i])
+                    word_list.append(line)
 
         subtitles.append({'time': time, 'word': word_list})
         # start_time,end_timeの追加
