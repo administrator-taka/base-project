@@ -249,7 +249,7 @@ class YouTubeSubtitleLogic:
             start_to_end = i["time"]
             start_to_end = re.sub(
                 # 末尾はワイルドカードで動作確認
-                r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3})(?: align:start position:0%)?',
+                r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3}).*',
                 r'\g<1>.\g<2>,\g<3>.\g<4>',
                 start_to_end
             )
