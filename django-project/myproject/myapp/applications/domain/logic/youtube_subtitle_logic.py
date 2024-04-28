@@ -266,12 +266,14 @@ class YouTubeSubtitleLogic:
             time_stamp_pattern_check = r'<\d{2}:\d{2}:\d{2}\.\d{3}>'
             if count % 2 == 1:
                 for j in subtitle["word"]:
+                    # 複数ある場合はリストに格納される
                     if type(j) == list:
                         for k in j:
                             if re.search(time_stamp_pattern_check, j):
                                 subtitle_timestamp_text = re.sub(r'</c>', '', k)
                                 subtitle_timestamp_text = re.sub('|'.join([r'<c(\.color\w+)?>', ]), '',
                                                                  subtitle_timestamp_text)
+                    # 一つしかない場合はリストに格納されていない
                     else:
                         if re.search(time_stamp_pattern_check, j):
                             subtitle_timestamp_text = re.sub(r'</c>', '', j)
