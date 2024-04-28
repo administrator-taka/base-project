@@ -329,6 +329,13 @@ class YouTubeSubtitleLogic:
                             'word': word,
                             'end_time': word_end_time
                         })
+        # 開始時間の代入
+        if result[0].get("start_time") is None:
+            result[0]["start_time"] = start_time
+        # 終了時間の代入
+        if result[len(result) - 1].get("end_time") is None:
+            result[len(result) - 1]["end_time"] = end_time
+
         return result
 
     def is_valid_subtitle(self, subtitle_text):
