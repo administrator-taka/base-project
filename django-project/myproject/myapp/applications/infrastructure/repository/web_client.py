@@ -21,3 +21,16 @@ class WebClient:
         except Exception as e:
             logging.error("Error: %s", str(e))
             return None
+
+    @staticmethod
+    def fetch_text_content(url):
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                return response.text
+            else:
+                logging.error("Error: %d", response.status_code)
+                return None
+        except Exception as e:
+            logging.error("Error: %s", str(e))
+            return None

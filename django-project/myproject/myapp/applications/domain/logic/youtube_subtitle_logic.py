@@ -6,6 +6,7 @@ import unittest
 import yt_dlp
 
 from myapp.applications.infrastructure.repository.web_client import WebClient
+from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
@@ -167,7 +168,47 @@ class YouTubeSubtitleLogic:
 
         return event_list
 
-    def is_valid_subtitle(self,subtitle_text):
+    # 字幕詳細からvttのurlを取得し、処理する
+    def extract_and_process_subtitle_vtt(self, subtitle_info, subtitle_type, language):
+        subtitles = subtitle_info.get(subtitle_type.to_string())
+        if subtitles:
+            captions_info = subtitles.get(language.value)
+            if captions_info:
+                # vtt形式の字幕データが存在する場合
+                json_data = [item for item in captions_info if item.get("ext") == "vtt"]
+                if json_data:
+                    url = json_data[0]["url"]
+                    # 取得したURLを処理する
+                    try:
+                        # メソッドの処理を試行
+                        subtitle = self.format_subtitle_vtt(url)
+                        return True, subtitle
+                    except Exception as e:
+                        traceback.print_exc()
+                        # エラーが発生した場合はログに出力して False とエラーメッセージを返す
+                        error_message = f"字幕取得処理でエラーが発生しました: {str(e)} ({type(e).__name__})"
+                        logging.warning(error_message)
+                        return False, error_message
+                else:
+                    # JSONデータが見つからない場合
+                    logging.debug("字幕のためのJSONデータが見つかりませんでした。")
+                    return False, None
+            else:
+                # 字幕のキャプション情報が見つからない場合
+                logging.debug("字幕のキャプション情報が見つかりませんでした。")
+                return False, None
+        else:
+            # 字幕が見つからない場合
+            logging.debug("字幕が見つかりませんでした。")
+            return False, None
+
+    # 字幕データをフォーマットする
+    def format_subtitle_vtt(self, url):
+        result_json = WebClient.fetch_text_content(url)
+        # TODO:整形
+        return result_json
+
+    def is_valid_subtitle(self, subtitle_text):
         if subtitle_text is None:
             logging.debug("subtitle_text は None です。")
             return False
@@ -182,10 +223,9 @@ class YouTubeSubtitleLogic:
             return False
         return True
 
-    def format_subtitle_text(self,subtitle_text):
+    def format_subtitle_text(self, subtitle_text):
         # 前後の空白とゼロ幅スペースを削除して返す
         return subtitle_text.strip("\u200b").strip()
-
 
 
 class TestYouTubeDownloadLogic(unittest.TestCase):
@@ -201,6 +241,15 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
         subtitles_content = youtube_subtitle_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
         FileHandler.format_json_print(subtitles_content)
+        FileHandler.write_json_response(subtitles_content)
+
+    def test_extract_and_process_subtitle_json(self):
+        youtube_subtitle_logic = YouTubeSubtitleLogic()
+        subtitle_info = FileHandler.get_json_response(TEST_DIR + "test_20240428_140943.json")
+        subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
+                                                                                    SubtitleType.MANUAL,
+                                                                                    YouTubeLanguage.KOREAN)
+        print(subtitles_content)
 
 # if __name__ == '__main__':
 #     unittest.main()
