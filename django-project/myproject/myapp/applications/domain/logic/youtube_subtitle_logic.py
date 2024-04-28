@@ -226,6 +226,7 @@ class YouTubeSubtitleLogic:
         word_list = []
         time = ""
 
+        # 最初の字幕情報を除去
         for line in lines:
             if re.search(time_column_check, line):
                 # 時間の行の場合
@@ -244,6 +245,7 @@ class YouTubeSubtitleLogic:
 
         # 字幕の抽出
         for count, subtitle in enumerate(subtitles):
+            # 開始時間終了時間の計算
             start_time = ""
             end_time = ""
             start_to_end = subtitle["time"]
@@ -254,10 +256,10 @@ class YouTubeSubtitleLogic:
                 start_to_end
             )
 
-            blank_check = start_to_end != None and start_to_end != ""
+            blank_check = start_to_end is not None and start_to_end != ""
 
-            if blank_check and start_to_end == "" or re.match('^\d{2}:\d{2}:\d{2}\.\d{3},\d{2}:\d{2}:\d{2}\.\d{3}$',
-                                                              start_to_end):
+            if blank_check and start_to_end == "" or \
+                    re.match('^\d{2}:\d{2}:\d{2}\.\d{3},\d{2}:\d{2}:\d{2}\.\d{3}$',start_to_end):
                 start_time, end_time = start_to_end.split(",")
             subtitle["start_time"] = start_time
             subtitle["end_time"] = end_time
@@ -291,8 +293,8 @@ class YouTubeSubtitleLogic:
             subtitle["end_time_ms"] = convert_to_milliseconds(subtitle["end_time"])
             time_stamp_words = self.split_subtitle_text(subtitle["start_time_ms"], subtitle["subtitle_timestamp_text"],
                                                         subtitle["end_time_ms"])
-            # logging.debug(subtitle)
-            logging.debug(time_stamp_words)
+            logging.debug(subtitle)
+            # logging.debug(time_stamp_words)
 
         # 奇数番目の字幕を削除
         subtitles = subtitles[1::2]
