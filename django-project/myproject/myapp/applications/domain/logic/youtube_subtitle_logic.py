@@ -221,7 +221,9 @@ class YouTubeSubtitleLogic:
         time_column_check = r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}.*'
         time_stamp_check = r'<\d{2}:\d{2}:\d{2}\.\d{3}>'
 
+        # 時間と単語のリスト
         subtitles = []
+        # 単語のリスト
         word_list = []
         time = ""
 
@@ -240,11 +242,14 @@ class YouTubeSubtitleLogic:
                     word_list.append(line)
 
         subtitles.append({'time': time, 'word': word_list})
-        # start_time,end_timeの追加
-        for i in subtitles:
+        # 　奇数番目？だけ削除
+        subtitles = subtitles[1::2]
+
+        # 字幕の抽出
+        for count, subtitle in enumerate(subtitles):
             start_time = ""
             end_time = ""
-            start_to_end = i["time"]
+            start_to_end = subtitle["time"]
             start_to_end = re.sub(
                 # 末尾はワイルドカードで動作確認
                 r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3}).*',
@@ -257,15 +262,13 @@ class YouTubeSubtitleLogic:
             if blank_check and start_to_end == "" or re.match('^\d{2}:\d{2}:\d{2}\.\d{3},\d{2}:\d{2}:\d{2}\.\d{3}$',
                                                               start_to_end):
                 start_time, end_time = start_to_end.split(",")
-            i["start_time"] = start_time
-            i["end_time"] = end_time
+            subtitle["start_time"] = start_time
+            subtitle["end_time"] = end_time
 
-        # 字幕の抽出
-        for count, i in enumerate(subtitles):
             subtitle_timestamp_text = ""
             time_stamp_pattern_check = r'<\d{2}:\d{2}:\d{2}\.\d{3}>'
             if count % 2 == 1:
-                for j in i["word"]:
+                for j in subtitle["word"]:
                     if type(j) == list:
                         for k in j:
                             if (re.search(time_stamp_pattern_check, j)):
@@ -279,22 +282,18 @@ class YouTubeSubtitleLogic:
                                                              subtitle_timestamp_text)
                         else:
                             subtitle_timestamp_text = j
-            i["subtitle_timestamp_text"] = subtitle_timestamp_text
+            subtitle["subtitle_timestamp_text"] = subtitle_timestamp_text
 
-        for i in subtitles:
-            subtitle_text = re.sub('<.*?>', '', i["subtitle_timestamp_text"])
-            i["subtitle_text"] = subtitle_text
+            subtitle_text = re.sub('<.*?>', '', subtitle["subtitle_timestamp_text"])
+            subtitle["subtitle_text"] = subtitle_text
 
-        # 　奇数番目？だけ削除
-        subtitles = subtitles[1::2]
-        for i in subtitles:
-            i["word"] = str(i["word"])
+            subtitle["word"] = str(subtitle["word"])
+            subtitle["start_time_ms"] = convert_to_milliseconds(subtitle["start_time"])
+            subtitle["end_time_ms"] = convert_to_milliseconds(subtitle["end_time"])
+            logging.debug(subtitle)
 
         df = pd.DataFrame(subtitles)
 
-        # 'start_time_sec'列と'end_time_sec'列を追加する
-        df['start_time_ms'] = df['start_time'].apply(convert_to_milliseconds)
-        df['end_time_ms'] = df['end_time'].apply(convert_to_milliseconds)
         return df
 
     def is_valid_subtitle(self, subtitle_text):
@@ -335,11 +334,10 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
     def test_extract_and_process_subtitle_json(self):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
         subtitle_info = youtube_subtitle_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
-        flag,subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
-                                                                                    SubtitleType.MANUAL,
-                                                                                    YouTubeLanguage.KOREAN)
+        flag, subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
+                                                                                          SubtitleType.MANUAL,
+                                                                                          YouTubeLanguage.KOREAN)
         print(subtitles_content.to_string())
-
 
 # if __name__ == '__main__':
 #     unittest.main()
