@@ -319,7 +319,6 @@ class YouTubeSubtitleLogic:
             words.append(end_time)
             for i in range(1, len(words) - 1):
                 if i % 2 == 1:
-
                     word_start_time = convert_to_milliseconds(words[i - 1])
                     word = words[i].strip()
                     word_end_time = convert_to_milliseconds(words[i + 1])
@@ -329,12 +328,15 @@ class YouTubeSubtitleLogic:
                             'word': word,
                             'end_time': word_end_time
                         })
-        # 開始時間の代入
-        if result[0].get("start_time") is None:
-            result[0]["start_time"] = start_time
-        # 終了時間の代入
-        if result[len(result) - 1].get("end_time") is None:
-            result[len(result) - 1]["end_time"] = end_time
+
+        # 結果が空でない場合にのみ処理を行う
+        if result:
+            # 開始時間の代入
+            if result[0].get("start_time") is None:
+                result[0]["start_time"] = start_time
+            # 終了時間の代入
+            if result[-1].get("end_time") is None:
+                result[-1]["end_time"] = end_time
 
         return result
 
@@ -383,8 +385,8 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
 
     def test_split_subtitle_text(self):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
-        subtitle_text = "teacup<00:04:44.000><c> just</c><00:04:44.160><c> kidding</c><00:04:44.400><c> you</c><00:04:44.479><c> can</c><00:04:44.600><c> drink</c><00:04:44.800><c> it</c>"
-        result = youtube_subtitle_logic.split_subtitle_text(283000, subtitle_text, 287310)
+        subtitle_text = "많잖아요<00:15:04.279> 그래서<00:15:04.600> 극장판<00:15:05.240> 굿즈가<00:15:05.639> 많았어  많잖아요 그래서 극장판 굿즈가 많았어"
+        result = youtube_subtitle_logic.split_subtitle_text(903440, subtitle_text, 906030)
         print(result)
 # if __name__ == '__main__':
 #     unittest.main()
