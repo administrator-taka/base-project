@@ -6,7 +6,6 @@ from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
-from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
@@ -26,16 +25,44 @@ class YoutubeDownloadService:
         playlist_videos = self.youtube_api_logic.get_channel_videos(playlist_id)
 
         for video in playlist_videos:
-            video_id=video.get("video_id")
+            video_id = video.get("video_id")
+            # 字幕IDが存在するかのチェックを行うデータ準備
+            subtitle_ids = [generate_subtitle_id(video_id, SubtitleType.AUTOMATIC, default_audio_language)]
+            for language in translation_languages:
+                subtitle_ids.append(generate_subtitle_id(video_id, SubtitleType.MANUAL, language))
             # 既に登録されているかのチェック
-            existing_subtitle_info = VideoSubtitleInfo.objects.filter(
-                video_id=video_id
-            ).first()
+            existing_subtitle_info = self.check_subtitle_existence(video_id, subtitle_ids)
+
             # 既に処理を行っている場合実行しない
             if not existing_subtitle_info:
                 self.download_video_subtitle(video_id, default_audio_language, translation_languages)
             else:
                 logging.debug(f"{video_id}:登録済み")
+
+    def check_subtitle_existence(self, video_id, subtitle_ids):
+        """
+        指定された video_id と複数の subtitle_ids を持つサブタイトルがすべて存在するかどうかを確認します。
+
+        :param video_id: ビデオのID
+        :param subtitle_ids: 確認したいサブタイトルのIDのリスト
+        :return: すべてのサブタイトルが存在する場合は True、少なくとも1つでも存在しない場合は False
+        """
+        # ビデオIDに基づいてすべてのサブタイトル情報を取得します
+        existing_subtitle_info = VideoSubtitleInfo.objects.filter(
+            video_id=video_id
+        )
+
+        # 各 subtitle_id をチェックします
+        for subtitle_id in subtitle_ids:
+            # 指定された subtitle_id を持つレコードが存在するかどうかを確認します
+            subtitle_exists = any(subtitle_info.subtitle_id == subtitle_id for subtitle_info in existing_subtitle_info)
+
+            # もし存在しない subtitle_id が見つかれば False を返します
+            if not subtitle_exists:
+                return False
+
+        # すべての subtitle_id が見つかった場合に True を返します
+        return True
 
     def download_video_subtitle(self, video_id: str,
                                 default_audio_language: YouTubeLanguage,
