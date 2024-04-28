@@ -241,8 +241,6 @@ class YouTubeSubtitleLogic:
                     word_list.append(line)
 
         subtitles.append({'time': time, 'word': word_list})
-        # 奇数番目の字幕を削除
-        subtitles = subtitles[1::2]
 
         # 字幕の抽出
         for count, subtitle in enumerate(subtitles):
@@ -289,11 +287,44 @@ class YouTubeSubtitleLogic:
             subtitle["word"] = str(subtitle["word"])
             subtitle["start_time_ms"] = convert_to_milliseconds(subtitle["start_time"])
             subtitle["end_time_ms"] = convert_to_milliseconds(subtitle["end_time"])
-            logging.debug(subtitle)
+            time_stamp_words = self.split_subtitle_text(subtitle["start_time_ms"], subtitle["subtitle_timestamp_text"],
+                                                        subtitle["end_time_ms"])
+            # logging.debug(subtitle)
+            logging.debug(time_stamp_words)
 
+        # 奇数番目の字幕を削除
+        subtitles = subtitles[1::2]
         df = pd.DataFrame(subtitles)
 
         return df
+
+    def split_subtitle_text(self, start_time, text, end_time):
+        result = []
+        text_none_check = text is not None and not pd.isna(text)
+        time_none_check = start_time is None and end_time is None
+        if text_none_check and not time_none_check:
+
+            # "<"と">"の間にある文字列を取得する正規表現パターン
+            pattern = r'<(.*?)>'
+
+            # "<"と">"で囲まれていない部分を単語としてリストに保存する
+            words = re.split(pattern, text)
+            words = [word for word in words if word]
+            words.insert(0, start_time)
+            words.append(end_time)
+            for i in range(1, len(words) - 1):
+                if i % 2 == 1:
+
+                    word_start_time = convert_to_milliseconds(words[i - 1])
+                    word = words[i].strip()
+                    word_end_time = convert_to_milliseconds(words[i + 1])
+                    if not word == "[Music]":
+                        result.append({
+                            'start_time': word_start_time,
+                            'word': word,
+                            'end_time': word_end_time
+                        })
+        return result
 
     def is_valid_subtitle(self, subtitle_text):
         if subtitle_text is None:
@@ -334,9 +365,14 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
         subtitle_info = youtube_subtitle_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
         flag, subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
-                                                                                          SubtitleType.MANUAL,
-                                                                                          YouTubeLanguage.KOREAN)
+                                                                                          SubtitleType.AUTOMATIC,
+                                                                                          YouTubeLanguage.ENGLISH)
         print(subtitles_content.to_string())
 
+    def test_split_subtitle_text(self):
+        youtube_subtitle_logic = YouTubeSubtitleLogic()
+        subtitle_text = "teacup<00:04:44.000><c> just</c><00:04:44.160><c> kidding</c><00:04:44.400><c> you</c><00:04:44.479><c> can</c><00:04:44.600><c> drink</c><00:04:44.800><c> it</c>"
+        result = youtube_subtitle_logic.split_subtitle_text(283000, subtitle_text, 287310)
+        print(result)
 # if __name__ == '__main__':
 #     unittest.main()
