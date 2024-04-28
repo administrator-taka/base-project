@@ -223,7 +223,6 @@ class YouTubeSubtitleLogic:
 
         # 時間と単語のリスト
         subtitles = []
-        # 単語のリスト
         word_list = []
         time = ""
 
@@ -242,7 +241,7 @@ class YouTubeSubtitleLogic:
                     word_list.append(line)
 
         subtitles.append({'time': time, 'word': word_list})
-        # 　奇数番目？だけ削除
+        # 奇数番目の字幕を削除
         subtitles = subtitles[1::2]
 
         # 字幕の抽出
@@ -271,12 +270,12 @@ class YouTubeSubtitleLogic:
                 for j in subtitle["word"]:
                     if type(j) == list:
                         for k in j:
-                            if (re.search(time_stamp_pattern_check, j)):
+                            if re.search(time_stamp_pattern_check, j):
                                 subtitle_timestamp_text = re.sub(r'</c>', '', k)
                                 subtitle_timestamp_text = re.sub('|'.join([r'<c(\.color\w+)?>', ]), '',
                                                                  subtitle_timestamp_text)
                     else:
-                        if (re.search(time_stamp_pattern_check, j)):
+                        if re.search(time_stamp_pattern_check, j):
                             subtitle_timestamp_text = re.sub(r'</c>', '', j)
                             subtitle_timestamp_text = re.sub('|'.join([r'<c(\.color\w+)?>', ]), '',
                                                              subtitle_timestamp_text)
