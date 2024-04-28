@@ -4,12 +4,15 @@ import traceback
 import unittest
 
 import yt_dlp
+import re
 
 from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
+from myapp.applications.util.util_convert import convert_to_milliseconds
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
+import pandas as pd
 
 
 class YouTubeSubtitleLogic:
@@ -175,7 +178,10 @@ class YouTubeSubtitleLogic:
             captions_info = subtitles.get(language.value)
             if captions_info:
                 # vtt形式の字幕データが存在する場合
-                json_data = [item for item in captions_info if item.get("ext") == "vtt"]
+                json_data = [item for item in captions_info if item.get("ext") == "vtt"
+                             # m3u8_nativeのvttは排除
+                             and item.get("protocol") != "m3u8_native"
+                             ]
                 if json_data:
                     url = json_data[0]["url"]
                     # 取得したURLを処理する
@@ -204,9 +210,94 @@ class YouTubeSubtitleLogic:
 
     # 字幕データをフォーマットする
     def format_subtitle_vtt(self, url):
-        result_json = WebClient.fetch_text_content(url)
-        # TODO:整形
-        return result_json
+        text = WebClient.fetch_text_content(url)
+
+        lines = re.split("\n+", text)
+        lines = list(filter(lambda x: x.strip() != "", lines))
+
+        subtitles = []
+        # 自動の場合は以下
+        # time_column_check = r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3} align:start position:0%'
+        # 手動の場合は以下
+        # time_column_check = r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}'
+        # 末尾はワイルドカードで動作確認
+        time_column_check = r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}.*'
+        time_stamp_check = r'<\d{2}:\d{2}:\d{2}\.\d{3}>'
+        word_list = []
+        time = ""
+
+        for i in range(len(lines)):
+            # 時間の変換
+            if (re.search(time_column_check, lines[i])):
+                subtitles.append({'time': time, 'word': word_list})
+                word_list = []
+                time = lines[i]
+
+            # 字幕の変換
+            else:
+                if (re.search(time_stamp_check, lines[i])):
+                    word_list = []
+                    word_list.append(lines[i])
+                else:
+                    word_list.append(lines[i])
+
+        subtitles.append({'time': time, 'word': word_list})
+        # start_time,end_timeの追加
+        for i in subtitles:
+            start_time = ""
+            end_time = ""
+            start_to_end = i["time"]
+            start_to_end = re.sub(
+                r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3}) align:start position:0%',
+                # r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3})',
+                r'\g<1>.\g<2>,\g<3>.\g<4>',
+                start_to_end
+            )
+
+            blank_check = start_to_end != None and start_to_end != ""
+
+            if blank_check and start_to_end == "" or re.match('^\d{2}:\d{2}:\d{2}\.\d{3},\d{2}:\d{2}:\d{2}\.\d{3}$',
+                                                              start_to_end):
+                start_time, end_time = start_to_end.split(",")
+            i["start_time"] = start_time
+            i["end_time"] = end_time
+
+        # 字幕の抽出
+        for count, i in enumerate(subtitles):
+            subtitle_timestamp_text = ""
+            time_stamp_pattern_check = r'<\d{2}:\d{2}:\d{2}\.\d{3}>'
+            if count % 2 == 1:
+                for j in i["word"]:
+                    if type(j) == list:
+                        for k in j:
+                            if (re.search(time_stamp_pattern_check, j)):
+                                subtitle_timestamp_text = re.sub(r'</c>', '', k)
+                                subtitle_timestamp_text = re.sub('|'.join([r'<c(\.color\w+)?>', ]), '',
+                                                                 subtitle_timestamp_text)
+                    else:
+                        if (re.search(time_stamp_pattern_check, j)):
+                            subtitle_timestamp_text = re.sub(r'</c>', '', j)
+                            subtitle_timestamp_text = re.sub('|'.join([r'<c(\.color\w+)?>', ]), '',
+                                                             subtitle_timestamp_text)
+                        else:
+                            subtitle_timestamp_text = j
+            i["subtitle_timestamp_text"] = subtitle_timestamp_text
+
+        for i in subtitles:
+            subtitle_text = re.sub('<.*?>', '', i["subtitle_timestamp_text"])
+            i["subtitle_text"] = subtitle_text
+
+        # 　奇数番目？だけ削除
+        subtitles = subtitles[1::2]
+        for i in subtitles:
+            i["word"] = str(i["word"])
+
+        df = pd.DataFrame(subtitles)
+
+        # # 'start_time_sec'列と'end_time_sec'列を追加する
+        # df['start_time_ms'] = df['start_time'].apply(convert_to_milliseconds)
+        # df['end_time_ms'] = df['end_time'].apply(convert_to_milliseconds)
+        return df
 
     def is_valid_subtitle(self, subtitle_text):
         if subtitle_text is None:
@@ -245,9 +336,9 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
 
     def test_extract_and_process_subtitle_json(self):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
-        subtitle_info = FileHandler.get_json_response(TEST_DIR + "test_20240428_140943.json")
+        subtitle_info = FileHandler.get_json_response(TEST_DIR + "test_20240428_145747.json")
         subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
-                                                                                    SubtitleType.MANUAL,
+                                                                                    SubtitleType.AUTOMATIC,
                                                                                     YouTubeLanguage.KOREAN)
         print(subtitles_content)
 
