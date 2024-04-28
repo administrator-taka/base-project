@@ -248,8 +248,8 @@ class YouTubeSubtitleLogic:
             end_time = ""
             start_to_end = i["time"]
             start_to_end = re.sub(
-                r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3}) align:start position:0%',
-                # r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3})',
+                # 末尾はワイルドカードで動作確認
+                r'(\d{2}:\d{2}:\d{2})\.(\d{3}) --> (\d{2}:\d{2}:\d{2})\.(\d{3})(?: align:start position:0%)?',
                 r'\g<1>.\g<2>,\g<3>.\g<4>',
                 start_to_end
             )
@@ -294,9 +294,9 @@ class YouTubeSubtitleLogic:
 
         df = pd.DataFrame(subtitles)
 
-        # # 'start_time_sec'列と'end_time_sec'列を追加する
-        # df['start_time_ms'] = df['start_time'].apply(convert_to_milliseconds)
-        # df['end_time_ms'] = df['end_time'].apply(convert_to_milliseconds)
+        # 'start_time_sec'列と'end_time_sec'列を追加する
+        df['start_time_ms'] = df['start_time'].apply(convert_to_milliseconds)
+        df['end_time_ms'] = df['end_time'].apply(convert_to_milliseconds)
         return df
 
     def is_valid_subtitle(self, subtitle_text):
@@ -337,10 +337,10 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
     def test_extract_and_process_subtitle_json(self):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
         subtitle_info = FileHandler.get_json_response(TEST_DIR + "test_20240428_145747.json")
-        subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
+        flag,subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
                                                                                     SubtitleType.AUTOMATIC,
                                                                                     YouTubeLanguage.KOREAN)
-        print(subtitles_content)
+        print(subtitles_content.to_string())
 
 # if __name__ == '__main__':
 #     unittest.main()
