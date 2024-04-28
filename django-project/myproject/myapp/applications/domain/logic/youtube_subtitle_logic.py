@@ -296,6 +296,7 @@ class YouTubeSubtitleLogic:
             logging.debug(subtitle)
             # logging.debug(time_stamp_words)
 
+        # TODO:自動生成字幕は奇数番目を削除するが、手動生成だと削除したらダメそう
         # 奇数番目の字幕を削除
         subtitles = subtitles[1::2]
         df = pd.DataFrame(subtitles)
@@ -370,7 +371,7 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
         subtitle_info = youtube_subtitle_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
         flag, subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
                                                                                           SubtitleType.AUTOMATIC,
-                                                                                          YouTubeLanguage.ENGLISH)
+                                                                                          YouTubeLanguage.KOREAN)
         print(subtitles_content.to_string())
 
     def test_split_subtitle_text(self):
