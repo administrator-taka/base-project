@@ -336,11 +336,12 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
 
     def test_extract_and_process_subtitle_json(self):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
-        subtitle_info = FileHandler.get_json_response(TEST_DIR + "test_20240428_145747.json")
+        subtitle_info = youtube_subtitle_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
         flag,subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
-                                                                                    SubtitleType.AUTOMATIC,
+                                                                                    SubtitleType.MANUAL,
                                                                                     YouTubeLanguage.KOREAN)
         print(subtitles_content.to_string())
+
 
 # if __name__ == '__main__':
 #     unittest.main()
