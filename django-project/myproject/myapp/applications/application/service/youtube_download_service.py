@@ -90,9 +90,9 @@ class YoutubeDownloadService:
         # ビデオサブタイトル情報が存在しない場合に新しいレコードを作成
         if not existing_subtitle_info:
             # 自動生成字幕
-            has_subtitle, subtitle = self.youtube_subtitle_logic.extract_and_process_subtitle(subtitle_info,
-                                                                                              subtitle_type,
-                                                                                              language)
+            has_subtitle, subtitle = self.youtube_subtitle_logic.extract_and_process_subtitle_json(subtitle_info,
+                                                                                                   subtitle_type,
+                                                                                                   language)
             if has_subtitle:
                 self.insert_subtitle_data(video_id, subtitle, subtitle_type, language)
             # サブタイトル情報がある場合、備考にサブタイトルを設定する

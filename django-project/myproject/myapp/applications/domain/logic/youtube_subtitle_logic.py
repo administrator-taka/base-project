@@ -88,7 +88,7 @@ class YouTubeSubtitleLogic:
             return
 
     # 字幕詳細からjsonのurlを取得し、処理する
-    def extract_and_process_subtitle(self, subtitle_info, subtitle_type, language):
+    def extract_and_process_subtitle_json(self, subtitle_info, subtitle_type, language):
         subtitles = subtitle_info.get(subtitle_type.to_string())
         if subtitles:
             captions_info = subtitles.get(language.value)
@@ -100,7 +100,7 @@ class YouTubeSubtitleLogic:
                     # 取得したURLを処理する
                     try:
                         # メソッドの処理を試行
-                        subtitle = self.format_subtitle(url)
+                        subtitle = self.format_subtitle_json(url)
                         return True, subtitle
                     except Exception as e:
                         traceback.print_exc()
@@ -122,7 +122,7 @@ class YouTubeSubtitleLogic:
             return False, None
 
     # 字幕データをフォーマットする
-    def format_subtitle(self, url):
+    def format_subtitle_json(self, url):
         result_json = WebClient.make_api_request(url, None)
         events = result_json.get("events")
         # リストの初期化
