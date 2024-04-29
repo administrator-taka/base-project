@@ -16,6 +16,21 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
+    def get_manual_subtitle_list(self,video_id):
+        # Django ORMを使用してクエリを構築
+        queryset = VideoSubtitle.objects.filter(
+            subtitle_info__subtitle_type=SubtitleType.MANUAL.value,
+            subtitle_info__video_id=video_id
+        ).order_by(
+            'subtitle_info__subtitle_id',
+            't_start_ms'
+        )
+
+        # クエリセットを実行
+        results = list(queryset)
+        for result in results:
+            print(result.subtitle_text)
+
     def download_channel_subtitles(self, channel_id: str) -> None:
         default_audio_language = YouTubeLanguage.KOREAN
         translation_languages = [YouTubeLanguage.JAPANESE]
@@ -77,6 +92,11 @@ class YoutubeDownloadService:
         # 手動作成字幕
         self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
                                                   default_audio_language)
+
+        # TODO:リストが単体だと動作不良を起こすため明示的に彩度リストに格納
+        if not isinstance(translation_languages, list):
+            translation_languages = [translation_languages]
+
         for language in translation_languages:
             self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
                                                       language)
@@ -93,25 +113,30 @@ class YoutubeDownloadService:
             has_subtitle, subtitle = self.youtube_subtitle_logic.extract_and_process_subtitle_json(subtitle_info,
                                                                                                    subtitle_type,
                                                                                                    language)
-            if has_subtitle:
-                self.insert_subtitle_data(video_id, subtitle, subtitle_type, language)
-            # サブタイトル情報がある場合、備考にサブタイトルを設定する
-            remarks_value = subtitle if not has_subtitle else None
+            # 最初にインサートし、データがあればupdateするように修正
+            subtitle_id=generate_subtitle_id(video_id, subtitle_type, language)
             VideoSubtitleInfo.objects.create(
-                subtitle_id=generate_subtitle_id(video_id, subtitle_type, language),
+                subtitle_id=subtitle_id,
                 video_id=video_id,
                 subtitle_type=subtitle_type.value,
                 language_code=language.value,
                 has_subtitle=has_subtitle,
+                remarks=None
+            )
+            if has_subtitle:
+                self.insert_subtitle_data(video_id, subtitle, subtitle_type, language)
+            # サブタイトル情報がある場合、備考にサブタイトルを設定する
+            remarks_value = subtitle if not has_subtitle else None
+            VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
+                has_subtitle=True,
                 remarks=remarks_value
             )
-
     def insert_subtitle_data(self, video_id, subtitle, subtitle_type, language):
         # 辞書型リストのデータを順番に処理してデータベースに挿入
         for data in subtitle:
             VideoSubtitle.objects.create(
                 subtitle_text_id=generate_uuid(),
-                subtitle_id=generate_subtitle_id(video_id, subtitle_type, language),
+                subtitle_info_id=generate_subtitle_id(video_id, subtitle_type, language),
                 t_start_ms=data['t_start_ms'],
                 d_duration_ms=data['d_duration_ms'],
                 t_offset_ms=data['t_offset_ms'],

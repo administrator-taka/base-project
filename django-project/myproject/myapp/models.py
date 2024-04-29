@@ -7,6 +7,9 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+from myapp.applications.util.code.subtitle_type import SubtitleType
+from myapp.applications.util.code.youtube_language import YouTubeLanguage
+
 
 class Test(models.Model):
     id = models.CharField(primary_key=True, max_length=50)
@@ -24,11 +27,10 @@ class VideoSubtitleInfo(models.Model):
     # 動画ID
     video_id = models.CharField(max_length=50, verbose_name='動画ID')
 
-    # 字幕の種類 (自動/手動)
-    subtitle_type = models.IntegerField(verbose_name='自動/手動')
+    subtitle_type = models.IntegerField(choices=[(tag.value, tag.name) for tag in SubtitleType], verbose_name='字幕の種類')
 
     # 字幕の言語コード
-    language_code = models.CharField(max_length=10, verbose_name='言語コード')
+    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
 
     # 字幕の有無 (True: 字幕あり, False: 字幕なし)
     has_subtitle = models.BooleanField(verbose_name='字幕があるかないか')
@@ -45,9 +47,9 @@ class VideoSubtitle(models.Model):
     # 字幕テキストID
     subtitle_text_id = models.CharField(primary_key=True, max_length=50, verbose_name='字幕テキストID')
 
-    # 字幕ID
-    subtitle_id = models.CharField(max_length=50, verbose_name='字幕ID')
-
+    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    subtitle_info = models.ForeignKey(VideoSubtitleInfo, on_delete=models.CASCADE, related_name='subtitles',
+                                      verbose_name='字幕ID')
     # 開始時間（ミリ秒）
     t_start_ms = models.IntegerField(verbose_name='開始時間（ミリ秒）', null=True, blank=True)
 
