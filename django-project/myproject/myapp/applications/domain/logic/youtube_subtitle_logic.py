@@ -178,12 +178,12 @@ class YouTubeSubtitleLogic:
             captions_info = subtitles.get(language.value)
             if captions_info:
                 # vtt形式の字幕データが存在する場合
-                json_data = [item for item in captions_info if item.get("ext") == "vtt"
+                vtt_ata = [item for item in captions_info if item.get("ext") == "vtt"
                              # m3u8_nativeのvttは排除
                              and item.get("protocol") != "m3u8_native"
                              ]
-                if json_data:
-                    url = json_data[0]["url"]
+                if vtt_ata:
+                    url = vtt_ata[0]["url"]
                     # 取得したURLを処理する
                     try:
                         # メソッドの処理を試行
@@ -196,8 +196,8 @@ class YouTubeSubtitleLogic:
                         logging.warning(error_message)
                         return False, error_message
                 else:
-                    # JSONデータが見つからない場合
-                    logging.debug("字幕のためのJSONデータが見つかりませんでした。")
+                    # vttデータが見つからない場合
+                    logging.debug("字幕のためのvttデータが見つかりませんでした。")
                     return False, None
             else:
                 # 字幕のキャプション情報が見つからない場合
@@ -379,7 +379,7 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
         subtitle_info = youtube_subtitle_logic.download_subtitles_info(TEST_YOUTUBE_VIDEO_ID)
         flag, subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
-                                                                                          SubtitleType.AUTOMATIC,
+                                                                                          SubtitleType.MANUAL,
                                                                                           YouTubeLanguage.KOREAN)
         print(subtitles_content.to_string())
 
