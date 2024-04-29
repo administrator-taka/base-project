@@ -41,3 +41,13 @@ SELECT subtitle_text, COUNT(*) AS subtitle_count
 FROM video_subtitle
 GROUP BY subtitle_text
 ORDER BY subtitle_count DESC;
+
+--出現度ランキング（言語指定、自動指定：手動だと歌詞などで不自然な集計が行われるため）
+SELECT subtitle_text, COUNT(*) AS subtitle_count
+FROM video_subtitle
+JOIN video_subtitle_info
+ON video_subtitle_info.subtitle_id = video_subtitle.subtitle_info_id
+WHERE video_subtitle_info.language_code='ko'
+AND subtitle_type=0
+GROUP BY subtitle_text
+ORDER BY subtitle_count DESC;
