@@ -28,8 +28,25 @@ class YoutubeDownloadService:
 
         # クエリセットを実行
         results = list(queryset)
+
+        # 別々のリストに格納するための空のリストを用意
+        ja_subtitles = []
+        ko_subtitles = []
+
         for result in results:
-            print(result.subtitle_text)
+            # subtitle_info__language_code が 'ja' の場合、ja_subtitles リストに格納
+            if result.subtitle_info.language_code == YouTubeLanguage.JAPANESE.value:
+                ja_subtitles.append(result.subtitle_text)
+            # subtitle_info__language_code が 'ko' の場合、ko_subtitles リストに格納
+            elif result.subtitle_info.language_code == YouTubeLanguage.KOREAN.value:
+                ko_subtitles.append(result.subtitle_text)
+
+        for result in ja_subtitles:
+            print(result)
+        for result in ko_subtitles:
+            print(result)
+        print(len(ja_subtitles))
+        print(len(ko_subtitles))
 
     def download_channel_subtitles(self, channel_id: str) -> None:
         default_audio_language = YouTubeLanguage.KOREAN
