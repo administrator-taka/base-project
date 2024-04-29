@@ -322,6 +322,7 @@ class YouTubeSubtitleLogic:
                     word_start_time = convert_to_milliseconds(words[i - 1])
                     word = words[i].strip()
                     word_end_time = convert_to_milliseconds(words[i + 1])
+                    # TODO:多言語対応できていない。
                     if not word == "[Music]":
                         result.append({
                             'start_time': word_start_time,
