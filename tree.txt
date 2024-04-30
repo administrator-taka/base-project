@@ -20,7 +20,10 @@
 │       │   ├─admin.py
 │       │   ├─applications
 │       │   │   ├─application
-│       │   │   │   └─__init__.py
+│       │   │   │   ├─__init__.py
+│       │   │   │   └─service
+│       │   │   │       ├─__init__.py
+│       │   │   │       └─youtube_download_service.py
 │       │   │   ├─domain
 │       │   │   │   ├─__init__.py
 │       │   │   │   └─logic
@@ -28,6 +31,7 @@
 │       │   │   │       ├─chat_gpt_api_logic.py
 │       │   │   │       ├─deepl_api_logic.py
 │       │   │   │       ├─youtube_api_logic.py
+│       │   │   │       ├─youtube_api_logic_2.py
 │       │   │   │       ├─youtube_download_logic.py
 │       │   │   │       └─youtube_subtitle_logic.py
 │       │   │   ├─infrastructure
@@ -41,22 +45,29 @@
 │       │   │       │   ├─__init__.py
 │       │   │       │   ├─character_code.py
 │       │   │       │   ├─deepl_language.py
+│       │   │       │   ├─subtitle_type.py
 │       │   │       │   ├─time_zone.py
 │       │   │       │   └─youtube_language.py
 │       │   │       ├─file_handler.py
-│       │   │       └─timestamp_converter.py
+│       │   │       ├─timestamp_converter.py
+│       │   │       ├─util_convert.py
+│       │   │       └─util_generate.py
 │       │   ├─apps.py
 │       │   ├─migrations
 │       │   │   ├─0001_initial.py
+│       │   │   ├─0002_alter_videosubtitleinfo_language_code_and_more.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
 │       │   │   ├─__init__.py
-│       │   │   └─test_serializer.py
+│       │   │   ├─test_serializer.py
+│       │   │   ├─youtube_api_serializer.py
+│       │   │   └─youtube_subtitle_serializer.py
 │       │   ├─tests.py
 │       │   ├─urls.py
 │       │   └─views
 │       │       ├─__init__.py
+│       │       ├─health_check_view.py
 │       │       └─test_views.py
 │       ├─myproject
 │       │   ├─__init__.py
@@ -69,6 +80,8 @@
 │       │   ├─urls.py
 │       │   └─wsgi.py
 │       ├─requirements.txt
+│       ├─resource
+│       │   └─test.sql
 │       └─sample.env
 ├─docker
 │   ├─api
