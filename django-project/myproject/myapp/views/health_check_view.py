@@ -34,7 +34,7 @@ def test_2():
 def test_3():
     youtube_download_service = YoutubeDownloadService()
     video_id = TEST_YOUTUBE_VIDEO_ID
-    youtube_download_service.get_manual_subtitle_list(video_id)
+    youtube_download_service.insert_initial_subtitle_detail(video_id)
 
 
 def test_4():

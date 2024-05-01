@@ -34,7 +34,7 @@ class YoutubeDownloadService:
             for info in infos:
                 print(info.language_code,info.has_subtitle)
 
-    def get_manual_subtitle_list(self, video_id):
+    def insert_initial_subtitle_detail(self, video_id):
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitle.objects.filter(
             subtitle_info__subtitle_type=SubtitleType.MANUAL.value,
