@@ -47,6 +47,40 @@ class YouTubeApiLogic:
             print('An error occurred:', str(e))
             return None
 
+    def get_channel_details_data(self, channel_id):
+        response = self.get_channel_details(channel_id)
+        channel_data = {}
+
+        if response.get('items'):
+            item = response.get('items')[0]
+            # チャンネルID
+            channel_data['channel_id'] = item.get('id')
+            # チャンネルプレイリストID
+            channel_data['playlist_id'] = item.get('contentDetails', {}).get('relatedPlaylists', {}).get('uploads')
+            # デフォルトの言語コード（初期値はnullで後から追記する）
+            channel_data['default_audio_language'] = None
+            # チャンネルタイトル
+            channel_data['title'] = item.get('snippet', {}).get('title')
+            # チャンネルの説明
+            channel_data['description'] = item.get('snippet', {}).get('description')
+            # カスタムURL
+            channel_data['custom_url'] = item.get('snippet', {}).get('customUrl')
+            # 公開日時
+            channel_data['published_at'] = item.get('snippet', {}).get('publishedAt')
+            # サムネイルURL
+            channel_data['thumbnail'] = item.get('snippet', {}).get('thumbnails', {}).get('high', {}).get('url')
+            # 国コード
+            channel_data['country'] = item.get('snippet', {}).get('country')
+
+            # ローカライズされた情報を取得
+            localized_data = item.get('snippet', {}).get('localized', [])
+            localized_list = []
+            localized_list.append(
+                {'title': localized_data.get('title'), 'description': localized_data.get('description')})
+            channel_data['localized'] = localized_list
+
+        return channel_data
+
     # プレイリスト内の全ての動画を取得するメソッド
     def get_all_playlist_videos(self, playlist_id):
         all_videos = []
@@ -149,6 +183,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         video_details = self.youtube_logic.get_video_details(video_id)
         # 取得した動画の詳細を出力
         FileHandler.format_json_print(video_details)
+        FileHandler.write_json_response(video_details)
 
     # チャンネルの詳細を取得するメソッドのテスト
     def test_get_channel_details(self):
@@ -158,6 +193,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         channel_details = self.youtube_logic.get_channel_details(channel_id)
         # 取得したチャンネルの詳細を出力
         FileHandler.format_json_print(channel_details)
+        FileHandler.write_json_response(channel_details)
 
     # プレイリスト内の全ての動画を取得するメソッドのテスト
     def test_get_all_playlist_videos(self):
@@ -167,6 +203,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         playlist_videos = self.youtube_logic.get_all_playlist_videos(playlist_id)
         # 取得したプレイリストの動画を出力
         FileHandler.format_json_print(playlist_videos)
+        FileHandler.write_json_response(playlist_videos)
 
     # 動画の字幕情報を取得するメソッドのテスト
     def test_get_video_captions(self):
@@ -194,6 +231,15 @@ class TestYouTubeApiLogic(unittest.TestCase):
         playlist_videos = self.youtube_logic.get_channel_videos(playlist_id)
         # 取得したチャンネルの詳細を出力
         print(playlist_videos)
+
+    def test_get_channel_details_data(self):
+        # テスト用のチャンネルIDを指定
+        channel_id = TEST_YOUTUBE_CHANNEL_ID
+        # チャンネルの詳細を取得
+        result = self.youtube_logic.get_channel_details_data(channel_id)
+        # 取得したチャンネルの詳細を出力
+        FileHandler.format_json_print(result)
+        FileHandler.write_json_response(result)
 
 # if __name__ == '__main__':
 #     # テストを実行

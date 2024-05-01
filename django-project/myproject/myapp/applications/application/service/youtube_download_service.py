@@ -7,7 +7,7 @@ from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtit
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
-from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation
+from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
 from collections import defaultdict
 
@@ -16,6 +16,33 @@ class YoutubeDownloadService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
+
+    def insert_initial_channel_data(self, channel_id):
+        # チャンネルIDに紐づくチャンネル情報が存在するかチェック
+        existing_channel_data = ChannelDetail.objects.filter(
+            channel_id=channel_id
+        )
+        # チャンネル情報が存在しない場合は追加
+        if not existing_channel_data:
+            channel_data = self.youtube_api_logic.get_channel_details_data(channel_id)
+            if channel_data:
+                # 新しいチャンネルデータを作成して保存
+                ChannelDetail.objects.create(
+                    channel_id=channel_data['channel_id'],
+                    playlist_id=channel_data['playlist_id'],
+                    default_audio_language=channel_data['default_audio_language'],
+                    title=channel_data['title'],
+                    description=channel_data['description'],
+                    custom_url=channel_data['custom_url'],
+                    published_at=channel_data['published_at'],
+                    thumbnail=channel_data['thumbnail'],
+                    country=channel_data['country']
+                )
+                logging.debug("チャンネル情報が追加されました。")
+            else:
+                logging.debug("チャンネル情報が見つかりませんでした。")
+        else:
+            logging.debug("チャンネル情報は既に存在します。")
 
     def get_channel_subtitle_list(self, channel_id):
         # Django ORMを使用してクエリを構築
@@ -32,7 +59,7 @@ class YoutubeDownloadService:
         for video_id, infos in subtitle_info_by_video.items():
             print("Video ID:", video_id)
             for info in infos:
-                print(info.language_code,info.has_subtitle)
+                print(info.language_code, info.has_subtitle)
 
     def insert_initial_subtitle_detail(self, video_id):
         # Django ORMを使用してクエリを構築
@@ -51,7 +78,8 @@ class YoutubeDownloadService:
         ko_results = list(ko_queryset.order_by('t_start_ms'))
         ja_results = list(ja_queryset.order_by('t_start_ms'))
 
-        if self.check_subtitle_text_id_exists(generate_subtitle_id(video_id,SubtitleType.MANUAL,YouTubeLanguage.KOREAN)):
+        if self.check_subtitle_text_id_exists(
+                generate_subtitle_id(video_id, SubtitleType.MANUAL, YouTubeLanguage.KOREAN)):
             logging.debug('既にある')
             return
 
@@ -71,8 +99,7 @@ class YoutubeDownloadService:
         else:
             logging.debug('一致する字幕情報なし')
 
-
-    def check_subtitle_text_id_exists(self,subtitle_id):
+    def check_subtitle_text_id_exists(self, subtitle_id):
         # 特定の subtitle_id に対応する VideoSubtitleDetail レコードが存在するかチェック
         exists = SubtitleTranslation.objects.filter(subtitle_text_id__subtitle_info__subtitle_id=subtitle_id).exists()
         return exists

@@ -10,7 +10,7 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def health_check(request):
-    test_4()
+    test_5()
     return JsonResponse(data={"msg": "pass"}, status=200)
 
 
@@ -41,3 +41,9 @@ def test_4():
     youtube_download_service = YoutubeDownloadService()
     channel_id = TEST_YOUTUBE_CHANNEL_ID
     youtube_download_service.get_channel_subtitle_list(channel_id)
+
+
+def test_5():
+    youtube_download_service = YoutubeDownloadService()
+    channel_id = TEST_YOUTUBE_CHANNEL_ID
+    youtube_download_service.insert_initial_channel_data(channel_id)
