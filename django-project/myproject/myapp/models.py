@@ -45,7 +45,7 @@ class ChannelDetail(models.Model):
 
 
 class ChannelTranslationInfo(models.Model):
-    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    # チャンネルIDでChannelDetailとの関連を表現
     channel_id = models.OneToOneField(ChannelDetail, primary_key=True, db_column='channel_id', on_delete=models.CASCADE,
                                       related_name='channel_translation_info',
                                       verbose_name='チャンネルID')
@@ -63,7 +63,7 @@ class ChannelTranslationInfo(models.Model):
 
 
 class ChannelLocalized(models.Model):
-    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    # チャンネルIDでChannelDetailとの関連を表現
     channel_id = models.ForeignKey(ChannelDetail, db_column='channel_id', on_delete=models.CASCADE,
                                    related_name='localized_channels',
                                    verbose_name='チャンネルID')
@@ -77,7 +77,7 @@ class ChannelLocalized(models.Model):
 
 
 class VideoDetail(models.Model):
-    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    # チャンネルIDでChannelDetailとの関連を表現
     channel_id = models.ForeignKey(ChannelDetail, db_column='channel_id', on_delete=models.CASCADE,
                                    related_name='channel_detail',
                                    verbose_name='チャンネルID')

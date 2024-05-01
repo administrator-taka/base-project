@@ -223,7 +223,7 @@ class YoutubeDownloadService:
         self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
                                                   default_audio_language)
 
-        # TODO:リストが単体だと動作不良を起こすため明示的に彩度リストに格納
+        # TODO:リストが単体だと動作不良を起こすため明示的に再度リストに格納
         if not isinstance(translation_languages, list):
             translation_languages = [translation_languages]
 
@@ -245,9 +245,11 @@ class YoutubeDownloadService:
                                                                                                    language)
             # 最初にインサートし、データがあればupdateするように修正
             subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
+            # VideoDetailから動画IDを取得
+            video_detail_instance = VideoDetail.objects.get(video_id=video_id)
             VideoSubtitleInfo.objects.create(
+                video_id=video_detail_instance,
                 subtitle_id=subtitle_id,
-                video_id=video_id,
                 subtitle_type=subtitle_type.value,
                 language_code=language.value,
                 has_subtitle=has_subtitle,
@@ -265,9 +267,12 @@ class YoutubeDownloadService:
     def insert_subtitle_data(self, video_id, subtitle, subtitle_type, language):
         # 辞書型リストのデータを順番に処理してデータベースに挿入
         for data in subtitle:
+            # 字幕情報を保存する前に、関連するVideoSubtitleInfoインスタンスを取得する必要があります
+            subtitle_info_id = generate_subtitle_id(video_id, subtitle_type, language)
+            subtitle_info_instance = VideoSubtitleInfo.objects.get(subtitle_id=subtitle_info_id)
             VideoSubtitle.objects.create(
+                subtitle_id=subtitle_info_instance,
                 subtitle_text_id=generate_uuid(),
-                subtitle_info_id=generate_subtitle_id(video_id, subtitle_type, language),
                 t_start_ms=data['t_start_ms'],
                 d_duration_ms=data['d_duration_ms'],
                 t_offset_ms=data['t_offset_ms'],
