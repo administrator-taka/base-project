@@ -116,15 +116,15 @@ class YoutubeDownloadService:
     def insert_initial_subtitle_detail(self, video_id):
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitle.objects.filter(
-            subtitle_info__subtitle_type=SubtitleType.MANUAL.value,
-            subtitle_info__video_id=video_id
+            subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
+            subtitle_id__video_id=video_id
         )
 
         # 韓国語字幕のクエリ
-        ko_queryset = queryset.filter(subtitle_info__language_code=YouTubeLanguage.KOREAN.value)
+        ko_queryset = queryset.filter(subtitle_id__language_code=YouTubeLanguage.KOREAN.value)
 
         # 日本語字幕のクエリ
-        ja_queryset = queryset.filter(subtitle_info__language_code=YouTubeLanguage.JAPANESE.value)
+        ja_queryset = queryset.filter(subtitle_id__language_code=YouTubeLanguage.JAPANESE.value)
 
         # クエリセットを実行
         ko_results = list(ko_queryset.order_by('t_start_ms'))
@@ -153,7 +153,7 @@ class YoutubeDownloadService:
 
     def check_subtitle_text_id_exists(self, subtitle_id):
         # 特定の subtitle_id に対応する VideoSubtitleDetail レコードが存在するかチェック
-        exists = SubtitleTranslation.objects.filter(subtitle_text_id__subtitle_info__subtitle_id=subtitle_id).exists()
+        exists = SubtitleTranslation.objects.filter(subtitle_text_id__subtitle_id__subtitle_id=subtitle_id).exists()
         return exists
 
     def download_channel_subtitles(self, channel_id: str) -> None:
@@ -268,8 +268,8 @@ class YoutubeDownloadService:
         # 辞書型リストのデータを順番に処理してデータベースに挿入
         for data in subtitle:
             # 字幕情報を保存する前に、関連するVideoSubtitleInfoインスタンスを取得する必要があります
-            subtitle_info_id = generate_subtitle_id(video_id, subtitle_type, language)
-            subtitle_info_instance = VideoSubtitleInfo.objects.get(subtitle_id=subtitle_info_id)
+            subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
+            subtitle_info_instance = VideoSubtitleInfo.objects.get(subtitle_id=subtitle_id)
             VideoSubtitle.objects.create(
                 subtitle_id=subtitle_info_instance,
                 subtitle_text_id=generate_uuid(),
