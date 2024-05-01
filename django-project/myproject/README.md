@@ -9,7 +9,8 @@ python manage.py makemigrations
 
 python manage.py migrate
 ```
-
+PKで生成する場合は以下
+timezone.now()
 ```
 ## 管理者ユーザー (スーパーユーザー) を作成
 

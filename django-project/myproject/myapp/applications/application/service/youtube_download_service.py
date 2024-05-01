@@ -7,7 +7,7 @@ from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtit
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
-from myapp.models import VideoSubtitleInfo, VideoSubtitle
+from myapp.models import VideoSubtitleInfo, VideoSubtitle, VideoSubtitleDetail
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
 
 
@@ -16,37 +16,48 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
-    def get_manual_subtitle_list(self,video_id):
+    def get_manual_subtitle_list(self, video_id):
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitle.objects.filter(
             subtitle_info__subtitle_type=SubtitleType.MANUAL.value,
             subtitle_info__video_id=video_id
-        ).order_by(
-            'subtitle_info__subtitle_id',
-            't_start_ms'
         )
 
+        # 韓国語字幕のクエリ
+        ko_queryset = queryset.filter(subtitle_info__language_code=YouTubeLanguage.KOREAN.value)
+
+        # 日本語字幕のクエリ
+        ja_queryset = queryset.filter(subtitle_info__language_code=YouTubeLanguage.JAPANESE.value)
+
         # クエリセットを実行
-        results = list(queryset)
+        ko_results = list(ko_queryset.order_by('t_start_ms'))
+        ja_results = list(ja_queryset.order_by('t_start_ms'))
 
-        # 別々のリストに格納するための空のリストを用意
-        ja_subtitles = []
-        ko_subtitles = []
+        if self.check_subtitle_text_id_exists(generate_subtitle_id(video_id,SubtitleType.MANUAL,YouTubeLanguage.KOREAN)):
+            logging.debug('既にある')
+            return
 
-        for result in results:
-            # subtitle_info__language_code が 'ja' の場合、ja_subtitles リストに格納
-            if result.subtitle_info.language_code == YouTubeLanguage.JAPANESE.value:
-                ja_subtitles.append(result.subtitle_text)
-            # subtitle_info__language_code が 'ko' の場合、ko_subtitles リストに格納
-            elif result.subtitle_info.language_code == YouTubeLanguage.KOREAN.value:
-                ko_subtitles.append(result.subtitle_text)
+        if len(ko_results) == len(ja_results):
+            for ko_result, ja_result in zip(ko_results, ja_results):
+                if ko_result.t_start_ms == ja_result.t_start_ms:
+                    # VideoSubtitle のインスタンスを取得
+                    subtitle_instance = VideoSubtitle.objects.get(subtitle_text_id=ko_result.subtitle_text_id)
 
-        for result in ja_subtitles:
-            print(result)
-        for result in ko_subtitles:
-            print(result)
-        print(len(ja_subtitles))
-        print(len(ko_subtitles))
+                    # VideoSubtitleDetail のインスタンスを作成し、subtitle_text_id に subtitle_instance を割り当てる
+                    VideoSubtitleDetail.objects.create(
+                        subtitle_text_id=subtitle_instance,
+                        subtitle_transration_text=ja_result.subtitle_text,
+                        subtitle_transration_text_detail=None,
+                    )
+                    print(ko_result.subtitle_text_id, ko_result.subtitle_text, ja_result.subtitle_text)
+        else:
+            logging.debug('一致する字幕情報なし')
+
+
+    def check_subtitle_text_id_exists(self,subtitle_id):
+        # 特定の subtitle_id に対応する VideoSubtitleDetail レコードが存在するかチェック
+        exists = VideoSubtitleDetail.objects.filter(subtitle_text_id__subtitle_info__subtitle_id=subtitle_id).exists()
+        return exists
 
     def download_channel_subtitles(self, channel_id: str) -> None:
         default_audio_language = YouTubeLanguage.KOREAN
@@ -131,7 +142,7 @@ class YoutubeDownloadService:
                                                                                                    subtitle_type,
                                                                                                    language)
             # 最初にインサートし、データがあればupdateするように修正
-            subtitle_id=generate_subtitle_id(video_id, subtitle_type, language)
+            subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
             VideoSubtitleInfo.objects.create(
                 subtitle_id=subtitle_id,
                 video_id=video_id,
@@ -148,6 +159,7 @@ class YoutubeDownloadService:
                 has_subtitle=True,
                 remarks=remarks_value
             )
+
     def insert_subtitle_data(self, video_id, subtitle, subtitle_type, language):
         # 辞書型リストのデータを順番に処理してデータベースに挿入
         for data in subtitle:

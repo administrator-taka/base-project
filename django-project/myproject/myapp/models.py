@@ -27,7 +27,8 @@ class VideoSubtitleInfo(models.Model):
     # 動画ID
     video_id = models.CharField(max_length=50, verbose_name='動画ID')
 
-    subtitle_type = models.IntegerField(choices=[(tag.value, tag.name) for tag in SubtitleType], verbose_name='字幕の種類')
+    subtitle_type = models.IntegerField(choices=[(tag.value, tag.name) for tag in SubtitleType],
+                                        verbose_name='字幕の種類')
 
     # 字幕の言語コード
     language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
@@ -64,3 +65,17 @@ class VideoSubtitle(models.Model):
 
     class Meta:
         db_table = 'video_subtitle'
+
+
+class VideoSubtitleDetail(models.Model):
+    # 字幕テキストID
+    subtitle_text_id = models.OneToOneField(VideoSubtitle, primary_key=True, on_delete=models.CASCADE, related_name='subtitle', verbose_name='字幕テキストID')
+
+    # 翻訳字幕
+    subtitle_transration_text = models.TextField(blank=True, null=True, verbose_name='翻訳字幕')
+
+    # 翻訳字幕詳細
+    subtitle_transration_text_detail = models.TextField(blank=True, null=True, verbose_name='翻訳字幕詳細')
+
+    class Meta:
+        db_table = 'video_subtitle_detail'
