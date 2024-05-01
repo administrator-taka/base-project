@@ -20,12 +20,115 @@ class Test(models.Model):
         db_table = 'test'
 
 
+class ChannelDetail(models.Model):
+    # チャンネルID
+    channel_id = models.CharField(primary_key=True, max_length=50, verbose_name='チャンネルID')
+    # チャンネルプレイリストID
+    playlist_id = models.CharField(max_length=50, verbose_name='チャンネルプレイリストID')
+
+    # デフォルトの言語コード（初期値はnullで後から追記する）
+    default_audio_language = models.CharField(null=True, choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                              verbose_name='デフォルトの言語コード')
+    # チャンネルタイトル
+    title = models.TextField(verbose_name='チャンネルタイトル')
+    # チャンネルの説明
+    description = models.TextField(verbose_name='チャンネルの説明')
+    # カスタムURL
+    custom_url = models.CharField(max_length=50, verbose_name='カスタムURL')
+    # 公開日時
+    published_at = models.DateTimeField(verbose_name='公開日時')
+    # サムネイルURL
+    thumbnail = models.TextField(verbose_name='サムネイルURL')
+    # 国コード
+    country = models.CharField(max_length=50, verbose_name='国コード')
+
+    class Meta:
+        db_table = 'channel_detail'
+
+
+class ChannelLocalized(models.Model):
+    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    channel_id = models.ForeignKey(ChannelDetail, db_column='channel_id', on_delete=models.CASCADE,
+                                   related_name='localized_channels',
+                                   verbose_name='チャンネルID')
+    # チャンネルタイトル
+    title = models.TextField(verbose_name='チャンネルタイトル')
+    # チャンネルの説明
+    description = models.TextField(verbose_name='チャンネルの説明')
+
+    class Meta:
+        db_table = 'channel_localized'
+
+
+class VideoDetail(models.Model):
+    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    channel_id = models.ForeignKey(ChannelDetail, db_column='channel_id', on_delete=models.CASCADE,
+                                   related_name='channel_detail',
+                                   verbose_name='チャンネルID')
+    # 動画ID
+    video_id = models.CharField(primary_key=True, max_length=50, verbose_name='動画ID')
+
+    # eタグ
+    e_tag = models.CharField(max_length=50, verbose_name='eタグ')
+
+    # 動画タイトル
+    title = models.TextField(verbose_name='動画タイトル')
+
+    # 動画の説明
+    description = models.TextField(verbose_name='動画の説明')
+    # 公開日時
+    published_at = models.DateTimeField(verbose_name='公開日時')
+    # サムネイルURL
+    thumbnail = models.TextField(verbose_name='サムネイルURL')
+
+    is_disabled = models.BooleanField(verbose_name='削除フラグ')
+
+    # デフォルトの言語コード（video リソースの snippet.title プロパティと snippet.description プロパティで指定されたテキストの言語。）
+    default_language = models.CharField(null=True, choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                        verbose_name='デフォルトのテキスト言語コード')
+
+    # デフォルトの言語コード
+    default_audio_language = models.CharField(null=True, choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                              verbose_name='デフォルトの言語コード')
+
+    # 配信開始日時
+    actual_start_time = models.DateTimeField(null=True, verbose_name='公開日時')
+
+    # 配信終了日時
+    actual_end_time = models.DateTimeField(null=True, verbose_name='公開日時')
+
+    # 配信予定日時
+    scheduled_start_time = models.DateTimeField(null=True, verbose_name='公開日時')
+
+    class Meta:
+        db_table = 'video_detail'
+
+
+class VideoLocalized(models.Model):
+    # 動画ID
+    video_id = models.ForeignKey(VideoDetail, db_column='video_id', on_delete=models.CASCADE,
+                                 related_name='localized_videos',
+                                 verbose_name='動画ID')
+
+    # 言語コード
+    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                     verbose_name='言語コード')
+    # チャンネルタイトル
+    channel_title = models.TextField(verbose_name='チャンネルタイトル')
+    # チャンネルの説明
+    description = models.TextField(verbose_name='チャンネルの説明')
+
+    class Meta:
+        db_table = 'video_localized'
+
+
 class VideoSubtitleInfo(models.Model):
+    # 動画ID
+    video_id = models.ForeignKey(VideoDetail, db_column='video_id', on_delete=models.CASCADE,
+                                 related_name='video_detail',
+                                 verbose_name='動画ID')
     # 字幕ID
     subtitle_id = models.CharField(primary_key=True, max_length=50, verbose_name='字幕ID')
-
-    # 動画ID
-    video_id = models.CharField(max_length=50, verbose_name='動画ID')
 
     subtitle_type = models.IntegerField(choices=[(tag.value, tag.name) for tag in SubtitleType],
                                         verbose_name='字幕の種類')
@@ -45,12 +148,13 @@ class VideoSubtitleInfo(models.Model):
 
 
 class VideoSubtitle(models.Model):
+    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    subtitle_id = models.ForeignKey(VideoSubtitleInfo, db_column='subtitle_id', on_delete=models.CASCADE,
+                                    related_name='video_subtitle_info',
+                                    verbose_name='字幕ID')
     # 字幕テキストID
     subtitle_text_id = models.CharField(primary_key=True, max_length=50, verbose_name='字幕テキストID')
 
-    # 字幕IDでVideoSubtitleInfoとの関連を表現
-    subtitle_info = models.ForeignKey(VideoSubtitleInfo, on_delete=models.CASCADE, related_name='subtitles',
-                                      verbose_name='字幕ID')
     # 開始時間（ミリ秒）
     t_start_ms = models.IntegerField(verbose_name='開始時間（ミリ秒）', null=True, blank=True)
 
@@ -67,10 +171,11 @@ class VideoSubtitle(models.Model):
         db_table = 'video_subtitle'
 
 
-class VideoSubtitleDetail(models.Model):
+class SubtitleTranslation(models.Model):
     # 字幕テキストID
-    subtitle_text_id = models.OneToOneField(VideoSubtitle, primary_key=True, on_delete=models.CASCADE, related_name='subtitle', verbose_name='字幕テキストID')
-
+    subtitle_text_id = models.OneToOneField(VideoSubtitle, db_column='subtitle_text_id', primary_key=True,
+                                            on_delete=models.CASCADE,
+                                            related_name='video_subtitle', verbose_name='字幕テキストID')
     # 翻訳字幕
     subtitle_transration_text = models.TextField(blank=True, null=True, verbose_name='翻訳字幕')
 

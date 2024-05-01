@@ -7,7 +7,7 @@ from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtit
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
-from myapp.models import VideoSubtitleInfo, VideoSubtitle, VideoSubtitleDetail
+from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
 from collections import defaultdict
 
@@ -62,7 +62,7 @@ class YoutubeDownloadService:
                     subtitle_instance = VideoSubtitle.objects.get(subtitle_text_id=ko_result.subtitle_text_id)
 
                     # VideoSubtitleDetail のインスタンスを作成し、subtitle_text_id に subtitle_instance を割り当てる
-                    VideoSubtitleDetail.objects.create(
+                    SubtitleTranslation.objects.create(
                         subtitle_text_id=subtitle_instance,
                         subtitle_transration_text=ja_result.subtitle_text,
                         subtitle_transration_text_detail=None,
@@ -74,7 +74,7 @@ class YoutubeDownloadService:
 
     def check_subtitle_text_id_exists(self,subtitle_id):
         # 特定の subtitle_id に対応する VideoSubtitleDetail レコードが存在するかチェック
-        exists = VideoSubtitleDetail.objects.filter(subtitle_text_id__subtitle_info__subtitle_id=subtitle_id).exists()
+        exists = SubtitleTranslation.objects.filter(subtitle_text_id__subtitle_info__subtitle_id=subtitle_id).exists()
         return exists
 
     def download_channel_subtitles(self, channel_id: str) -> None:
