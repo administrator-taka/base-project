@@ -128,10 +128,28 @@ class YouTubeApiLogic:
 
         for item in playlist_data:
             video_id = item.get("contentDetails", {}).get("videoId")
+            e_tag = item.get("etag", {})
             title = item.get("snippet", {}).get("title")
-            # TODO:他の項目も含める
-            if video_id and title:
-                videos.append({"video_id": video_id, "title": title})
+            published_at = item.get("snippet", {}).get("publishedAt")
+            description = item.get("snippet", {}).get("description")
+            thumbnail = item.get("snippet", {}).get("thumbnails", {}).get("high", {}).get("url")
+            channel_id = item.get("snippet", {}).get("channelId")
+            channel_title = item.get("snippet", {}).get("channelTitle")
+
+            # 他の項目も含める
+
+            if video_id:
+                videos.append({
+                    "video_id": video_id,
+                    "e_tag": e_tag,
+                    "title": title,
+                    "published_at": published_at,
+                    "description": description,
+                    "thumbnail": thumbnail,
+                    "channel_id": channel_id,
+                    "channel_title": channel_title,
+                    # 他の情報もここで追加する
+                })
 
         return videos
 

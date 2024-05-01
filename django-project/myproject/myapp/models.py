@@ -81,8 +81,6 @@ class VideoDetail(models.Model):
     # サムネイルURL
     thumbnail = models.TextField(verbose_name='サムネイルURL')
 
-    is_disabled = models.BooleanField(verbose_name='削除フラグ')
-
     # デフォルトの言語コード（video リソースの snippet.title プロパティと snippet.description プロパティで指定されたテキストの言語。）
     default_language = models.CharField(null=True, choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
                                         verbose_name='デフォルトのテキスト言語コード')
@@ -99,6 +97,9 @@ class VideoDetail(models.Model):
 
     # 配信予定日時
     scheduled_start_time = models.DateTimeField(null=True, verbose_name='公開日時')
+
+    # 削除フラグ
+    is_disabled = models.BooleanField(verbose_name='削除フラグ')
 
     class Meta:
         db_table = 'video_detail'
