@@ -158,15 +158,19 @@ class YoutubeDownloadService:
 
     def download_channel_subtitles(self, channel_id: str) -> None:
         self.insert_initial_channel_data(channel_id)
-        default_audio_language = YouTubeLanguage.KOREAN
-        translation_languages = [YouTubeLanguage.JAPANESE]
+        # ChannelTranslationInfoからデータを取得
+        translation_info = ChannelTranslationInfo.objects.get(channel_id=channel_id)
 
-        # playlist_id = self.youtube_api_logic.get_channel_id_playlist_id(channel_id)
-        playlist_id = TEST_YOUTUBE_PLAYLIST_ID
-        playlist_videos = self.youtube_api_logic.get_channel_videos(playlist_id)
+        # デフォルトの言語コードを取得
+        default_audio_language = YouTubeLanguage(translation_info.default_audio_language)
+
+        # 翻訳言語リスト取得
+        translation_languages = [YouTubeLanguage(language) for language in translation_info.translation_languages]
+
+        playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
 
         for video in playlist_videos:
-            video_id = video.get("video_id")
+            video_id = video.video_id
             # 字幕IDが存在するかのチェックを行うデータ準備
             subtitle_ids = [generate_subtitle_id(video_id, SubtitleType.AUTOMATIC, default_audio_language)]
             for language in translation_languages:

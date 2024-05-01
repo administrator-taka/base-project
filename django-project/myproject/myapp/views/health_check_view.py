@@ -10,7 +10,7 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def health_check(request):
-    test_5()
+    test_2()
     return JsonResponse(data={"msg": "pass"}, status=200)
 
 
