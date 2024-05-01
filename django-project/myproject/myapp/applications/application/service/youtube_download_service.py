@@ -18,12 +18,13 @@ class YoutubeDownloadService:
         self.youtube_api_logic = YouTubeApiLogic()
 
     def insert_initial_channel_data(self, channel_id):
-        # チャンネルIDに紐づくチャンネル情報が存在するかチェック
-        existing_channel_data = ChannelDetail.objects.filter(
+        # チャンネルIDに紐づくチャンネル情報を取得
+        channel_data = ChannelDetail.objects.filter(
             channel_id=channel_id
-        )
+        ).first()
+        channel_playlist_id = None;
         # チャンネル情報が存在しない場合は追加
-        if not existing_channel_data:
+        if not channel_data:
             channel_data = self.youtube_api_logic.get_channel_details_data(channel_id)
             if channel_data:
                 # 新しいチャンネルデータを作成して保存
@@ -38,11 +39,18 @@ class YoutubeDownloadService:
                     thumbnail=channel_data['thumbnail'],
                     country=channel_data['country']
                 )
+                channel_playlist_id = channel_data['playlist_id']
                 logging.debug("チャンネル情報が追加されました。")
             else:
                 logging.debug("チャンネル情報が見つかりませんでした。")
         else:
             logging.debug("チャンネル情報は既に存在します。")
+            channel_playlist_id = channel_data.playlist_id
+
+        playlist_videos = self.youtube_api_logic.get_channel_videos(channel_playlist_id)
+        print(playlist_videos)
+
+
 
     def get_channel_subtitle_list(self, channel_id):
         # Django ORMを使用してクエリを構築
