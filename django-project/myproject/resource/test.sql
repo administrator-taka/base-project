@@ -51,3 +51,6 @@ WHERE video_subtitle_info.language_code='ko'
 AND subtitle_type=0
 GROUP BY subtitle_text
 ORDER BY subtitle_count DESC;
+
+--初期データ
+"UCHE7GBQVtdh-c1m3tjFdevQ","ko","{ja}"
