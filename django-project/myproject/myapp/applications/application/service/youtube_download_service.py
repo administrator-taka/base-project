@@ -9,12 +9,30 @@ from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, VideoSubtitleDetail
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
+from collections import defaultdict
 
 
 class YoutubeDownloadService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
+
+    def get_channel_subtitle_list(self, channel_id):
+        # Django ORMを使用してクエリを構築
+        queryset = VideoSubtitleInfo.objects.filter(
+            subtitle_type=SubtitleType.MANUAL.value,
+        )
+
+        # video_idごとに字幕情報をまとめるための辞書を作成
+        subtitle_info_by_video = defaultdict(list)
+        for info in queryset:
+            subtitle_info_by_video[info.video_id].append(info)
+
+        # 辞書の内容を表示
+        for video_id, infos in subtitle_info_by_video.items():
+            print("Video ID:", video_id)
+            for info in infos:
+                print(info.language_code,info.has_subtitle)
 
     def get_manual_subtitle_list(self, video_id):
         # Django ORMを使用してクエリを構築
