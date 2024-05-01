@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from myapp.applications.util.code.subtitle_type import SubtitleType
@@ -26,9 +27,6 @@ class ChannelDetail(models.Model):
     # チャンネルプレイリストID
     playlist_id = models.CharField(max_length=50, verbose_name='チャンネルプレイリストID')
 
-    # デフォルトの言語コード（初期値はnullで後から追記する）
-    default_audio_language = models.CharField(null=True, choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
-                                              verbose_name='デフォルトの言語コード')
     # チャンネルタイトル
     title = models.TextField(verbose_name='チャンネルタイトル')
     # チャンネルの説明
@@ -44,6 +42,24 @@ class ChannelDetail(models.Model):
 
     class Meta:
         db_table = 'channel_detail'
+
+
+class ChannelTranslationInfo(models.Model):
+    # 字幕IDでVideoSubtitleInfoとの関連を表現
+    channel_id = models.OneToOneField(ChannelDetail, primary_key=True, db_column='channel_id', on_delete=models.CASCADE,
+                                      related_name='channel_translation_info',
+                                      verbose_name='チャンネルID')
+    # デフォルトの言語コード（初期値はnullで後から追記する）
+    default_audio_language = models.CharField(null=True, choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                              verbose_name='デフォルトの言語コード')
+
+    # 翻訳の言語コードリスト
+    translation_languages = ArrayField(
+        models.CharField(max_length=10, choices=[(tag.value, tag.name) for tag in YouTubeLanguage]),
+        null=True, verbose_name='翻訳の言語コードリスト')
+
+    class Meta:
+        db_table = 'channel_translation_info'
 
 
 class ChannelLocalized(models.Model):

@@ -7,7 +7,8 @@ from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtit
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
-from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail
+from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
+    ChannelTranslationInfo
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
 from collections import defaultdict
 
@@ -28,10 +29,9 @@ class YoutubeDownloadService:
             channel_data = self.youtube_api_logic.get_channel_details_data(channel_id)
             if channel_data:
                 # 新しいチャンネルデータを作成して保存
-                ChannelDetail.objects.create(
+                new_channel = ChannelDetail.objects.create(
                     channel_id=channel_data['channel_id'],
                     playlist_id=channel_data['playlist_id'],
-                    default_audio_language=channel_data['default_audio_language'],
                     title=channel_data['title'],
                     description=channel_data['description'],
                     custom_url=channel_data['custom_url'],
@@ -40,7 +40,13 @@ class YoutubeDownloadService:
                     country=channel_data['country']
                 )
                 channel_playlist_id = channel_data['playlist_id']
+                ChannelTranslationInfo.objects.create(
+                    channel_id=new_channel,
+                    default_audio_language=None,
+                    translation_languages=None
+                )
                 logging.debug("チャンネル情報が追加されました。")
+
             else:
                 logging.debug("チャンネル情報が見つかりませんでした。")
         else:
@@ -151,6 +157,7 @@ class YoutubeDownloadService:
         return exists
 
     def download_channel_subtitles(self, channel_id: str) -> None:
+        self.insert_initial_channel_data(channel_id)
         default_audio_language = YouTubeLanguage.KOREAN
         translation_languages = [YouTubeLanguage.JAPANESE]
 

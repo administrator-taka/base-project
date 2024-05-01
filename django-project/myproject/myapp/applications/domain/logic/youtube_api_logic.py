@@ -57,8 +57,6 @@ class YouTubeApiLogic:
             channel_data['channel_id'] = item.get('id')
             # チャンネルプレイリストID
             channel_data['playlist_id'] = item.get('contentDetails', {}).get('relatedPlaylists', {}).get('uploads')
-            # デフォルトの言語コード（初期値はnullで後から追記する）
-            channel_data['default_audio_language'] = None
             # チャンネルタイトル
             channel_data['title'] = item.get('snippet', {}).get('title')
             # チャンネルの説明
