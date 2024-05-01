@@ -114,24 +114,28 @@ class YoutubeDownloadService:
                 print(info.language_code, info.has_subtitle)
 
     def insert_initial_subtitle_detail(self, video_id):
+        # YouTubeLanguageを変数にする
+        base_language = YouTubeLanguage.KOREAN
+        target_language = YouTubeLanguage.JAPANESE
+
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitle.objects.filter(
             subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
             subtitle_id__video_id=video_id
         )
 
-        # 韓国語字幕のクエリ
-        ko_queryset = queryset.filter(subtitle_id__language_code=YouTubeLanguage.KOREAN.value)
+        # ベース字幕のクエリ
+        base_queryset = queryset.filter(subtitle_id__language_code=base_language.value)
 
-        # 日本語字幕のクエリ
-        ja_queryset = queryset.filter(subtitle_id__language_code=YouTubeLanguage.JAPANESE.value)
+        # ターゲット字幕のクエリ
+        target_queryset = queryset.filter(subtitle_id__language_code=target_language.value)
 
         # クエリセットを実行
-        ko_results = list(ko_queryset.order_by('t_start_ms'))
-        ja_results = list(ja_queryset.order_by('t_start_ms'))
+        ko_results = list(base_queryset.order_by('t_start_ms'))
+        ja_results = list(target_queryset.order_by('t_start_ms'))
 
         if self.check_subtitle_text_id_exists(
-                generate_subtitle_id(video_id, SubtitleType.MANUAL, YouTubeLanguage.KOREAN), YouTubeLanguage.JAPANESE):
+                generate_subtitle_id(video_id, SubtitleType.MANUAL, base_language), target_language):
             logging.debug('既にある')
             return
 
@@ -144,7 +148,7 @@ class YoutubeDownloadService:
                     # VideoSubtitleDetail のインスタンスを作成し、subtitle_text_id に subtitle_instance を割り当てる
                     SubtitleTranslation.objects.create(
                         subtitle_text_id=subtitle_instance,
-                        language_code=YouTubeLanguage.JAPANESE.value,
+                        language_code=target_language.value,
                         subtitle_transration_text=ja_result.subtitle_text,
                         subtitle_transration_text_detail=None,
                     )
