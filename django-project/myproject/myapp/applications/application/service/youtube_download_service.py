@@ -260,7 +260,7 @@ class YoutubeDownloadService:
             # サブタイトル情報がある場合、備考にサブタイトルを設定する
             remarks_value = subtitle if not has_subtitle else None
             VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
-                has_subtitle=True,
+                has_subtitle=has_subtitle,
                 remarks=remarks_value
             )
 
