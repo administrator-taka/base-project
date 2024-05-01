@@ -99,7 +99,7 @@ class VideoDetail(models.Model):
     scheduled_start_time = models.DateTimeField(null=True, verbose_name='公開日時')
 
     # 削除フラグ
-    is_disabled = models.BooleanField(verbose_name='削除フラグ')
+    is_disabled = models.BooleanField(default=False, verbose_name='削除フラグ')
 
     class Meta:
         db_table = 'video_detail'
