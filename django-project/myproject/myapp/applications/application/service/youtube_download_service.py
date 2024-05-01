@@ -49,9 +49,9 @@ class YoutubeDownloadService:
 
         playlist_videos = self.youtube_api_logic.get_channel_videos(channel_playlist_id)
         for video_data in playlist_videos:
-            self.insert_or_update_video_detail(channel_id,video_data)
+            self.insert_or_update_video_detail(video_data)
 
-    def insert_or_update_video_detail(self, channel_id, video_data):
+    def insert_or_update_video_detail(self, video_data):
         video_id = video_data['video_id']
         e_tag = video_data['e_tag']
         title = video_data['title']
@@ -59,14 +59,13 @@ class YoutubeDownloadService:
         description = video_data['description']
         thumbnail = video_data['thumbnail']
         channel_id = video_data['channel_id']
-        channel_title = video_data['channel_title']
 
         # video_idで既存のレコードを取得する
         try:
             video_detail = VideoDetail.objects.get(video_id=video_id)
         except VideoDetail.DoesNotExist:
             # 既存のレコードがない場合は新規作成
-            video_detail = VideoDetail.objects.create(
+            VideoDetail.objects.create(
                 video_id=video_id,
                 e_tag=e_tag,
                 title=title,
