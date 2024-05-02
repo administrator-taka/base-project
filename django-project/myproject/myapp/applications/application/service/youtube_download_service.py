@@ -183,6 +183,10 @@ class YoutubeDownloadService:
 
         playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
 
+        # ログ出力用
+        total_videos = len(playlist_videos)
+        processed_videos = 0
+
         for video in playlist_videos:
             video_id = video.video_id
             # 字幕IDが存在するかのチェックを行うデータ準備
@@ -197,6 +201,11 @@ class YoutubeDownloadService:
                 self.download_video_subtitle(video_id, default_audio_language, translation_languages)
             else:
                 logging.debug(f"{video_id}:登録済み")
+
+            # 処理されたビデオ数を更新
+            processed_videos += 1
+            # 経過率をデバッグに出力
+            logging.debug(f"処理進行状況: {processed_videos}/{total_videos}")
 
     def check_subtitle_existence(self, video_id, subtitle_ids):
         """
@@ -227,8 +236,9 @@ class YoutubeDownloadService:
                                 default_audio_language: YouTubeLanguage,
                                 translation_languages: List[YouTubeLanguage]) -> None:
 
-        # subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
-        # FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
+        subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
+        FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
+        return
         # TODO:データを事前に用意している場合は以下を使用
         subtitle_info = FileHandler.get_json_response(TEST_DIR+"subtitle_data/" + video_id)
         # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
