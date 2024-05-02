@@ -205,7 +205,7 @@ class YoutubeDownloadService:
             # 処理されたビデオ数を更新
             processed_videos += 1
             # 経過率をデバッグに出力
-            logging.debug(f"処理進行状況: {processed_videos}/{total_videos}")
+            logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
 
     def check_subtitle_existence(self, video_id, subtitle_ids):
         """
@@ -236,9 +236,9 @@ class YoutubeDownloadService:
                                 default_audio_language: YouTubeLanguage,
                                 translation_languages: List[YouTubeLanguage]) -> None:
 
-        subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
-        FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
-        return
+        # subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
+        # FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
+        # return
         # TODO:データを事前に用意している場合は以下を使用
         subtitle_info = FileHandler.get_json_response(TEST_DIR+"subtitle_data/" + video_id)
         # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
