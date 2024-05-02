@@ -1,4 +1,5 @@
 import logging
+import time
 import unittest
 from typing import List
 
@@ -226,10 +227,12 @@ class YoutubeDownloadService:
                                 default_audio_language: YouTubeLanguage,
                                 translation_languages: List[YouTubeLanguage]) -> None:
 
-        subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
+        # subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
+        # FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
         # TODO:データを事前に用意している場合は以下を使用
-        FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
         subtitle_info = FileHandler.get_json_response(TEST_DIR+"subtitle_data/" + video_id)
+        # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
+        time.sleep(0.5)
         # 自動生成字幕
         self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
                                                   default_audio_language)
