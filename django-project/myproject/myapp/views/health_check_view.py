@@ -10,7 +10,7 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def health_check(request):
-    test_3()
+    test_2()
     return JsonResponse(data={"msg": "pass"}, status=200)
 
 
@@ -24,6 +24,7 @@ def test_1():
 
 
 def test_2():
+    # 全部の字幕データを取得する動作確認用
     youtube_download_service = YoutubeDownloadService()
 
     channel_id = TEST_YOUTUBE_CHANNEL_ID

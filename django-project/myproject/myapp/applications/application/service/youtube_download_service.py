@@ -6,10 +6,11 @@ from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
+from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
     ChannelTranslationInfo
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID
+from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID, TEST_DIR
 from collections import defaultdict
 
 
@@ -226,8 +227,9 @@ class YoutubeDownloadService:
                                 translation_languages: List[YouTubeLanguage]) -> None:
 
         subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
-        # FileHandler.write_json_response(subtitle_info)
-        # subtitle_info = FileHandler.get_json_response(TEST_DIR + "test_20240427_141430.json")
+        # TODO:データを事前に用意している場合は以下を使用
+        FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
+        subtitle_info = FileHandler.get_json_response(TEST_DIR+"subtitle_data/" + video_id)
         # 自動生成字幕
         self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
                                                   default_audio_language)

@@ -114,6 +114,8 @@ class VideoDetail(models.Model):
     # 配信予定日時
     scheduled_start_time = models.DateTimeField(null=True, verbose_name='公開日時')
 
+    # TODO:動画の種類、動画、short、配信
+
     # 削除フラグ
     is_disabled = models.BooleanField(default=False, verbose_name='削除フラグ')
 
