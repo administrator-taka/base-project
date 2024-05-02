@@ -19,6 +19,8 @@ class FileHandler:
             file_name (str): 保存するファイルの名前
             encoding (str): ファイルのエンコーディング（デフォルトは utf-8）
         """
+        if not file_name.endswith('.json'):
+            file_name += '.json'
         # ディレクトリが存在しない場合は作成する
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -41,6 +43,8 @@ class FileHandler:
             file_name (str): 保存するファイルの名前
             encoding (str): ファイルのエンコーディング（デフォルトは utf-8）
         """
+        if not file_name.endswith('.csv'):
+            file_name += '.csv'
         # ディレクトリが存在しない場合は作成する
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -64,6 +68,8 @@ class FileHandler:
             file_name (str): 保存するファイルの名前
             encoding (str): ファイルのエンコーディング（デフォルトは utf-8）
         """
+        if not file_name.endswith('.txt'):
+            file_name += '.txt'
         # ディレクトリが存在しない場合は作成する
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -101,6 +107,8 @@ class FileHandler:
         Returns:
             dict: 読み込んだJSONファイルの内容
         """
+        if not file_path.endswith('.json'):
+            file_path += '.json'
         with open(file_path, 'r', encoding=encoding) as json_file:
             data = json.load(json_file)
         return data
