@@ -84,8 +84,14 @@ class FileHandler:
     @staticmethod
     def format_json_print(data):
         # JSONデータを整形して返す
-        formatted_json = json.dumps(data, indent=4, ensure_ascii=False)
+        formatted_json = FileHandler.format_json(data)
         print(formatted_json)
+
+    @staticmethod
+    def format_json(data):
+        # JSONデータを整形して返す
+        formatted_json = json.dumps(data, indent=4, ensure_ascii=False)
+        return formatted_json
 
     @staticmethod
     def write_json_response(data, file_name="test"):

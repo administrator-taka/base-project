@@ -125,6 +125,7 @@ class YoutubeDownloadService:
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitleInfo.objects.filter(
             subtitle_type=SubtitleType.MANUAL.value,
+            video_id__channel_id=channel_id
         )
 
         # video_idごとに字幕情報をまとめるための辞書を作成
