@@ -38,10 +38,10 @@ class YoutubeDownloadService:
 
         # 結果を表示
         for result in results:
-            print("Subtitle Text:", result.subtitle_text)
-            print("Video ID:", result.subtitle_id.video_id_id)
-            print("Start Time (ms):", result.t_start_ms)
-            print(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
+            logging.debug(f"Subtitle Text: {result.subtitle_text}")
+            logging.debug(f"Video ID: {result.subtitle_id.video_id_id}")
+            logging.debug(f"Start Time (ms): {result.t_start_ms}")
+            logging.debug(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
 
     def insert_initial_channel_data(self, channel_id):
         # チャンネルIDに紐づくチャンネル情報を取得
