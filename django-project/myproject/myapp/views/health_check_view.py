@@ -48,7 +48,7 @@ def test_4():
 def test_5():
     youtube_download_service = YoutubeDownloadService()
     channel_id = TEST_YOUTUBE_CHANNEL_ID
-    youtube_download_service.insert_initial_channel_data(channel_id)
+    youtube_download_service.insert_initial_video_data(channel_id)
 
 
 def test_6():

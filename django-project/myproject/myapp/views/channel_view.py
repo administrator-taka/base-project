@@ -23,7 +23,10 @@ def get_channel_data(request, channel_id):
 
 
 @api_view(['GET'])
-def insert_initial_channel_data(request, channel_id):
+def download_channel_subtitles(request, channel_id):
+    youtube_download_service = YoutubeDownloadService()
+    youtube_download_service.download_channel_subtitles(channel_id)
+
     # JSONレスポンスを作成
     data = {
         "response": "response"
@@ -94,7 +97,7 @@ def test_4():
 def test_5():
     youtube_download_service = YoutubeDownloadService()
     channel_id = TEST_YOUTUBE_CHANNEL_ID
-    youtube_download_service.insert_initial_channel_data(channel_id)
+    youtube_download_service.insert_initial_video_data(channel_id)
 
 
 def test_6():

@@ -22,6 +22,7 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
+    # 単語検索
     def search_single_row_word(self, search_word, channel_id=None, subtitle_type=None, language_code=None):
         # 検索クエリを構築
         query = Q(subtitle_text__icontains=search_word)
@@ -54,12 +55,11 @@ class YoutubeDownloadService:
 
         return search_results
 
-    def insert_initial_channel_data(self, channel_id):
+    def insert_channel_data(self, channel_id):
         # チャンネルIDに紐づくチャンネル情報を取得
         channel_data = ChannelDetail.objects.filter(
             channel_id=channel_id
         ).first()
-        channel_playlist_id = None;
         # チャンネル情報が存在しない場合は追加
         if not channel_data:
             channel_data = self.youtube_api_logic.get_channel_details_data(channel_id)
@@ -75,7 +75,6 @@ class YoutubeDownloadService:
                     thumbnail=channel_data['thumbnail'],
                     country=channel_data['country']
                 )
-                channel_playlist_id = channel_data['playlist_id']
                 ChannelTranslationInfo.objects.create(
                     channel_id=new_channel,
                     default_audio_language=None,
@@ -87,12 +86,21 @@ class YoutubeDownloadService:
                 logging.debug("チャンネル情報が見つかりませんでした。")
         else:
             logging.debug("チャンネル情報は既に存在します。")
-            channel_playlist_id = channel_data.playlist_id
+
+    # 初期動画データ登録
+    def insert_initial_video_data(self, channel_id):
+        self.insert_channel_data(channel_id)
+        # チャンネルIDに紐づくチャンネル情報を取得
+        channel_data = ChannelDetail.objects.filter(
+            channel_id=channel_id
+        ).first()
+        channel_playlist_id = channel_data.playlist_id
 
         playlist_videos = self.youtube_api_logic.get_channel_videos(channel_playlist_id)
         for video_data in playlist_videos:
             self.insert_or_update_video_detail(video_data)
 
+    # 動画詳細登録
     def insert_or_update_video_detail(self, video_data):
         video_id = video_data['video_id']
         e_tag = video_data['e_tag']
@@ -132,6 +140,7 @@ class YoutubeDownloadService:
         else:
             logging.debug("動画情報は既に最新です。")
 
+    # 字幕のステータスの一覧を取得
     def get_channel_subtitle_list(self, channel_id):
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitleInfo.objects.filter(
@@ -163,6 +172,7 @@ class YoutubeDownloadService:
             result.append(video_info)
         return result
 
+    # 初期字幕翻訳情報追加 TODO:レスポンスを考える
     def insert_initial_subtitle_detail(self, video_id):
         # YouTubeLanguageを変数にする
         base_language = YouTubeLanguage.KOREAN
@@ -181,16 +191,16 @@ class YoutubeDownloadService:
         target_queryset = queryset.filter(subtitle_id__language_code=target_language.value)
 
         # クエリセットを実行
-        ko_results = list(base_queryset.order_by('t_start_ms'))
-        ja_results = list(target_queryset.order_by('t_start_ms'))
+        base_results = list(base_queryset.order_by('t_start_ms'))
+        target_results = list(target_queryset.order_by('t_start_ms'))
 
         if self.check_subtitle_text_id_exists(
                 generate_subtitle_id(video_id, SubtitleType.MANUAL, base_language), target_language):
             logging.debug('既にある')
             return
 
-        if len(ko_results) == len(ja_results):
-            for ko_result, ja_result in zip(ko_results, ja_results):
+        if len(base_results) == len(target_results):
+            for ko_result, ja_result in zip(base_results, target_results):
                 if ko_result.t_start_ms == ja_result.t_start_ms:
                     # VideoSubtitle のインスタンスを取得
                     subtitle_instance = VideoSubtitle.objects.get(subtitle_text_id=ko_result.subtitle_text_id)
@@ -214,8 +224,10 @@ class YoutubeDownloadService:
         ).exists()
         return exists
 
+    # 初期字幕データ一括投入（大）
     def download_channel_subtitles(self, channel_id: str) -> None:
-        self.insert_initial_channel_data(channel_id)
+        self.insert_initial_video_data(channel_id)
+        # TODO:字幕の追加状況確認メソッド追加
         # ChannelTranslationInfoからデータを取得
         translation_info = ChannelTranslationInfo.objects.get(channel_id=channel_id)
 
@@ -289,8 +301,6 @@ class YoutubeDownloadService:
         # return
         # TODO:データを事前に用意している場合は以下を使用
         subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
-        # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
-        time.sleep(1)
         # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
         # # 自動生成字幕
         # self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
@@ -315,6 +325,8 @@ class YoutubeDownloadService:
 
         # ビデオサブタイトル情報が存在しない場合に新しいレコードを作成
         if not existing_subtitle_info:
+            # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
+            time.sleep(1)
             # 自動生成字幕
             has_subtitle, subtitle = self.youtube_subtitle_logic.extract_and_process_subtitle_json(subtitle_info,
                                                                                                    subtitle_type,
