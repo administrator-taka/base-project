@@ -13,12 +13,35 @@ from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, 
     ChannelTranslationInfo
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID, TEST_DIR
 from collections import defaultdict
+from django.db.models import Q
 
 
 class YoutubeDownloadService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
+
+    def search_single_row_word(self, search_word, channel_id=None, subtitle_type=None, language_code=None):
+        # 検索クエリを構築
+        query = Q(subtitle_text__icontains=search_word)
+
+        # フィルタリング条件を追加
+        if channel_id is not None:
+            query &= Q(subtitle_id__video_id__channel_id=channel_id)
+        if subtitle_type is not None:
+            query &= Q(subtitle_id__subtitle_type=subtitle_type.value)
+        if language_code is not None:
+            query &= Q(subtitle_id__language_code=language_code.value)
+
+        # VideoSubtitle モデルからレコードを検索
+        results = VideoSubtitle.objects.filter(query)
+
+        # 結果を表示
+        for result in results:
+            print("Subtitle Text:", result.subtitle_text)
+            print("Video ID:", result.subtitle_id.video_id_id)
+            print("Start Time (ms):", result.t_start_ms)
+            print(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
 
     def insert_initial_channel_data(self, channel_id):
         # チャンネルIDに紐づくチャンネル情報を取得
@@ -240,7 +263,7 @@ class YoutubeDownloadService:
         # FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
         # return
         # TODO:データを事前に用意している場合は以下を使用
-        subtitle_info = FileHandler.get_json_response(TEST_DIR+"subtitle_data/" + video_id)
+        subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
         # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
         time.sleep(1)
         # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
