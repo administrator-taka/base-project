@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 import unittest
@@ -134,8 +135,10 @@ class YoutubeDownloadService:
             subtitle_info_by_video[info.video_id].append(info)
 
         # 辞書の内容を表示
-        for video_id, infos in subtitle_info_by_video.items():
-            print("Video ID:", video_id)
+        for video_detail, infos in subtitle_info_by_video.items():
+            print("Video ID:", video_detail)
+            print(video_detail.title)
+            print(video_detail.thumbnail)
             for info in infos:
                 print(info.language_code, info.has_subtitle)
 
