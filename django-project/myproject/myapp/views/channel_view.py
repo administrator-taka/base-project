@@ -11,11 +11,42 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_
 @api_view(['GET'])
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
+    # TODO:channel_dataのinsertと取得
     response = youtube_download_service.get_channel_subtitle_list(channel_id)
     # JSONレスポンスを作成
     data = {
         "channel_data": None,
         "response": response
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['GET'])
+def insert_initial_channel_data(request, channel_id):
+    # JSONレスポンスを作成
+    data = {
+        "response": "response"
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['GET'])
+def search_word(request, channel_id):
+    # JSONレスポンスを作成
+    data = {
+        "response": "response"
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['GET'])
+def update_translation_language(request, channel_id):
+    # JSONレスポンスを作成
+    data = {
+        "response": "response"
     }
 
     return JsonResponse(data=data, status=200)
@@ -59,4 +90,5 @@ def test_5():
 
 def test_6():
     youtube_download_service = YoutubeDownloadService()
-    youtube_download_service.search_single_row_word("미안해", TEST_YOUTUBE_CHANNEL_ID, SubtitleType.MANUAL, YouTubeLanguage.KOREAN)
+    youtube_download_service.search_single_row_word("미안해", TEST_YOUTUBE_CHANNEL_ID, SubtitleType.MANUAL,
+                                                    YouTubeLanguage.KOREAN)
