@@ -37,12 +37,22 @@ class YoutubeDownloadService:
         # VideoSubtitle モデルからレコードを検索
         results = VideoSubtitle.objects.filter(query)
 
-        # 結果を表示
+        # 結果を辞書のリストに詰めて返す
+        search_results = []
         for result in results:
-            logging.debug(f"Subtitle Text: {result.subtitle_text}")
             logging.debug(f"Video ID: {result.subtitle_id.video_id_id}")
             logging.debug(f"Start Time (ms): {result.t_start_ms}")
+            logging.debug(f"Subtitle Text: {result.subtitle_text}")
             logging.debug(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
+            result_dict = {
+                "video_id": result.subtitle_id.video_id_id,
+                "start_time_ms": result.t_start_ms,
+                "subtitle_text": result.subtitle_text,
+                "youtube_url": f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms"
+            }
+            search_results.append(result_dict)
+
+        return search_results
 
     def insert_initial_channel_data(self, channel_id):
         # チャンネルIDに紐づくチャンネル情報を取得

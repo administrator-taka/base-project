@@ -32,11 +32,20 @@ def insert_initial_channel_data(request, channel_id):
     return JsonResponse(data=data, status=200)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def search_word(request, channel_id):
+    # リクエストのJSONの中身を取得
+    request_data = request.data
+
+    # search_wordを取得
+    search_word = request_data.get('search_word', None)
+
+    youtube_download_service = YoutubeDownloadService()
+    # TODO:言語どうにかする
+    response = youtube_download_service.search_single_row_word(search_word, channel_id, SubtitleType.MANUAL)
     # JSONレスポンスを作成
     data = {
-        "response": "response"
+        "response": response
     }
 
     return JsonResponse(data=data, status=200)
