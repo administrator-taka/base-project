@@ -12,7 +12,13 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
     response = youtube_download_service.get_channel_subtitle_list(channel_id)
-    return JsonResponse(data={"response": response}, status=200)
+    # JSONレスポンスを作成
+    data = {
+        "channel_data": None,
+        "response": response
+    }
+
+    return JsonResponse(data=data, status=200)
 
 
 def test_1():

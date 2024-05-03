@@ -144,13 +144,12 @@ class YoutubeDownloadService:
                 'thumbnail': video_detail.thumbnail,
                 'infos': [{'language_code': info.language_code, 'has_subtitle': info.has_subtitle} for info in infos]
             }
-            print(video_detail.video_id)
-            print(video_detail.title)
-            print(video_detail.thumbnail)
-            for info in infos:
-                print(info.language_code, info.has_subtitle)
+            # print(video_detail.video_id)
+            # print(video_detail.title)
+            # print(video_detail.thumbnail)
+            # for info in infos:
+            #     print(info.language_code, info.has_subtitle)
             result.append(video_info)
-
         return result
 
     def insert_initial_subtitle_detail(self, video_id):
