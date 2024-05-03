@@ -133,14 +133,25 @@ class YoutubeDownloadService:
         subtitle_info_by_video = defaultdict(list)
         for info in queryset:
             subtitle_info_by_video[info.video_id].append(info)
+        # 辞書をJSON形式に変換して返す
+        result = []
 
         # 辞書の内容を表示
         for video_detail, infos in subtitle_info_by_video.items():
-            print("Video ID:", video_detail)
+            video_info = {
+                'video_id': video_detail.video_id,
+                'title': video_detail.title,
+                'thumbnail': video_detail.thumbnail,
+                'infos': [{'language_code': info.language_code, 'has_subtitle': info.has_subtitle} for info in infos]
+            }
+            print(video_detail.video_id)
             print(video_detail.title)
             print(video_detail.thumbnail)
             for info in infos:
                 print(info.language_code, info.has_subtitle)
+            result.append(video_info)
+
+        return result
 
     def insert_initial_subtitle_detail(self, video_id):
         # YouTubeLanguageを変数にする

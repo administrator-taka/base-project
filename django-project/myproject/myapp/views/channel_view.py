@@ -12,9 +12,7 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
     response = youtube_download_service.get_channel_subtitle_list(channel_id)
-    print(response)
-
-    return JsonResponse(data={"msg": "pass"}, status=200)
+    return JsonResponse(data={"response": response}, status=200)
 
 
 def test_1():
