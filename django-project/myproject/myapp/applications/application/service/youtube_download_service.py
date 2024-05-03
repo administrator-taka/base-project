@@ -288,7 +288,7 @@ class YoutubeDownloadService:
         self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
                                                   default_audio_language)
 
-        # TODO:リストが単体だと動作不良を起こすため明示的に再度リストに格納
+        # TODO:リストが単体だと動作不良を起こすため明示的に再度リストに格納（引数渡す時に間違ってたので多分なおっている）
         if not isinstance(translation_languages, list):
             translation_languages = [translation_languages]
 

@@ -19,7 +19,7 @@ def test_1():
     youtube_download_service = YoutubeDownloadService()
     video_id = TEST_YOUTUBE_VIDEO_ID
     default_audio_language = YouTubeLanguage.KOREAN
-    translation_language = YouTubeLanguage.JAPANESE
+    translation_language = [YouTubeLanguage.JAPANESE]
 
     youtube_download_service.download_video_subtitle(video_id, default_audio_language, translation_language)
 
