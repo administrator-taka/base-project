@@ -142,6 +142,7 @@ class YoutubeDownloadService:
                 'video_id': video_detail.video_id,
                 'title': video_detail.title,
                 'thumbnail': video_detail.thumbnail,
+                'published_at' : video_detail.published_at,
                 'infos': [{'language_code': info.language_code, 'has_subtitle': info.has_subtitle} for info in infos]
             }
             # print(video_detail.video_id)
