@@ -23,7 +23,6 @@ class YouTubeLanguage(Enum):
     GREEK = "el"
     BRITISH_ENGLISH = "en-GB"
     INDIAN_ENGLISH = "en-IN"
-    ENGLISH = "en"
     SPANISH = "es"
     LATIN_AMERICAN_SPANISH = "es-419"
     US_ENGLISH = "es-US"
