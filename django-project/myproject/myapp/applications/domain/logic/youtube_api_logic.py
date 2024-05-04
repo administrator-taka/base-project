@@ -4,6 +4,8 @@ import unittest
 import googleapiclient.discovery
 from django.conf import settings
 
+from myapp.applications.util.code.subtitle_type import SubtitleType
+from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
     TEST_YOUTUBE_PLAYLIST_ID
@@ -180,13 +182,13 @@ class YouTubeApiLogic:
                 # 最終更新日
                 subtitle_info['last_updated'] = item.get('snippet', {}).get('lastUpdated')
                 # 字幕種別
-                subtitle_info['track_kind'] = item.get('snippet', {}).get('trackKind')
+                track_kind = item.get('snippet', {}).get('trackKind')
+                subtitle_info['track_kind'] = SubtitleType.AUTOMATIC if track_kind == 'asr' else SubtitleType.MANUAL
                 # 字幕言語
-                subtitle_info['language'] = item.get('snippet', {}).get('language')
+                subtitle_info['language'] = YouTubeLanguage(item.get('snippet', {}).get('language'))
                 subtitle_info_list.append(subtitle_info)
 
         return subtitle_info_list
-
     # 動画のカテゴリ情報を取得する
     def get_video_category(self, category_id):
         try:
@@ -284,7 +286,9 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # 動画の字幕情報を取得
         captions_info = self.youtube_logic.get_subtitle_info(video_id)
         # 取得した字幕情報を出力
-        FileHandler.format_json_print(captions_info)
+        print(captions_info)
+        # Enumを扱っているためjsonにできない
+        # FileHandler.format_json_print(captions_info)
 
 
 # if __name__ == '__main__':
