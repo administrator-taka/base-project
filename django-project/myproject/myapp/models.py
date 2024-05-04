@@ -155,6 +155,7 @@ class VideoSubtitleInfo(models.Model):
     # 字幕の言語コード
     language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
 
+    # TODO:0:なし,1:あり,2:追加済み
     # 字幕の有無 (True: 字幕あり, False: 字幕なし)
     has_subtitle = models.BooleanField(verbose_name='字幕があるかないか')
 

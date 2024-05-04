@@ -201,6 +201,15 @@ class YouTubeApiLogic:
             print('An error occurred:', str(e))
             return None
 
+    def get_youtube_languages(self):
+        youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=self.api_key)
+
+        request = youtube.i18nLanguages().list(part='snippet')
+        response = request.execute()
+
+        language_codes = [item['snippet']['hl'] for item in response['items']]
+        return language_codes
+
 
 # YouTubeApiLogicクラスのテスト
 class TestYouTubeApiLogic(unittest.TestCase):
@@ -284,6 +293,10 @@ class TestYouTubeApiLogic(unittest.TestCase):
         print(captions_info)
         # Enumを扱っているためjsonにできない
         # FileHandler.format_json_print(captions_info)
+
+    def test_get_youtube_languages(self):
+        result = self.youtube_logic.get_youtube_languages()
+        FileHandler.format_json_print(result)
 
 # if __name__ == '__main__':
 #     # テストを実行
