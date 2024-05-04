@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -26,7 +25,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VideoSubtitleInfo',
             fields=[
-                ('subtitle_id', models.CharField(max_length=50, primary_key=True, serialize=False, verbose_name='字幕ID')),
+                ('subtitle_id',
+                 models.CharField(max_length=50, primary_key=True, serialize=False, verbose_name='字幕ID')),
                 ('video_id', models.CharField(max_length=50, verbose_name='動画ID')),
                 ('subtitle_type', models.IntegerField(choices=[(0, '自動'), (1, '手動')], verbose_name='字幕の種類')),
                 ('language_code', models.CharField(max_length=10, verbose_name='言語コード')),
@@ -41,12 +41,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VideoSubtitle',
             fields=[
-                ('subtitle_text_id', models.CharField(max_length=50, primary_key=True, serialize=False, verbose_name='字幕テキストID')),
+                ('subtitle_text_id',
+                 models.CharField(max_length=50, primary_key=True, serialize=False, verbose_name='字幕テキストID')),
                 ('t_start_ms', models.IntegerField(blank=True, null=True, verbose_name='開始時間（ミリ秒）')),
                 ('d_duration_ms', models.IntegerField(blank=True, null=True, verbose_name='持続時間（ミリ秒）')),
                 ('t_offset_ms', models.IntegerField(blank=True, null=True, verbose_name='オフセット時間（ミリ秒）')),
                 ('subtitle_text', models.TextField(verbose_name='字幕')),
-                ('subtitle_info', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subtitles', to='myapp.videosubtitleinfo', verbose_name='字幕ID')),
+                ('subtitle_info',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subtitles',
+                                   to='myapp.videosubtitleinfo', verbose_name='字幕ID')),
             ],
             options={
                 'db_table': 'video_subtitle',

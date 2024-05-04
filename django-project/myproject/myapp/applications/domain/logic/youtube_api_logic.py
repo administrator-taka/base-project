@@ -189,6 +189,7 @@ class YouTubeApiLogic:
                 subtitle_info_list.append(subtitle_info)
 
         return subtitle_info_list
+
     # 動画のカテゴリ情報を取得する
     def get_video_category(self, category_id):
         try:
@@ -204,7 +205,6 @@ class YouTubeApiLogic:
         except Exception as e:
             print('An error occurred:', str(e))
             return None
-
 
 
 # YouTubeApiLogicクラスのテスト
@@ -289,7 +289,6 @@ class TestYouTubeApiLogic(unittest.TestCase):
         print(captions_info)
         # Enumを扱っているためjsonにできない
         # FileHandler.format_json_print(captions_info)
-
 
 # if __name__ == '__main__':
 #     # テストを実行

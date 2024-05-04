@@ -1,8 +1,11 @@
-import json
+import logging
 import logging
 import time
 import unittest
+from collections import defaultdict
 from typing import List
+
+from django.db.models import Q
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
@@ -12,9 +15,7 @@ from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
     ChannelTranslationInfo
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_PLAYLIST_ID, TEST_DIR
-from collections import defaultdict
-from django.db.models import Q
+from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
 
 class YoutubeDownloadService:
@@ -161,7 +162,7 @@ class YoutubeDownloadService:
                 'video_id': video_detail.video_id,
                 'title': video_detail.title,
                 'thumbnail': video_detail.thumbnail,
-                'published_at' : video_detail.published_at,
+                'published_at': video_detail.published_at,
                 'infos': [{'language_code': info.language_code, 'has_subtitle': info.has_subtitle} for info in infos]
             }
             # print(video_detail.video_id)

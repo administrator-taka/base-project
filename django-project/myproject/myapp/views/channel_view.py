@@ -1,11 +1,8 @@
 from django.http import JsonResponse
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view
 
 from myapp.applications.application.service.youtube_download_service import YoutubeDownloadService
 from myapp.applications.util.code.subtitle_type import SubtitleType
-from myapp.applications.util.code.youtube_language import YouTubeLanguage
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID
 
 
 @api_view(['GET'])
@@ -63,4 +60,3 @@ def update_translation_language(request, channel_id):
     }
 
     return JsonResponse(data=data, status=200)
-

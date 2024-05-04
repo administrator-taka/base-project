@@ -1,10 +1,11 @@
 import logging
 import os
+import re
 import traceback
 import unittest
 
+import pandas as pd
 import yt_dlp
-import re
 
 from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.subtitle_type import SubtitleType
@@ -12,7 +13,6 @@ from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_convert import convert_to_milliseconds
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
-import pandas as pd
 
 
 class YouTubeSubtitleLogic:
@@ -179,9 +179,9 @@ class YouTubeSubtitleLogic:
             if captions_info:
                 # vtt形式の字幕データが存在する場合
                 vtt_ata = [item for item in captions_info if item.get("ext") == "vtt"
-                             # m3u8_nativeのvttは排除
-                             and item.get("protocol") != "m3u8_native"
-                             ]
+                           # m3u8_nativeのvttは排除
+                           and item.get("protocol") != "m3u8_native"
+                           ]
                 if vtt_ata:
                     url = vtt_ata[0]["url"]
                     # 取得したURLを処理する
@@ -259,7 +259,7 @@ class YouTubeSubtitleLogic:
             blank_check = start_to_end is not None and start_to_end != ""
 
             if blank_check and start_to_end == "" or \
-                    re.match('^\d{2}:\d{2}:\d{2}\.\d{3},\d{2}:\d{2}:\d{2}\.\d{3}$',start_to_end):
+                    re.match('^\d{2}:\d{2}:\d{2}\.\d{3},\d{2}:\d{2}:\d{2}\.\d{3}$', start_to_end):
                 start_time, end_time = start_to_end.split(",")
             subtitle["start_time"] = start_time
             subtitle["end_time"] = end_time

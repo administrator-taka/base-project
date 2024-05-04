@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0015_channeltranslationinfo_and_more'),
     ]
@@ -14,13 +13,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='subtitletranslation',
             name='language_code',
-            field=models.CharField(choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'), ('id', 'INDONESIAN')], default=1, verbose_name='言語コード'),
+            field=models.CharField(choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'),
+                                            ('id', 'INDONESIAN')], default=1, verbose_name='言語コード'),
             preserve_default=False,
         ),
         migrations.AlterField(
             model_name='subtitletranslation',
             name='subtitle_text_id',
-            field=models.ForeignKey(db_column='subtitle_text_id', on_delete=django.db.models.deletion.CASCADE, related_name='video_subtitle', to='myapp.videosubtitle', verbose_name='字幕テキストID'),
+            field=models.ForeignKey(db_column='subtitle_text_id', on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='video_subtitle', to='myapp.videosubtitle', verbose_name='字幕テキストID'),
         ),
         migrations.AddField(
             model_name='subtitletranslation',

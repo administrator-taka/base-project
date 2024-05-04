@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0001_initial'),
     ]
@@ -13,7 +12,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='videosubtitleinfo',
             name='language_code',
-            field=models.CharField(choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'), ('id', 'INDONESIAN')], verbose_name='言語コード'),
+            field=models.CharField(choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'),
+                                            ('id', 'INDONESIAN')], verbose_name='言語コード'),
         ),
         migrations.AlterField(
             model_name='videosubtitleinfo',

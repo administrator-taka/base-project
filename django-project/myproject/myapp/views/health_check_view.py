@@ -53,4 +53,5 @@ def test_5():
 
 def test_6():
     youtube_download_service = YoutubeDownloadService()
-    youtube_download_service.search_single_row_word("미안해", TEST_YOUTUBE_CHANNEL_ID, SubtitleType.MANUAL, YouTubeLanguage.KOREAN)
+    youtube_download_service.search_single_row_word("미안해", TEST_YOUTUBE_CHANNEL_ID, SubtitleType.MANUAL,
+                                                    YouTubeLanguage.KOREAN)

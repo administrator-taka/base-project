@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0008_rename_videosubtitledetail_subtitletranslation_and_more'),
     ]

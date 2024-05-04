@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0002_alter_videosubtitleinfo_language_code_and_more'),
     ]
@@ -14,7 +13,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VideoSubtitleDetail',
             fields=[
-                ('subtitle_text', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='subtitle', serialize=False, to='myapp.videosubtitle', verbose_name='字幕テキストID')),
+                ('subtitle_text', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, primary_key=True,
+                                                    related_name='subtitle', serialize=False, to='myapp.videosubtitle',
+                                                    verbose_name='字幕テキストID')),
                 ('subtitle_transration_text', models.TextField(verbose_name='字幕')),
                 ('subtitle_transration_text_detail', models.TextField(verbose_name='字幕')),
             ],

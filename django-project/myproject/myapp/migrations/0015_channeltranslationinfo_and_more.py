@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0014_alter_videodetail_is_disabled'),
     ]
@@ -15,9 +14,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ChannelTranslationInfo',
             fields=[
-                ('channel_id', models.OneToOneField(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='channel_translation_info', serialize=False, to='myapp.channeldetail', verbose_name='チャンネルID')),
-                ('default_audio_language', models.CharField(choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'), ('id', 'INDONESIAN')], null=True, verbose_name='デフォルトの言語コード')),
-                ('translation_languages', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'), ('id', 'INDONESIAN')], max_length=10), null=True, size=None, verbose_name='翻訳の言語コードリスト')),
+                ('channel_id', models.OneToOneField(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE,
+                                                    primary_key=True, related_name='channel_translation_info',
+                                                    serialize=False, to='myapp.channeldetail', verbose_name='チャンネルID')),
+                ('default_audio_language', models.CharField(
+                    choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'),
+                             ('id', 'INDONESIAN')], null=True, verbose_name='デフォルトの言語コード')),
+                ('translation_languages', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(
+                    choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'),
+                             ('id', 'INDONESIAN')], max_length=10), null=True, size=None,
+                                                                                    verbose_name='翻訳の言語コードリスト')),
             ],
             options={
                 'db_table': 'channel_translation_info',

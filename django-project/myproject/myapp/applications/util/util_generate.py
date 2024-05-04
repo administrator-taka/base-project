@@ -1,6 +1,7 @@
+import uuid
+
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
-import uuid
 
 
 def generate_subtitle_id(video_id: str, subtitle_type: SubtitleType, language: YouTubeLanguage):
