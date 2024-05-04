@@ -117,11 +117,6 @@ class YouTubeApiLogic:
             print('An error occurred:', str(e))
             return None
 
-    def get_channel_id_playlist_id(self, channel_id):
-        channel_details = self.get_channel_details(channel_id)
-        playlist_id = channel_details["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-        return playlist_id
-
     def get_channel_videos(self, playlist_id):
         playlist_data = self.get_all_playlist_videos(playlist_id)
         videos = []
@@ -266,7 +261,7 @@ class TestYouTubeApiLogic(unittest.TestCase):
         # テスト用のチャンネルIDを指定
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         # チャンネルの動画一覧を取得
-        playlist_id = self.youtube_logic.get_channel_id_playlist_id(channel_id)
+        playlist_id = self.youtube_logic.get_channel_details_data(channel_id).get('playlist_id')
         playlist_videos = self.youtube_logic.get_channel_videos(playlist_id)
         # 取得したチャンネルの詳細を出力
         print(playlist_videos)
