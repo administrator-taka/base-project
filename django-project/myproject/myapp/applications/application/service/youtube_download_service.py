@@ -9,6 +9,7 @@ from django.db.models import Q
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
+from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
@@ -23,7 +24,7 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
-    def insert_or_update_latest_subtitle_info(self,channel_id):
+    def insert_or_update_latest_subtitle_info(self, channel_id):
         self.insert_initial_video_data(channel_id)
 
         playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
@@ -182,13 +183,9 @@ class YoutubeDownloadService:
                 'title': video_detail.title,
                 'thumbnail': video_detail.thumbnail,
                 'published_at': video_detail.published_at,
-                'infos': [{'language_code': info.language_code, 'has_subtitle': info.has_subtitle} for info in infos]
+                'infos': [{'language_code': info.language_code, 'subtitle_status': info.subtitle_status} for info in
+                          infos]
             }
-            # print(video_detail.video_id)
-            # print(video_detail.title)
-            # print(video_detail.thumbnail)
-            # for info in infos:
-            #     print(info.language_code, info.has_subtitle)
             result.append(video_info)
         return result
 
@@ -355,20 +352,22 @@ class YoutubeDownloadService:
             subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
             # VideoDetailから動画IDを取得
             video_detail_instance = VideoDetail.objects.get(video_id=video_id)
-            VideoSubtitleInfo.objects.create(
-                video_id=video_detail_instance,
-                subtitle_id=subtitle_id,
-                subtitle_type=subtitle_type.value,
-                language_code=language.value,
-                has_subtitle=has_subtitle,
-                remarks=None
-            )
+            # 先に字幕情報をinsertする（別の処理に変更するため削除？）
+            # VideoSubtitleInfo.objects.create(
+            #     video_id=video_detail_instance,
+            #     subtitle_id=subtitle_id,
+            #     subtitle_type=subtitle_type.value,
+            #     language_code=language.value,
+            #     subtitle_status=1 if has_subtitle else 0,
+            #     remarks=None
+            # )
+            # 字幕があった場合、
             if has_subtitle:
                 self.insert_subtitle_data(video_id, subtitle, subtitle_type, language)
             # サブタイトル情報がある場合、備考にサブタイトルを設定する
             remarks_value = subtitle if not has_subtitle else None
             VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
-                has_subtitle=has_subtitle,
+                subtitle_status = SubtitleStatus.REGISTERED.value if has_subtitle else SubtitleStatus.UNREGISTERED.value,
                 remarks=remarks_value
             )
 
