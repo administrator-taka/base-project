@@ -23,6 +23,25 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
+    def insert_or_update_latest_subtitle_info(self,channel_id):
+        self.insert_initial_video_data(channel_id)
+
+        playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
+
+        # ログ出力用
+        total_videos = len(playlist_videos)
+        processed_videos = 0
+
+        for video in playlist_videos:
+            video_id = video.video_id
+            video_captions = self.youtube_api_logic.get_subtitle_info(video_id)
+            print(video_captions)
+
+            # 処理されたビデオ数を更新
+            processed_videos += 1
+            # 経過率をデバッグに出力
+            logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
+
     # 単語検索
     def search_single_row_word(self, search_word, channel_id=None, subtitle_type=None, language_code=None):
         # 検索クエリを構築

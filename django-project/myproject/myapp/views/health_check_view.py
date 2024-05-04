@@ -11,7 +11,7 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def health_check(request):
-    test_6()
+    test_7()
     return JsonResponse(data={"msg": "pass"}, status=200)
 
 
@@ -55,3 +55,9 @@ def test_6():
     youtube_download_service = YoutubeDownloadService()
     youtube_download_service.search_single_row_word("미안해", TEST_YOUTUBE_CHANNEL_ID, SubtitleType.MANUAL,
                                                     YouTubeLanguage.KOREAN)
+
+
+def test_7():
+    youtube_download_service = YoutubeDownloadService()
+    channel_id = TEST_YOUTUBE_CHANNEL_ID
+    youtube_download_service.insert_or_update_latest_subtitle_info(channel_id)
