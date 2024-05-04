@@ -183,21 +183,6 @@ class YouTubeApiLogic:
             print('An error occurred:', str(e))
             return None
 
-    # 動画の字幕情報を取得するメソッド
-    def get_video_captions(self, video_id):
-        try:
-            # YouTube Data APIを使用して字幕情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.captions().list(
-                part="snippet",
-                videoId=video_id,
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('字幕情報の取得中にエラーが発生しました:', str(e))
-            return None
 
 
 # YouTubeApiLogicクラスのテスト
@@ -273,13 +258,6 @@ class TestYouTubeApiLogic(unittest.TestCase):
         FileHandler.format_json_print(result)
         FileHandler.write_json_response(result)
 
-    def test_get_video_captions(self):
-        # テスト用の動画IDを指定
-        video_id = TEST_YOUTUBE_VIDEO_ID
-        # 動画の字幕情報を取得
-        captions_info = self.youtube_logic.get_video_captions(video_id)
-        # 取得した字幕情報を出力
-        FileHandler.format_json_print(captions_info)
 
 
 # if __name__ == '__main__':
