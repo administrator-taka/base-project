@@ -167,6 +167,26 @@ class YouTubeApiLogic:
             print('An error occurred:', str(e))
             return None
 
+    # 動画の字幕情報を取得するメソッド
+    def get_subtitle_info(self, video_id):
+        response = self.get_video_captions(video_id)
+        subtitle_info_list = []
+
+        if response.get('items'):
+            for item in response.get('items'):
+                subtitle_info = {}
+                # 動画ID
+                subtitle_info['video_id'] = item.get('snippet', {}).get('videoId')
+                # 最終更新日
+                subtitle_info['last_updated'] = item.get('snippet', {}).get('lastUpdated')
+                # 字幕種別
+                subtitle_info['track_kind'] = item.get('snippet', {}).get('trackKind')
+                # 字幕言語
+                subtitle_info['language'] = item.get('snippet', {}).get('language')
+                subtitle_info_list.append(subtitle_info)
+
+        return subtitle_info_list
+
     # 動画のカテゴリ情報を取得する
     def get_video_category(self, category_id):
         try:
@@ -258,6 +278,13 @@ class TestYouTubeApiLogic(unittest.TestCase):
         FileHandler.format_json_print(result)
         FileHandler.write_json_response(result)
 
+    def test_get_subtitle_info(self):
+        # テスト用の動画IDを指定
+        video_id = TEST_YOUTUBE_VIDEO_ID
+        # 動画の字幕情報を取得
+        captions_info = self.youtube_logic.get_subtitle_info(video_id)
+        # 取得した字幕情報を出力
+        FileHandler.format_json_print(captions_info)
 
 
 # if __name__ == '__main__':
