@@ -1,9 +1,8 @@
 # 必要なモジュールをインポート
+import functools
 import logging
 import unittest
-import functools
 
-import function as function
 import googleapiclient.discovery
 from django.conf import settings
 from googleapiclient.errors import HttpError
@@ -38,7 +37,8 @@ class YouTubeApiLogic:
                     # functionを実行
                     return function(self, *args, **kwargs)
                 except HttpError as e:
-                    print('エラーの種類:', type(e).__name__)
+                    logging.debug('エラーの種類: %s', type(e).__name__)
+                    logging.debug(f"{self.api_key_index}個目のAPI KEY")
                     logging.error('エラーが発生しました: %s', str(e))
                     # エラー詳細を確認して、quotaExceeded かどうかを検証する
                     error_details = e.error_details
@@ -66,7 +66,6 @@ class YouTubeApiLogic:
         )
         response = request.execute()
         return response
-
 
     # チャンネルの詳細を取得するメソッド
     @retry_on_quota_exceeded
