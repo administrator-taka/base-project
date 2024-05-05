@@ -11,7 +11,7 @@ from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
-    TEST_YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY_1, YOUTUBE_API_KEY_2
+    TEST_YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY_1, YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3
 
 
 # YouTubeのAPIを操作するクラス
@@ -23,6 +23,7 @@ class YouTubeApiLogic:
         self.api_keys.append(YOUTUBE_API_KEY)
         self.api_keys.append(YOUTUBE_API_KEY_1)
         self.api_keys.append(YOUTUBE_API_KEY_2)
+        self.api_keys.append(YOUTUBE_API_KEY_3)
         self.api_key_index = 0
 
     @staticmethod
@@ -44,12 +45,20 @@ class YouTubeApiLogic:
                     error_details = e.error_details
                     for error_detail in error_details:
                         if 'quotaExceeded' in error_detail.get('reason', ''):
+                            logging.error('エラーが発生しました（quotaExceeded）: %s', str(e))
                             # quotaExceeded エラーが見つかった場合は次のAPIキーに切り替えてリトライする
                             self.api_key_index += 1
                             break
                     else:
+                        logging.error('その他のエラーが発生しました（HttpErrorその他）: %s', str(e))
                         # quotaExceeded エラーが見つからなかった場合はリトライしない
                         break
+                except Exception as e:
+                    # その他のすべてのエラーに対してもログを出力してリトライしない
+                    logging.debug('エラーの種類: %s', type(e).__name__)
+                    logging.debug(f"{self.api_key_index}個目のAPI KEY")
+                    logging.error('その他のエラーが発生しました: %s', str(e))
+                    break
             return None
 
         return wrapper
