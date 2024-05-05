@@ -24,7 +24,25 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
+    def get_translation_info(self, channel_id):
+        # ChannelTranslationInfoからデータを取得
+        translation_info = ChannelTranslationInfo.objects.get(channel_id=channel_id)
+
+        if translation_info.default_audio_language is None or translation_info.translation_languages is None:
+            logging.error("TODO:デフォルト言語指定エラー")
+            return
+        # デフォルトの言語コードを取得
+        default_audio_language = YouTubeLanguage(translation_info.default_audio_language)
+
+        # 翻訳言語リスト取得
+        translation_languages = [YouTubeLanguage(language) for language in translation_info.translation_languages]
+
+        return default_audio_language, translation_languages
+
     def insert_or_update_latest_subtitle_info(self, channel_id):
+
+        default_audio_language, translation_languages = self.get_translation_info(channel_id)
+
         self.insert_initial_video_data(channel_id)
 
         playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
@@ -36,12 +54,30 @@ class YoutubeDownloadService:
         for video in playlist_videos:
             video_id = video.video_id
             video_captions = self.youtube_api_logic.get_subtitle_info(video_id)
-            print(video_captions)
+            for video_caption in video_captions:
 
+                print(video_caption)
+                self.insert_or_update_video_subtitle_info(video_id, video_caption.get('subtitle_type'),SubtitleStatus.UNREGISTERED, video_caption.get('language'))
             # 処理されたビデオ数を更新
             processed_videos += 1
             # 経過率をデバッグに出力
             logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
+
+    def insert_or_update_video_subtitle_info(self, video_id, subtitle_type, language, subtitle_status):
+        video_detail_instance, _ = VideoDetail.objects.get_or_create(video_id=video_id)
+        subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
+
+        # 既存のレコードがあれば更新し、なければ新規作成
+        VideoSubtitleInfo.objects.update_or_create(
+            subtitle_id=subtitle_id,
+            defaults={
+                'video_id': video_detail_instance,
+                'subtitle_type': subtitle_type.value,
+                'language_code': language.value,
+                'subtitle_status': subtitle_status,
+                'remarks': None
+            }
+        )
 
     # 単語検索
     def search_single_row_word(self, search_word, channel_id=None, subtitle_type=None, language_code=None):
@@ -244,19 +280,9 @@ class YoutubeDownloadService:
     # 初期字幕データ一括投入（大）
     def download_channel_subtitles(self, channel_id: str) -> None:
         self.insert_initial_video_data(channel_id)
+
+        default_audio_language, translation_languages = self.get_translation_info(channel_id)
         # TODO:字幕の追加状況確認メソッド追加
-        # ChannelTranslationInfoからデータを取得
-        translation_info = ChannelTranslationInfo.objects.get(channel_id=channel_id)
-
-        if translation_info.default_audio_language is None or translation_info.translation_languages is None:
-            logging.error("TODO:デフォルト言語指定エラー")
-            return
-
-        # デフォルトの言語コードを取得
-        default_audio_language = YouTubeLanguage(translation_info.default_audio_language)
-
-        # 翻訳言語リスト取得
-        translation_languages = [YouTubeLanguage(language) for language in translation_info.translation_languages]
 
         playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
 
@@ -351,7 +377,7 @@ class YoutubeDownloadService:
             # 最初にインサートし、データがあればupdateするように修正
             subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
             # VideoDetailから動画IDを取得
-            video_detail_instance = VideoDetail.objects.get(video_id=video_id)
+            # video_detail_instance = VideoDetail.objects.get(video_id=video_id)
             # 先に字幕情報をinsertする（別の処理に変更するため削除？）
             # VideoSubtitleInfo.objects.create(
             #     video_id=video_detail_instance,
@@ -367,7 +393,7 @@ class YoutubeDownloadService:
             # サブタイトル情報がある場合、備考にサブタイトルを設定する
             remarks_value = subtitle if not has_subtitle else None
             VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
-                subtitle_status = SubtitleStatus.REGISTERED.value if has_subtitle else SubtitleStatus.UNREGISTERED.value,
+                subtitle_status=SubtitleStatus.REGISTERED.value if has_subtitle else SubtitleStatus.UNREGISTERED.value,
                 remarks=remarks_value
             )
 

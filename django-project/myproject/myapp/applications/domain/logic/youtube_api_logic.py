@@ -178,7 +178,7 @@ class YouTubeApiLogic:
                 subtitle_info['last_updated'] = item.get('snippet', {}).get('lastUpdated')
                 # 字幕種別
                 track_kind = item.get('snippet', {}).get('trackKind')
-                subtitle_info['track_kind'] = SubtitleType.AUTOMATIC if track_kind == 'asr' else SubtitleType.MANUAL
+                subtitle_info['subtitle_type'] = SubtitleType.AUTOMATIC if track_kind == 'asr' else SubtitleType.MANUAL
                 # 字幕言語
                 subtitle_info['language'] = YouTubeLanguage(item.get('snippet', {}).get('language'))
                 subtitle_info_list.append(subtitle_info)
