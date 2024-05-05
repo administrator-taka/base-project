@@ -156,7 +156,7 @@ class VideoSubtitleInfo(models.Model):
     # 字幕の言語コード
     language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
 
-    subtitle_status = models.CharField(choices=[(tag.value, tag.name) for tag in SubtitleStatus],
+    subtitle_status = models.IntegerField(choices=[(tag.value, tag.name) for tag in SubtitleStatus],
                                        verbose_name='字幕ステータス')
 
     last_updated = models.DateTimeField(verbose_name='最終更新日時', null=True)

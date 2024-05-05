@@ -55,30 +55,67 @@ class YoutubeDownloadService:
             video_id = video.video_id
             video_captions = self.youtube_api_logic.get_subtitle_info(video_id)
             for video_caption in video_captions:
+                self.insert_or_update_video_subtitle_info(video_id,
+                                                          video_caption.get('subtitle_type'),
+                                                          video_caption.get('language'),
+                                                          SubtitleStatus.UNREGISTERED,
+                                                          video_caption.get('last_updated'))
 
-                print(video_caption)
-                self.insert_or_update_video_subtitle_info(video_id, video_caption.get('subtitle_type'),SubtitleStatus.UNREGISTERED, video_caption.get('language'))
+            # 自動字幕の情報追加
+            self.insert_false_subtitle_info(video_id, SubtitleType.AUTOMATIC, default_audio_language)
+            # 手動字幕の情報追加
+            for language in translation_languages:
+                self.insert_false_subtitle_info(video_id, SubtitleType.MANUAL, language)
+
             # 処理されたビデオ数を更新
             processed_videos += 1
             # 経過率をデバッグに出力
             logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
 
-    def insert_or_update_video_subtitle_info(self, video_id, subtitle_type, language, subtitle_status):
+    def insert_false_subtitle_info(self, video_id, subtitle_type, language):
+        video_detail_instance, _ = VideoDetail.objects.get_or_create(video_id=video_id)
+        subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
+        # 既存のレコードがあれば取得
+        video_subtitle_info = VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).first()
+
+        # 既存のレコードがある場合かつsubtitle_statusが1の場合は更新しない
+        if not video_subtitle_info:
+            # 既存のレコードがない場合またはsubtitle_statusが1（登録済み）でない場合は新規作成または更新
+            VideoSubtitleInfo.objects.update_or_create(
+                subtitle_id=subtitle_id,
+                defaults={
+                    'video_id': video_detail_instance,
+                    'subtitle_type': subtitle_type.value,
+                    'language_code': language.value,
+                    'subtitle_status': SubtitleStatus.NO_SUBTITLE.value,
+                    'remarks': None
+                }
+            )
+
+    def insert_or_update_video_subtitle_info(self, video_id, subtitle_type, language, subtitle_status, last_updated):
         video_detail_instance, _ = VideoDetail.objects.get_or_create(video_id=video_id)
         subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
 
-        # 既存のレコードがあれば更新し、なければ新規作成
-        VideoSubtitleInfo.objects.update_or_create(
-            subtitle_id=subtitle_id,
-            defaults={
-                'video_id': video_detail_instance,
-                'subtitle_type': subtitle_type.value,
-                'language_code': language.value,
-                'subtitle_status': subtitle_status,
-                'remarks': None
-            }
-        )
+        # 既存のレコードがあれば取得
+        video_subtitle_info = VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).first()
 
+        # 既存のレコードがある場合かつsubtitle_statusが1の場合は更新しない
+        if video_subtitle_info and video_subtitle_info.subtitle_status == SubtitleStatus.REGISTERED.value:
+            logging.debug("字幕登録済み")
+        else:
+            # 既存のレコードがない場合またはsubtitle_statusが1（登録済み）でない場合は新規作成または更新
+            VideoSubtitleInfo.objects.update_or_create(
+                subtitle_id=subtitle_id,
+                defaults={
+                    'video_id': video_detail_instance,
+                    'subtitle_type': subtitle_type.value,
+                    'language_code': language.value,
+                    'subtitle_status': subtitle_status.value,
+                    'last_updated': last_updated,
+                }
+            )
+
+    # 単語検索
     # 単語検索
     def search_single_row_word(self, search_word, channel_id=None, subtitle_type=None, language_code=None):
         # 検索クエリを構築
@@ -283,6 +320,7 @@ class YoutubeDownloadService:
 
         default_audio_language, translation_languages = self.get_translation_info(channel_id)
         # TODO:字幕の追加状況確認メソッド追加
+        self.insert_or_update_latest_subtitle_info(channel_id)
 
         playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
 
@@ -296,6 +334,7 @@ class YoutubeDownloadService:
             subtitle_ids = [generate_subtitle_id(video_id, SubtitleType.AUTOMATIC, default_audio_language)]
             for language in translation_languages:
                 subtitle_ids.append(generate_subtitle_id(video_id, SubtitleType.MANUAL, language))
+            # TODO:自動字幕と手動字幕で登録するかしないかを分けるべき
             # 既に登録されているかのチェック
             existing_subtitle_info = self.check_subtitle_existence(video_id, subtitle_ids)
 
