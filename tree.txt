@@ -45,6 +45,7 @@
 │       │   │       │   ├─__init__.py
 │       │   │       │   ├─character_code.py
 │       │   │       │   ├─deepl_language.py
+│       │   │       │   ├─subtitle_status.py
 │       │   │       │   ├─subtitle_type.py
 │       │   │       │   ├─time_zone.py
 │       │   │       │   └─youtube_language.py
@@ -56,6 +57,25 @@
 │       │   ├─migrations
 │       │   │   ├─0001_initial.py
 │       │   │   ├─0002_alter_videosubtitleinfo_language_code_and_more.py
+│       │   │   ├─0003_videosubtitledetail.py
+│       │   │   ├─0004_alter_videosubtitledetail_subtitle_transration_text_and_more.py
+│       │   │   ├─0005_remove_videosubtitledetail_subtitle_text_and_more.py
+│       │   │   ├─0006_channeldetail_and_more.py
+│       │   │   ├─0007_rename_subtitle_id_videosubtitleinfo_subtitle_info_id.py
+│       │   │   ├─0008_rename_videosubtitledetail_subtitletranslation_and_more.py
+│       │   │   ├─0009_alter_channellocalized_table_and_more.py
+│       │   │   ├─0010_rename_channel_channellocalized_channel_id_and_more.py
+│       │   │   ├─0011_alter_channellocalized_channel_id_and_more.py
+│       │   │   ├─0012_alter_channellocalized_channel_id_and_more.py
+│       │   │   ├─0013_alter_channellocalized_channel_id_and_more.py
+│       │   │   ├─0014_alter_videodetail_is_disabled.py
+│       │   │   ├─0015_channeltranslationinfo_and_more.py
+│       │   │   ├─0016_subtitletranslation_id_and_more.py
+│       │   │   ├─0017_alter_subtitletranslation_table.py
+│       │   │   ├─0018_videosubtitleinfo_last_updated_and_more.py
+│       │   │   ├─0019_alter_videosubtitleinfo_last_updated.py
+│       │   │   ├─0020_remove_videosubtitleinfo_has_subtitle.py
+│       │   │   ├─0021_alter_channeltranslationinfo_default_audio_language_and_more.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
@@ -67,6 +87,7 @@
 │       │   ├─urls.py
 │       │   └─views
 │       │       ├─__init__.py
+│       │       ├─channel_view.py
 │       │       ├─health_check_view.py
 │       │       └─test_views.py
 │       ├─myproject
