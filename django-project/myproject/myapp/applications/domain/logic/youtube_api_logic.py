@@ -51,15 +51,15 @@ class YouTubeApiLogic:
                             break
                     else:
                         logging.error('その他のエラーが発生しました（HttpErrorその他）: %s', str(e))
-                        # quotaExceeded エラーが見つからなかった場合はリトライしない
-                        break
+                        # quotaExceeded エラーが見つからなかった場合
+                        raise RuntimeError(str(e))  # RuntimeError などの組み込みの例外クラスを使用する
                 except Exception as e:
                     # その他のすべてのエラーに対してもログを出力してリトライしない
                     logging.debug('エラーの種類: %s', type(e).__name__)
                     logging.debug(f"{self.api_key_index}個目のAPI KEY")
                     logging.error('その他のエラーが発生しました: %s', str(e))
-                    break
-            return None
+                    raise RuntimeError(str(e))  # RuntimeError などの組み込みの例外クラスを使用する
+            raise RuntimeError("リトライ回数越えエラー")  # RuntimeError などの組み込みの例外クラスを使用する
 
         return wrapper
 
