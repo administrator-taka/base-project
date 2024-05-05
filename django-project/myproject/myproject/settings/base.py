@@ -152,6 +152,9 @@ logging.config.dictConfig(LOGGING)
 
 # YouTube APIキーの設定
 YOUTUBE_API_KEY = config('YOUTUBE_API_KEY')
+YOUTUBE_API_KEY_1 = config('YOUTUBE_API_KEY_1')
+YOUTUBE_API_KEY_2 = config('YOUTUBE_API_KEY_2')
+YOUTUBE_API_KEY_3 = config('YOUTUBE_API_KEY_3')
 
 # DeepL APIキーの設定
 DEEPL_API_KEY = config('DEEPL_API_KEY')

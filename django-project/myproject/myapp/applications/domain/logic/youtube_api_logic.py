@@ -1,53 +1,85 @@
 # 必要なモジュールをインポート
+import logging
 import unittest
+import functools
 
+import function as function
 import googleapiclient.discovery
 from django.conf import settings
+from googleapiclient.errors import HttpError
 
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
-    TEST_YOUTUBE_PLAYLIST_ID
+    TEST_YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY_1, YOUTUBE_API_KEY_2
 
 
 # YouTubeのAPIを操作するクラス
 class YouTubeApiLogic:
     def __init__(self):
         # YouTubeのAPIキーを読み込む
-        self.api_key = YOUTUBE_API_KEY
+        # APIキーをリストに登録
+        self.api_keys = []
+        self.api_keys.append(YOUTUBE_API_KEY)
+        self.api_keys.append(YOUTUBE_API_KEY_1)
+        self.api_keys.append(YOUTUBE_API_KEY_2)
+        self.api_key_index = 0
+
+    @staticmethod
+    def retry_on_quota_exceeded(function):
+        @functools.wraps(function)
+        def wrapper(self, *args, **kwargs):
+            """
+            リトライ処理を行う内部メソッド
+            """
+            while self.api_key_index < len(self.api_keys):
+                try:
+                    # functionを実行
+                    return function(self, *args, **kwargs)
+                except HttpError as e:
+                    print('エラーの種類:', type(e).__name__)
+                    logging.error('エラーが発生しました: %s', str(e))
+                    # エラー詳細を確認して、quotaExceeded かどうかを検証する
+                    error_details = e.error_details
+                    for error_detail in error_details:
+                        if 'quotaExceeded' in error_detail.get('reason', ''):
+                            # quotaExceeded エラーが見つかった場合は次のAPIキーに切り替えてリトライする
+                            self.api_key_index += 1
+                            break
+                    else:
+                        # quotaExceeded エラーが見つからなかった場合はリトライしない
+                        break
+            return None
+
+        return wrapper
 
     # 動画の詳細を取得するメソッド
+    @retry_on_quota_exceeded
     def get_video_details(self, video_id):
-        try:
-            # YouTube Data APIを使用して動画情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.videos().list(
-                part="snippet,liveStreamingDetails,localizations",
-                id=video_id,
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # YouTube Data APIを使用して動画情報を取得する
+        youtube = googleapiclient.discovery.build(
+            'youtube', 'v3', developerKey=self.api_keys[self.api_key_index])
+        request = youtube.videos().list(
+            part="snippet,liveStreamingDetails,localizations",
+            id=video_id,
+        )
+        response = request.execute()
+        return response
+
 
     # チャンネルの詳細を取得するメソッド
+    @retry_on_quota_exceeded
     def get_channel_details(self, channel_id):
-        try:
-            # YouTube Data APIを使用してチャンネル情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.channels().list(
-                part="snippet,contentDetails",
-                id=channel_id,
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # YouTube Data APIを使用してチャンネル情報を取得する
+        youtube = googleapiclient.discovery.build(
+            'youtube', 'v3', developerKey=self.api_keys[self.api_key_index])
+        request = youtube.channels().list(
+            part="snippet,contentDetails",
+            id=channel_id,
+        )
+        response = request.execute()
+        return response
 
     def get_channel_details_data(self, channel_id):
         response = self.get_channel_details(channel_id)
@@ -100,22 +132,19 @@ class YouTubeApiLogic:
         return all_videos
 
     # プレイリスト内の動画をページングしながら取得するメソッド
+    @retry_on_quota_exceeded
     def get_playlist_videos_page(self, playlist_id, page_token=None):
-        try:
-            # YouTube Data APIを使用してプレイリスト内の動画情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.playlistItems().list(
-                part="snippet,contentDetails",
-                playlistId=playlist_id,
-                maxResults=50,
-                pageToken=page_token,
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # YouTube Data APIを使用してプレイリスト内の動画情報を取得する
+        youtube = googleapiclient.discovery.build(
+            'youtube', 'v3', developerKey=self.api_keys[self.api_key_index])
+        request = youtube.playlistItems().list(
+            part="snippet,contentDetails",
+            playlistId=playlist_id,
+            maxResults=50,
+            pageToken=page_token,
+        )
+        response = request.execute()
+        return response
 
     def get_channel_videos(self, playlist_id):
         playlist_data = self.get_all_playlist_videos(playlist_id)
@@ -149,20 +178,17 @@ class YouTubeApiLogic:
         return videos
 
     # 動画の字幕情報を取得するメソッド
+    @retry_on_quota_exceeded
     def get_video_captions(self, video_id):
-        try:
-            # YouTube Data APIを使用して動画の字幕情報を取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.captions().list(
-                part="snippet",
-                videoId=video_id
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # YouTube Data APIを使用して動画の字幕情報を取得する
+        youtube = googleapiclient.discovery.build(
+            'youtube', 'v3', developerKey=self.api_keys[self.api_key_index])
+        request = youtube.captions().list(
+            part="snippet",
+            videoId=video_id
+        )
+        response = request.execute()
+        return response
 
     # 動画の字幕情報を取得するメソッド
     def get_subtitle_info(self, video_id):
@@ -186,23 +212,21 @@ class YouTubeApiLogic:
         return subtitle_info_list
 
     # 動画のカテゴリ情報を取得する
+    @retry_on_quota_exceeded
     def get_video_category(self, category_id):
-        try:
-            # YouTube Data APIを使用して動画カテゴリを取得する
-            youtube = googleapiclient.discovery.build(
-                'youtube', 'v3', developerKey=self.api_key)
-            request = youtube.videoCategories().list(
-                part="snippet",
-                id=category_id
-            )
-            response = request.execute()
-            return response
-        except Exception as e:
-            print('An error occurred:', str(e))
-            return None
+        # YouTube Data APIを使用して動画カテゴリを取得する
+        youtube = googleapiclient.discovery.build(
+            'youtube', 'v3', developerKey=self.api_keys[self.api_key_index])
+        request = youtube.videoCategories().list(
+            part="snippet",
+            id=category_id
+        )
+        response = request.execute()
+        return response
 
+    @retry_on_quota_exceeded
     def get_youtube_languages(self):
-        youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=self.api_key)
+        youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=self.api_keys[self.api_key_index])
 
         request = youtube.i18nLanguages().list(part='snippet')
         response = request.execute()
