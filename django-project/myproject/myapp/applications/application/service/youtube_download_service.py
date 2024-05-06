@@ -150,23 +150,59 @@ class YoutubeDownloadService:
         return search_results
 
     def get_video_data(self, video_id):
-        video_data = self.youtube_api_logic.get_video_details_data(video_id)
-        if video_data:
-            self.insert_video_data(video_data)
-        video_detail = VideoDetail.objects.get(video_id=video_id)
-        video_detail_dict = {
-            'video_id': video_detail.video_id,
-            'title': video_detail.title,
-            'published_at': video_detail.published_at,
-            'description': video_detail.description,
-            'thumbnail': video_detail.thumbnail,
-            'channel_id': video_detail.channel_id.channel_id,
-            'default_language': video_detail.default_language,
-            'default_audio_language': video_detail.default_audio_language,
-            'actual_start_time': video_detail.actual_start_time,
-            'actual_end_time': video_detail.actual_end_time,
-            'scheduled_start_time': video_detail.scheduled_start_time
-        }
+        video_detail_dict = {}
+        try:
+            video_detail = VideoDetail.objects.get(video_id=video_id)
+            if video_detail.initial_flag:
+                video_detail_dict = {
+                    'video_id': video_detail.video_id,
+                    'title': video_detail.title,
+                    'published_at': video_detail.published_at,
+                    'description': video_detail.description,
+                    'thumbnail': video_detail.thumbnail,
+                    'channel_id': video_detail.channel_id.channel_id,
+                    'default_language': video_detail.default_language,
+                    'default_audio_language': video_detail.default_audio_language,
+                    'actual_start_time': video_detail.actual_start_time,
+                    'actual_end_time': video_detail.actual_end_time,
+                    'scheduled_start_time': video_detail.scheduled_start_time
+                }
+                logging.debug("動画最新")
+            else:
+                video_data = self.youtube_api_logic.get_video_details_data(video_id)
+                self.insert_video_data(video_data)
+                video_detail_dict = {
+                    'video_id': video_detail.video_id,
+                    'title': video_detail.title,
+                    'published_at': video_detail.published_at,
+                    'description': video_detail.description,
+                    'thumbnail': video_detail.thumbnail,
+                    'channel_id': video_detail.channel_id.channel_id,
+                    'default_language': video_detail.default_language,
+                    'default_audio_language': video_detail.default_audio_language,
+                    'actual_start_time': video_detail.actual_start_time,
+                    'actual_end_time': video_detail.actual_end_time,
+                    'scheduled_start_time': video_detail.scheduled_start_time
+                }
+                logging.debug("動画更新")
+        except VideoDetail.DoesNotExist:
+            video_data = self.youtube_api_logic.get_video_details_data(video_id)
+            if video_data:
+                video_detail_dict = {
+                    'video_id': video_data['video_id'],
+                    'title': video_data['title'],
+                    'published_at': video_data['published_at'],
+                    'description': video_data['description'],
+                    'thumbnail': video_data['thumbnail'],
+                    'channel_id': video_data['channel_id'],
+                    'default_language': video_data['default_language'],
+                    'default_audio_language': video_data['default_audio_language'],
+                    'actual_start_time': video_data['actual_start_time'],
+                    'actual_end_time': video_data['actual_end_time'],
+                    'scheduled_start_time': video_data['scheduled_start_time']
+                }
+            logging.debug("動画なし")
+
         return video_detail_dict
 
     def insert_video_data(self, video_data):
