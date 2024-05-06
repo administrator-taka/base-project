@@ -149,6 +149,31 @@ class YoutubeDownloadService:
 
         return search_results
 
+    def get_channel_data(self,channel_id):
+        self.insert_channel_data(channel_id)
+        self.insert_channel_data(channel_id)
+        # チャンネルIDに紐づくチャンネル情報を取得
+        channel_detail = ChannelDetail.objects.filter(channel_id=channel_id).first()
+
+        # チャンネル情報を辞書型に変換して返す
+        if channel_detail:
+            channel_data = {
+                'channel_id': channel_detail.channel_id,
+                'playlist_id': channel_detail.playlist_id,
+                'title': channel_detail.title,
+                'description': channel_detail.description,
+                'custom_url': channel_detail.custom_url,
+                'published_at': channel_detail.published_at,
+                'thumbnail': channel_detail.thumbnail,
+                'country': channel_detail.country
+            }
+        else:
+            # チャンネル情報が見つからない場合は空の辞書を返す
+            channel_data = {}
+
+        return channel_data
+
+
     def insert_channel_data(self, channel_id):
         # チャンネルIDに紐づくチャンネル情報を取得
         channel_data = ChannelDetail.objects.filter(
