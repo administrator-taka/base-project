@@ -8,6 +8,7 @@ import pandas as pd
 import yt_dlp
 
 from myapp.applications.infrastructure.repository.web_client import WebClient
+from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
@@ -105,25 +106,25 @@ class YouTubeSubtitleLogic:
                     try:
                         # メソッドの処理を試行
                         subtitle = self.format_subtitle_json(url)
-                        return True, subtitle
+                        return SubtitleStatus.REGISTERED, subtitle
                     except Exception as e:
                         traceback.print_exc()
                         # エラーが発生した場合はログに出力して False とエラーメッセージを返す
                         error_message = f"字幕取得処理でエラーが発生しました: {str(e)} ({type(e).__name__})"
                         logging.warning(error_message)
-                        return False, error_message
+                        return SubtitleStatus.REGISTRATION_FAILED, error_message
                 else:
                     # JSONデータが見つからない場合
                     logging.debug("字幕のためのJSONデータが見つかりませんでした。")
-                    return False, None
+                    return SubtitleStatus.NO_SUBTITLE, None
             else:
                 # 字幕のキャプション情報が見つからない場合
                 logging.debug("字幕のキャプション情報が見つかりませんでした。")
-                return False, None
+                return SubtitleStatus.NO_SUBTITLE, None
         else:
             # 字幕が見つからない場合
             logging.debug("字幕が見つかりませんでした。")
-            return False, None
+            return SubtitleStatus.NO_SUBTITLE, None
 
     # 字幕データをフォーマットする
     def format_subtitle_json(self, url):
