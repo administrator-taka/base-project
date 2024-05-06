@@ -437,7 +437,8 @@ class YoutubeDownloadService:
                         subtitle_transration_text_detail=None,
                     )
                     print(ko_result.subtitle_text_id, ko_result.subtitle_text, ja_result.subtitle_text)
-            logging.debug(f'配列サイズは一致したが一致する字幕なし。リストサイズ:{len(base_results)}')
+            if len(base_results)==0:
+                logging.debug(f'配列サイズは一致したが一致する字幕なし。リストサイズ:{len(base_results)}')
         else:
             logging.debug('一致する字幕情報なし')
 
