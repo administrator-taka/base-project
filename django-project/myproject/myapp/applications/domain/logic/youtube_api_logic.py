@@ -11,7 +11,7 @@ from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
-    TEST_YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY_1, YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3
+    TEST_YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY_1, YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3, YOUTUBE_API_KEY_4
 
 
 # YouTubeのAPIを操作するクラス
@@ -24,6 +24,7 @@ class YouTubeApiLogic:
         self.api_keys.append(YOUTUBE_API_KEY_1)
         self.api_keys.append(YOUTUBE_API_KEY_2)
         self.api_keys.append(YOUTUBE_API_KEY_3)
+        self.api_keys.append(YOUTUBE_API_KEY_4)
         self.api_key_index = 0
 
     @staticmethod
