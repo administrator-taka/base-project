@@ -53,6 +53,7 @@ class YoutubeDownloadService:
 
         for video in playlist_videos:
             video_id = video.video_id
+            # TODO:動画の数だけAPIをたたいてしまうので一つのチャンネルで1000回近くapiをたたくことになるため使えない
             video_captions = self.youtube_api_logic.get_subtitle_info(video_id)
             for video_caption in video_captions:
                 self.insert_or_update_video_subtitle_info(video_id,
