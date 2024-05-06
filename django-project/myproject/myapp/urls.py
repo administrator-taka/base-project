@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from myapp.views.channel_view import get_channel_data, search_word, download_channel_subtitles
 from myapp.views.test_views import TestViewSet
+from myapp.views.video_view import get_video_data
 
 # デフォルトのルーターを作成
 router = DefaultRouter()
@@ -16,5 +17,6 @@ urlpatterns = [
     path("channel/<str:channel_id>/", get_channel_data, name="get_channel_data"),
     path("channel/<str:channel_id>/download_channel_subtitles", download_channel_subtitles,
          name="download_channel_subtitles"),
-    path("channel/<str:channel_id>/search_word", search_word, name="search_word"),  # 新しいビューのパスを追加
+    path("channel/<str:channel_id>/search_word", search_word, name="search_word"),
+    path("video/<str:video_id>/", get_video_data, name="get_video_data"),
 ]

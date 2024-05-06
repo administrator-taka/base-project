@@ -117,6 +117,9 @@ class VideoDetail(models.Model):
 
     # TODO:動画の種類、動画、short、配信
 
+    # 初期登録フラグ
+    initial_flag = models.BooleanField(default=False, verbose_name='初期登録フラグ')
+
     # 削除フラグ
     is_disabled = models.BooleanField(default=False, verbose_name='削除フラグ')
 
@@ -157,7 +160,7 @@ class VideoSubtitleInfo(models.Model):
     language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
 
     subtitle_status = models.IntegerField(choices=[(tag.value, tag.name) for tag in SubtitleStatus],
-                                       verbose_name='字幕ステータス')
+                                          verbose_name='字幕ステータス')
 
     last_updated = models.DateTimeField(verbose_name='最終更新日時', null=True)
 

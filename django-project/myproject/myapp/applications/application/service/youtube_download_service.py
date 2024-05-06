@@ -149,8 +149,82 @@ class YoutubeDownloadService:
 
         return search_results
 
-    def get_channel_data(self,channel_id):
-        self.insert_channel_data(channel_id)
+    def get_video_data(self, video_id):
+        video_data = self.youtube_api_logic.get_video_details_data(video_id)
+        if video_data:
+            self.insert_video_data(video_data)
+        video_detail = VideoDetail.objects.get(video_id=video_id)
+        video_detail_dict = {
+            'video_id': video_detail.video_id,
+            'title': video_detail.title,
+            'published_at': video_detail.published_at,
+            'description': video_detail.description,
+            'thumbnail': video_detail.thumbnail,
+            'channel_id': video_detail.channel_id.channel_id,
+            'default_language': video_detail.default_language,
+            'default_audio_language': video_detail.default_audio_language,
+            'actual_start_time': video_detail.actual_start_time,
+            'actual_end_time': video_detail.actual_end_time,
+            'scheduled_start_time': video_detail.scheduled_start_time
+        }
+        return video_detail_dict
+
+    def insert_video_data(self, video_data):
+        video_id = video_data['video_id']
+        e_tag = video_data['e_tag']
+        title = video_data['title']
+        published_at = video_data['published_at']
+        description = video_data['description']
+        thumbnail = video_data['thumbnail']
+        channel_id = video_data['channel_id']
+        default_language = video_data['default_language']
+        default_audio_language = video_data['default_audio_language']
+        actual_start_time = video_data['actual_start_time']
+        actual_end_time = video_data['actual_end_time']
+        scheduled_start_time = video_data['scheduled_start_time']
+        # video_idで既存のレコードを取得する
+        try:
+            video_detail = VideoDetail.objects.get(video_id=video_id)
+        except VideoDetail.DoesNotExist:
+            # 既存のレコードがない場合は新規作成
+            VideoDetail.objects.create(
+                video_id=video_id,
+                e_tag=e_tag,
+                title=title,
+                description=description,
+                published_at=published_at,
+                thumbnail=thumbnail,
+                default_language=default_language,
+                default_audio_language=default_audio_language,
+                actual_start_time=actual_start_time,
+                actual_end_time=actual_end_time,
+                scheduled_start_time=scheduled_start_time,
+                initial_flag=True,
+                channel_id=ChannelDetail.objects.get(channel_id=channel_id),
+            )
+            logging.debug("動画情報が追加されました。")
+            return
+
+        # 既存のレコードがある場合、かつetagが異なる場合またはinitial_flagがFalseの場合にのみ更新
+        if video_detail.e_tag != e_tag or not video_detail.initial_flag:
+            video_detail.e_tag = e_tag
+            video_detail.title = title
+            video_detail.published_at = published_at
+            video_detail.description = description
+            video_detail.thumbnail = thumbnail
+            video_detail.default_language = default_language
+            video_detail.default_audio_language = default_audio_language
+            video_detail.actual_start_time = actual_start_time
+            video_detail.actual_end_time = actual_end_time
+            video_detail.scheduled_start_time = scheduled_start_time
+            video_detail.channel_id = ChannelDetail.objects.get(channel_id=channel_id)
+            video_detail.initial_flag = True
+            video_detail.save()
+            logging.debug("動画情報が更新されました。")
+        else:
+            logging.debug("動画情報は既に最新です。")
+
+    def get_channel_data(self, channel_id):
         self.insert_channel_data(channel_id)
         # チャンネルIDに紐づくチャンネル情報を取得
         channel_detail = ChannelDetail.objects.filter(channel_id=channel_id).first()
@@ -172,7 +246,6 @@ class YoutubeDownloadService:
             channel_data = {}
 
         return channel_data
-
 
     def insert_channel_data(self, channel_id):
         # チャンネルIDに紐づくチャンネル情報を取得
