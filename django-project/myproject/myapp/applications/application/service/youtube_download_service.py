@@ -459,28 +459,43 @@ class YoutubeDownloadService:
 
         subtitle_translation = SubtitleTranslation.objects.filter(subtitle_text_id__in=base_queryset)
 
+        # 辞書のリストを初期化
+        video_subtitle_data = []
+
         # クエリセットを実行
         base_results = list(base_queryset.order_by('t_start_ms'))
 
         for base_result in base_results:
-            logging.debug(base_result.subtitle_id.subtitle_id)
-            logging.debug(base_result.subtitle_id.language_code)
-            logging.debug(base_result.subtitle_text_id)
-            logging.debug(base_result.t_start_ms)
-            logging.debug(base_result.subtitle_text)
+            base_subtitle_dict = {
+                'subtitle_id': base_result.subtitle_id.subtitle_id,
+                'language_code': base_result.subtitle_id.language_code,
+                'subtitle_text_id': base_result.subtitle_text_id,
+                't_start_ms': base_result.t_start_ms,
+                'subtitle_text': base_result.subtitle_text,
+                'translations': {}  # 翻訳の辞書
+            }
 
             for language in translation_languages:
                 # other_querysetのlanguage_codeで検索
                 other_subtitle = other_queryset.filter(subtitle_id__language_code=language.value,
                                                        t_start_ms=base_result.t_start_ms).first()
 
-
                 subtitle_translation_data = subtitle_translation.filter(
                     subtitle_text_id=base_result.subtitle_text_id,
-                    language_code=language.value).first()
-                print(subtitle_translation_data.subtitle_transration_text)
+                    language_code=language.value
+                ).first()
 
-                logging.debug(f"Translation found for language {language.value}: {other_subtitle.subtitle_text}")
+                # 翻訳が存在する場合、辞書に追加
+                if other_subtitle and subtitle_translation_data:
+                    base_subtitle_dict['translations'][language.value] = {
+                        'subtitle_text': other_subtitle.subtitle_text,
+                        'translation_text': subtitle_translation_data.subtitle_transration_text
+                    }
+
+            # ベース字幕と翻訳の辞書をリストに追加
+            video_subtitle_data.append(base_subtitle_dict)
+
+        return video_subtitle_data
 
     def check_subtitle_text_id_exists(self, subtitle_id, language_code):
         # 特定の subtitle_text_id と language_code に対応する SubtitleTranslation レコードが存在するかチェック
