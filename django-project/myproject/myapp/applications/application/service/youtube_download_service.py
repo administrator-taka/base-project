@@ -437,6 +437,7 @@ class YoutubeDownloadService:
                         subtitle_transration_text_detail=None,
                     )
                     print(ko_result.subtitle_text_id, ko_result.subtitle_text, ja_result.subtitle_text)
+            logging.debug(f'配列サイズは一致したが一致する字幕なし。リストサイズ:{len(base_results)}')
         else:
             logging.debug('一致する字幕情報なし')
 
@@ -456,6 +457,8 @@ class YoutubeDownloadService:
         # ベース字幕以外のクエリ
         other_queryset = queryset.exclude(subtitle_id__language_code=default_audio_language.value)
 
+        subtitle_translation = SubtitleTranslation.objects.filter(subtitle_text_id__in=base_queryset)
+
         # クエリセットを実行
         base_results = list(base_queryset.order_by('t_start_ms'))
 
@@ -470,10 +473,14 @@ class YoutubeDownloadService:
                 # other_querysetのlanguage_codeで検索
                 other_subtitle = other_queryset.filter(subtitle_id__language_code=language.value,
                                                        t_start_ms=base_result.t_start_ms).first()
-                if other_subtitle:
-                    logging.debug(f"Translation found for language {language.value}: {other_subtitle.subtitle_text}")
-                else:
-                    logging.debug(f"No translation found for language {language.value}")
+
+
+                subtitle_translation_data = subtitle_translation.filter(
+                    subtitle_text_id=base_result.subtitle_text_id,
+                    language_code=language.value).first()
+                print(subtitle_translation_data.subtitle_transration_text)
+
+                logging.debug(f"Translation found for language {language.value}: {other_subtitle.subtitle_text}")
 
     def check_subtitle_text_id_exists(self, subtitle_id, language_code):
         # 特定の subtitle_text_id と language_code に対応する SubtitleTranslation レコードが存在するかチェック
