@@ -76,6 +76,7 @@
 │       │   │   ├─0019_alter_videosubtitleinfo_last_updated.py
 │       │   │   ├─0020_remove_videosubtitleinfo_has_subtitle.py
 │       │   │   ├─0021_alter_channeltranslationinfo_default_audio_language_and_more.py
+│       │   │   ├─0022_videodetail_initial_flag_and_more.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
@@ -89,7 +90,8 @@
 │       │       ├─__init__.py
 │       │       ├─channel_view.py
 │       │       ├─health_check_view.py
-│       │       └─test_views.py
+│       │       ├─test_views.py
+│       │       └─video_view.py
 │       ├─myproject
 │       │   ├─__init__.py
 │       │   ├─asgi.py
