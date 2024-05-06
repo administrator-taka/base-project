@@ -8,7 +8,7 @@ from myapp.applications.util.code.subtitle_type import SubtitleType
 @api_view(['GET'])
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
-    # TODO:channel_dataのinsertと取得
+    youtube_download_service.insert_channel_data(channel_id)
     response = youtube_download_service.get_channel_subtitle_list(channel_id)
     # JSONレスポンスを作成
     data = {
