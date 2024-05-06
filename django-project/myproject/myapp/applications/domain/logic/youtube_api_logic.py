@@ -77,6 +77,47 @@ class YouTubeApiLogic:
         response = request.execute()
         return response
 
+    def get_video_details_data(self, video_id):
+        response = self.get_video_details(video_id)
+        video_data = {}
+        items = response.get('items')
+        if items:
+            item = items[0]
+            snippet = item.get('snippet', {})
+            video_data['video_id'] = item.get('id')
+            video_data['e_tag'] = response.get('etag')
+            video_data['title'] = snippet.get('title')
+            video_data['published_at'] = snippet.get('publishedAt')
+            video_data['description'] = snippet.get('description')
+            thumbnail_info = snippet.get('thumbnails', {}).get('default', {})
+            video_data['thumbnail'] = thumbnail_info.get('url')
+            video_data['channel_id'] = snippet.get('channelId')
+            video_data['default_language'] = snippet.get('defaultLanguage')
+
+            # 存在しない場合はNoneを指定
+            live_streaming_details = item.get('liveStreamingDetails', {})
+            video_data['default_audio_language'] = live_streaming_details.get('defaultLanguage')
+            video_data['actual_start_time'] = live_streaming_details.get('actualStartTime')
+            video_data['actual_end_time'] = live_streaming_details.get('actualEndTime')
+            video_data['scheduled_start_time'] = live_streaming_details.get('scheduledStartTime')
+
+            # ローカライズされた情報を取得
+            localized_data = snippet.get('localized', {})
+            video_data['localized'] = {'title': localized_data.get('title'),
+                                       'description': localized_data.get('description')}
+
+            localizations_datas = item.get('localizations', {})
+            localizations_data_list = []
+            for language_code, localizations_data in localizations_datas.items():
+                localizations_data_list.append({
+                    'language_code': language_code,
+                    'title': localizations_data.get('title'),
+                    'description': localizations_data.get('description')
+                })
+            video_data['localizations_data'] = localizations_data_list
+
+        return video_data
+
     # チャンネルの詳細を取得するメソッド
     @retry_on_quota_exceeded
     def get_channel_details(self, channel_id):
@@ -257,6 +298,15 @@ class TestYouTubeApiLogic(unittest.TestCase):
         video_id = TEST_YOUTUBE_VIDEO_ID
         # 動画の詳細を取得
         video_details = self.youtube_logic.get_video_details(video_id)
+        # 取得した動画の詳細を出力
+        FileHandler.format_json_print(video_details)
+        FileHandler.write_json_response(video_details)
+
+    def test_get_video_details_data(self):
+        # テスト用の動画IDを指定
+        video_id = TEST_YOUTUBE_VIDEO_ID
+        # 動画の詳細を取得
+        video_details = self.youtube_logic.get_video_details_data(video_id)
         # 取得した動画の詳細を出力
         FileHandler.format_json_print(video_details)
         FileHandler.write_json_response(video_details)
