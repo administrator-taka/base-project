@@ -397,51 +397,43 @@ class YoutubeDownloadService:
             result.append(video_info)
         return result
 
-    # 初期字幕翻訳情報追加 TODO:レスポンスを考える
+    # 初期字幕翻訳情報追加
     def insert_initial_subtitle_detail(self, video_id):
-        # YouTubeLanguageを変数にする
-        base_language = YouTubeLanguage.KOREAN
-        target_language = YouTubeLanguage.JAPANESE
-
-        # Django ORMを使用してクエリを構築
-        queryset = VideoSubtitle.objects.filter(
-            subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
-            subtitle_id__video_id=video_id
-        )
-
-        # ベース字幕のクエリ
-        base_queryset = queryset.filter(subtitle_id__language_code=base_language.value)
-
-        # ターゲット字幕のクエリ
-        target_queryset = queryset.filter(subtitle_id__language_code=target_language.value)
-
-        # クエリセットを実行
-        base_results = list(base_queryset.order_by('t_start_ms'))
-        target_results = list(target_queryset.order_by('t_start_ms'))
-
-        if self.check_subtitle_text_id_exists(
-                generate_subtitle_id(video_id, SubtitleType.MANUAL, base_language), target_language):
-            logging.debug('既にある')
+        try:
+            video_detail = VideoDetail.objects.get(video_id=video_id)
+        except VideoDetail.DoesNotExist:
             return
 
-        if len(base_results) == len(target_results):
-            for base_result, target_result in zip(base_results, target_results):
-                if base_result.t_start_ms == target_result.t_start_ms:
-                    # VideoSubtitle のインスタンスを取得
-                    subtitle_instance = VideoSubtitle.objects.get(subtitle_text_id=base_result.subtitle_text_id)
+        default_audio_language, translation_languages = self.get_translation_info(video_detail.channel_id)
 
-                    # VideoSubtitleDetail のインスタンスを作成し、subtitle_text_id に subtitle_instance を割り当てる
+        # ベース字幕を取得
+        base_subtitles = VideoSubtitle.objects.filter(
+            subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
+            subtitle_id__video_id=video_id,
+            subtitle_id__language_code=default_audio_language.value
+        )
+
+        # 各言語のターゲット字幕について翻訳を挿入
+        for language in translation_languages:
+            # 各言語のターゲット字幕を取得
+            target_subtitles = VideoSubtitle.objects.filter(
+                subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
+                subtitle_id__video_id=video_id,
+                subtitle_id__language_code=language.value
+            )
+
+            # ターゲット字幕とベース字幕をマージしてペアを見つける
+            for base_subtitle in base_subtitles:
+                target_subtitle = target_subtitles.filter(t_start_ms=base_subtitle.t_start_ms).first()
+
+                if target_subtitle:
+                    # 翻訳を挿入
                     SubtitleTranslation.objects.create(
-                        subtitle_text_id=subtitle_instance,
-                        language_code=target_language.value,
-                        subtitle_transration_text=target_result.subtitle_text,
-                        subtitle_transration_text_detail=None,
+                        subtitle_text_id=base_subtitle,
+                        language_code=language.value,
+                        subtitle_transration_text=target_subtitle.subtitle_text,
+                        subtitle_transration_text_detail=None
                     )
-                    print(base_result.subtitle_text_id, base_result.subtitle_text, target_result.subtitle_text)
-            if len(base_results) == 0:
-                logging.debug(f'配列サイズは一致したが一致する字幕なし。リストサイズ:{len(base_results)}')
-        else:
-            logging.debug('一致する字幕情報なし')
 
     def get_video_subtitle_data(self, video_id):
         try:
