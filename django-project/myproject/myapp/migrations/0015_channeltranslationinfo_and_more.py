@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('translation_languages', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(
                     choices=[('ja', 'JAPANESE'), ('en', 'ENGLISH'), ('ko', 'KOREAN'), ('zh', 'CHINESE'),
                              ('id', 'INDONESIAN')], max_length=10), null=True, size=None,
-                                                                                    verbose_name='翻訳の言語コードリスト')),
+                    verbose_name='翻訳の言語コードリスト')),
             ],
             options={
                 'db_table': 'channel_translation_info',

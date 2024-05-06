@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0018_videosubtitleinfo_last_updated_and_more'),
     ]

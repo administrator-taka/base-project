@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0021_alter_channeltranslationinfo_default_audio_language_and_more'),
     ]
@@ -18,6 +17,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='videosubtitleinfo',
             name='subtitle_status',
-            field=models.IntegerField(choices=[(0, 'NO_SUBTITLE'), (1, 'REGISTERED'), (2, 'UNREGISTERED'), (3, 'REGISTRATION_FAILED')], verbose_name='字幕ステータス'),
+            field=models.IntegerField(
+                choices=[(0, 'NO_SUBTITLE'), (1, 'REGISTERED'), (2, 'UNREGISTERED'), (3, 'REGISTRATION_FAILED')],
+                verbose_name='字幕ステータス'),
         ),
     ]

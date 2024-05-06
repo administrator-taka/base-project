@@ -2,7 +2,6 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
 from myapp.applications.application.service.youtube_download_service import YoutubeDownloadService
-from myapp.applications.util.code.subtitle_type import SubtitleType
 
 
 @api_view(['GET'])

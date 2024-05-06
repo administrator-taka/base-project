@@ -425,20 +425,20 @@ class YoutubeDownloadService:
             return
 
         if len(base_results) == len(target_results):
-            for ko_result, ja_result in zip(base_results, target_results):
-                if ko_result.t_start_ms == ja_result.t_start_ms:
+            for base_result, target_result in zip(base_results, target_results):
+                if base_result.t_start_ms == target_result.t_start_ms:
                     # VideoSubtitle のインスタンスを取得
-                    subtitle_instance = VideoSubtitle.objects.get(subtitle_text_id=ko_result.subtitle_text_id)
+                    subtitle_instance = VideoSubtitle.objects.get(subtitle_text_id=base_result.subtitle_text_id)
 
                     # VideoSubtitleDetail のインスタンスを作成し、subtitle_text_id に subtitle_instance を割り当てる
                     SubtitleTranslation.objects.create(
                         subtitle_text_id=subtitle_instance,
                         language_code=target_language.value,
-                        subtitle_transration_text=ja_result.subtitle_text,
+                        subtitle_transration_text=target_result.subtitle_text,
                         subtitle_transration_text_detail=None,
                     )
-                    print(ko_result.subtitle_text_id, ko_result.subtitle_text, ja_result.subtitle_text)
-            if len(base_results)==0:
+                    print(base_result.subtitle_text_id, base_result.subtitle_text, target_result.subtitle_text)
+            if len(base_results) == 0:
                 logging.debug(f'配列サイズは一致したが一致する字幕なし。リストサイズ:{len(base_results)}')
         else:
             logging.debug('一致する字幕情報なし')
@@ -447,7 +447,7 @@ class YoutubeDownloadService:
         try:
             video_detail = VideoDetail.objects.get(video_id=video_id)
         except VideoDetail.DoesNotExist:
-            return 
+            return
         default_audio_language, translation_languages = self.get_translation_info(video_detail.channel_id)
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitle.objects.filter(
