@@ -442,8 +442,10 @@ class YoutubeDownloadService:
             logging.debug('一致する字幕情報なし')
 
     def get_video_subtitle_data(self, video_id):
-        video_detail = VideoDetail.objects.get(video_id=video_id)
-
+        try:
+            video_detail = VideoDetail.objects.get(video_id=video_id)
+        except VideoDetail.DoesNotExist:
+            return 
         default_audio_language, translation_languages = self.get_translation_info(video_detail.channel_id)
         # Django ORMを使用してクエリを構築
         queryset = VideoSubtitle.objects.filter(
