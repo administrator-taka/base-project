@@ -9,6 +9,11 @@ from myapp.applications.util.code.subtitle_type import SubtitleType
 def get_video_data(request, video_id):
     youtube_download_service = YoutubeDownloadService()
     video_data = youtube_download_service.get_video_data(video_id)
+
+    # TODO:一旦初期データ直接突っ込む（言語指定もできていない）
+    youtube_download_service.insert_initial_subtitle_detail(video_id)
+
+    youtube_download_service.get_video_subtitle_data(video_id)
     # JSONレスポンスを作成
     data = {
         "video_data": video_data,

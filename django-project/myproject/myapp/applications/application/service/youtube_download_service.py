@@ -440,6 +440,41 @@ class YoutubeDownloadService:
         else:
             logging.debug('一致する字幕情報なし')
 
+    def get_video_subtitle_data(self, video_id):
+        video_detail = VideoDetail.objects.get(video_id=video_id)
+
+        default_audio_language, translation_languages = self.get_translation_info(video_detail.channel_id)
+        # Django ORMを使用してクエリを構築
+        queryset = VideoSubtitle.objects.filter(
+            subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
+            subtitle_id__video_id=video_id
+        )
+
+        # ベース字幕のクエリ
+        base_queryset = queryset.filter(subtitle_id__language_code=default_audio_language.value)
+
+        # ベース字幕以外のクエリ
+        other_queryset = queryset.exclude(subtitle_id__language_code=default_audio_language.value)
+
+        # クエリセットを実行
+        base_results = list(base_queryset.order_by('t_start_ms'))
+
+        for base_result in base_results:
+            logging.debug(base_result.subtitle_id.subtitle_id)
+            logging.debug(base_result.subtitle_id.language_code)
+            logging.debug(base_result.subtitle_text_id)
+            logging.debug(base_result.t_start_ms)
+            logging.debug(base_result.subtitle_text)
+
+            for language in translation_languages:
+                # other_querysetのlanguage_codeで検索
+                other_subtitle = other_queryset.filter(subtitle_id__language_code=language.value,
+                                                       t_start_ms=base_result.t_start_ms).first()
+                if other_subtitle:
+                    logging.debug(f"Translation found for language {language.value}: {other_subtitle.subtitle_text}")
+                else:
+                    logging.debug(f"No translation found for language {language.value}")
+
     def check_subtitle_text_id_exists(self, subtitle_id, language_code):
         # 特定の subtitle_text_id と language_code に対応する SubtitleTranslation レコードが存在するかチェック
         exists = SubtitleTranslation.objects.filter(
