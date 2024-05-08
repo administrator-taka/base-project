@@ -565,11 +565,11 @@ class YoutubeDownloadService:
                                 default_audio_language: YouTubeLanguage,
                                 translation_languages: List[YouTubeLanguage]) -> None:
 
-        # subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
-        # FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
+        subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
+        FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
         # return
-        # TODO:データを事前に用意している場合は以下を使用
-        subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
+        # # TODO:データを事前に用意している場合は以下を使用
+        # subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
         # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
         # # 自動生成字幕
         # self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
