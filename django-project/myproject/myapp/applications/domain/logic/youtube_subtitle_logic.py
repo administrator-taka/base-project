@@ -4,7 +4,6 @@ import re
 import traceback
 import unittest
 
-import pandas as pd
 import yt_dlp
 
 from myapp.applications.infrastructure.repository.web_client import WebClient
@@ -300,13 +299,12 @@ class YouTubeSubtitleLogic:
         # TODO:自動生成字幕は奇数番目を削除するが、手動生成だと削除したらダメそう
         # 奇数番目の字幕を削除
         subtitles = subtitles[1::2]
-        df = pd.DataFrame(subtitles)
 
-        return df
+        return subtitles
 
     def split_subtitle_text(self, start_time, text, end_time):
         result = []
-        text_none_check = text is not None and not pd.isna(text)
+        text_none_check = text is not None
         time_none_check = start_time is None and end_time is None
         if text_none_check and not time_none_check:
 
