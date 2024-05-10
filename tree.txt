@@ -49,6 +49,7 @@
 │       │   │       │   ├─subtitle_type.py
 │       │   │       │   ├─time_zone.py
 │       │   │       │   └─youtube_language.py
+│       │   │       ├─encryption.py
 │       │   │       ├─file_handler.py
 │       │   │       ├─timestamp_converter.py
 │       │   │       ├─util_convert.py
@@ -77,6 +78,8 @@
 │       │   │   ├─0020_remove_videosubtitleinfo_has_subtitle.py
 │       │   │   ├─0021_alter_channeltranslationinfo_default_audio_language_and_more.py
 │       │   │   ├─0022_videodetail_initial_flag_and_more.py
+│       │   │   ├─0023_alter_channellocalized_channel_id_and_more.py
+│       │   │   ├─0024_rename_subtitle_transration_text_subtitletranslation_subtitle_translation_text_and_more.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
@@ -90,6 +93,7 @@
 │       │       ├─__init__.py
 │       │       ├─channel_view.py
 │       │       ├─health_check_view.py
+│       │       ├─subtitle_text_view.py
 │       │       ├─test_views.py
 │       │       └─video_view.py
 │       ├─myproject
@@ -230,8 +234,10 @@
         │   │   ├─HelloWorld.vue
         │   │   ├─SidebarComponent.vue
         │   │   ├─TopComponent.vue
-        │   │   └─test-service
-        │   │       └─TestHome.vue
+        │   │   ├─test-service
+        │   │   │   └─TestHome.vue
+        │   │   └─youtube-app
+        │   │       └─YouTubeAppHome.vue
         │   ├─main.ts
         │   ├─router
         │   │   └─index.ts
