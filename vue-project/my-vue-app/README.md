@@ -42,3 +42,13 @@ https://www.bnote.net/front-end/vscode_prettier.html
 
 フォルダ単位のフォーマット
 npx prettier --write .
+
+Docker コンテナ内で npm パッケージのバージョンを確認するには、次のコマンドを使用できます。
+
+npm のバージョンを確認する：
+npm -v
+Vue CLI のバージョンを確認する：
+vue --version
+serve のバージョンを確認する：
+serve --version
+これらのコマンドを Docker コンテナ内で実行することで、それぞれのパッケージのバージョンを確認できます。そして、得られたバージョンを Dockerfile に直接記述して、特定のバージョンをインストールすることができます。
