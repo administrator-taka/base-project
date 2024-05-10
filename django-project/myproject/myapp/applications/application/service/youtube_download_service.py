@@ -91,7 +91,7 @@ class YoutubeDownloadService:
                     'subtitle_type': subtitle_type.value,
                     'language_code': language.value,
                     'subtitle_status': SubtitleStatus.NO_SUBTITLE.value,
-                    'last_updated': datetime.utcnow(),
+                    'last_updated': datetime.now(),
                     'remarks': None
                 }
             )
@@ -115,7 +115,7 @@ class YoutubeDownloadService:
                     'subtitle_type': subtitle_type.value,
                     'language_code': language.value,
                     'subtitle_status': subtitle_status.value,
-                    'last_updated': datetime.utcnow(),
+                    'last_updated': datetime.now(),
                 }
             )
 
