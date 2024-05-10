@@ -52,8 +52,18 @@ def search_word(request, channel_id):
     return JsonResponse(data=data, status=200)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def update_translation_language(request, channel_id):
+    # リクエストのJSONの中身を取得
+    request_data = request.data
+
+    default_audio_language = request_data.get('default_audio_language', None)
+    translation_languages = request_data.get('translation_languages', None)
+
+    youtube_download_service = YoutubeDownloadService()
+
+    youtube_download_service.update_channel_translation_info(channel_id, default_audio_language, translation_languages)
+
     # JSONレスポンスを作成
     data = {
         "response": "response"

@@ -26,6 +26,12 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
+    def update_channel_translation_info(self, channel_id, default_audio_language=None, translation_languages=None):
+        translation_info, created = ChannelTranslationInfo.objects.get_or_create(channel_id=channel_id)
+        translation_info.default_audio_language = default_audio_language
+        translation_info.translation_languages = translation_languages
+        translation_info.save()
+
     def get_translation_info(self, channel_id):
         # ChannelTranslationInfoからデータを取得
         translation_info = ChannelTranslationInfo.objects.get(channel_id=channel_id)
@@ -569,7 +575,7 @@ class YoutubeDownloadService:
                                 translation_languages: List[YouTubeLanguage]) -> None:
 
         subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
-        FileHandler.write_json(subtitle_info, TEST_DIR+"subtitle_data/", video_id, )
+        FileHandler.write_json(subtitle_info, TEST_DIR + "subtitle_data/", video_id, )
         # return
         # # TODO:データを事前に用意している場合は以下を使用
         # subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
