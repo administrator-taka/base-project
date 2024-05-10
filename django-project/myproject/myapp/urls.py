@@ -20,8 +20,10 @@ urlpatterns = [
     path("channel/<str:channel_id>/download_channel_subtitles", download_channel_subtitles,
          name="download_channel_subtitles"),
     path("channel/<str:channel_id>/search_word", search_word, name="search_word"),
-    path("channel/<str:channel_id>/update_translation_language", update_translation_language, name="update_translation_language"),
+    path("channel/<str:channel_id>/update_translation_language", update_translation_language,
+         name="update_translation_language"),
     path("video/<str:video_id>/", get_video_data, name="get_video_data"),
     path("subtitle/<str:subtitle_text_id>/", get_subtitle_text_data, name="get_subtitle_text_data"),
-    path("subtitle/<str:subtitle_text_id>/update_subtitle_translation", update_subtitle_translation, name="update_subtitle_translation"),
+    path("subtitle/<str:subtitle_text_id>/update_subtitle_translation", update_subtitle_translation,
+         name="update_subtitle_translation"),
 ]

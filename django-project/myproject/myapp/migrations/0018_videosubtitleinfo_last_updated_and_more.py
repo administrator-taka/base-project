@@ -78,7 +78,7 @@ class Migration(migrations.Migration):
                          ('tr', 'TURKISH'), ('uk', 'UKRAINIAN'), ('ur', 'URDU'), ('uz', 'UZBEK'), ('vi', 'VIETNAMESE'),
                          ('zh-CN', 'CHINESE_SIMPLIFIED'), ('zh-HK', 'CHINESE_HONGKONG'),
                          ('zh-TW', 'CHINESE_TRADITIONAL'), ('zu', 'ZULU')], max_length=10), null=True, size=None,
-                                                            verbose_name='翻訳の言語コードリスト'),
+                verbose_name='翻訳の言語コードリスト'),
         ),
         migrations.AlterField(
             model_name='subtitletranslation',

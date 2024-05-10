@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0022_videodetail_initial_flag_and_more'),
     ]
@@ -14,36 +13,44 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='channellocalized',
             name='channel_id',
-            field=models.ForeignKey(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE, to='myapp.channeldetail', verbose_name='チャンネルID'),
+            field=models.ForeignKey(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE,
+                                    to='myapp.channeldetail', verbose_name='チャンネルID'),
         ),
         migrations.AlterField(
             model_name='channeltranslationinfo',
             name='channel_id',
-            field=models.OneToOneField(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='myapp.channeldetail', verbose_name='チャンネルID'),
+            field=models.OneToOneField(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE,
+                                       primary_key=True, serialize=False, to='myapp.channeldetail',
+                                       verbose_name='チャンネルID'),
         ),
         migrations.AlterField(
             model_name='subtitletranslation',
             name='subtitle_text_id',
-            field=models.ForeignKey(db_column='subtitle_text_id', on_delete=django.db.models.deletion.CASCADE, to='myapp.videosubtitle', verbose_name='字幕テキストID'),
+            field=models.ForeignKey(db_column='subtitle_text_id', on_delete=django.db.models.deletion.CASCADE,
+                                    to='myapp.videosubtitle', verbose_name='字幕テキストID'),
         ),
         migrations.AlterField(
             model_name='videodetail',
             name='channel_id',
-            field=models.ForeignKey(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE, to='myapp.channeldetail', verbose_name='チャンネルID'),
+            field=models.ForeignKey(db_column='channel_id', on_delete=django.db.models.deletion.CASCADE,
+                                    to='myapp.channeldetail', verbose_name='チャンネルID'),
         ),
         migrations.AlterField(
             model_name='videolocalized',
             name='video_id',
-            field=models.ForeignKey(db_column='video_id', on_delete=django.db.models.deletion.CASCADE, to='myapp.videodetail', verbose_name='動画ID'),
+            field=models.ForeignKey(db_column='video_id', on_delete=django.db.models.deletion.CASCADE,
+                                    to='myapp.videodetail', verbose_name='動画ID'),
         ),
         migrations.AlterField(
             model_name='videosubtitle',
             name='subtitle_id',
-            field=models.ForeignKey(db_column='subtitle_id', on_delete=django.db.models.deletion.CASCADE, to='myapp.videosubtitleinfo', verbose_name='字幕ID'),
+            field=models.ForeignKey(db_column='subtitle_id', on_delete=django.db.models.deletion.CASCADE,
+                                    to='myapp.videosubtitleinfo', verbose_name='字幕ID'),
         ),
         migrations.AlterField(
             model_name='videosubtitleinfo',
             name='video_id',
-            field=models.ForeignKey(db_column='video_id', on_delete=django.db.models.deletion.CASCADE, to='myapp.videodetail', verbose_name='動画ID'),
+            field=models.ForeignKey(db_column='video_id', on_delete=django.db.models.deletion.CASCADE,
+                                    to='myapp.videodetail', verbose_name='動画ID'),
         ),
     ]

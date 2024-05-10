@@ -1,13 +1,12 @@
 import datetime
 import logging
-import logging
 import time
 import unittest
 from collections import defaultdict
+from datetime import datetime
 from typing import List
 
 from django.db.models import Q
-from datetime import datetime
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
@@ -34,9 +33,10 @@ class YoutubeDownloadService:
         subtitle_translation_info.subtitle_translation_text_detail = subtitle_translation_text_detail
         subtitle_translation_info.save()
 
-    def get_subtitle_text_data(self,subtitle_text_id,language):
-        subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(subtitle_text_id=subtitle_text_id,language_code=language.value)
-        video_subtitle_info=VideoSubtitle.objects.filter(
+    def get_subtitle_text_data(self, subtitle_text_id, language):
+        subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(
+            subtitle_text_id=subtitle_text_id, language_code=language.value)
+        video_subtitle_info = VideoSubtitle.objects.filter(
             subtitle_id__video_id=subtitle_translation_info.subtitle_text_id.subtitle_id.video_id,
             subtitle_id__language_code=language.value,
             t_start_ms=subtitle_translation_info.subtitle_text_id.t_start_ms,

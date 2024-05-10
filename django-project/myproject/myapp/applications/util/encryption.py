@@ -1,5 +1,6 @@
-from cryptography.fernet import Fernet
 import unittest
+
+from cryptography.fernet import Fernet
 
 
 class Encryption:
