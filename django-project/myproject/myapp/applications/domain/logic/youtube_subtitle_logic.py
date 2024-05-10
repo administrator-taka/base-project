@@ -381,7 +381,7 @@ class TestYouTubeDownloadLogic(unittest.TestCase):
         flag, subtitles_content = youtube_subtitle_logic.extract_and_process_subtitle_vtt(subtitle_info,
                                                                                           SubtitleType.MANUAL,
                                                                                           YouTubeLanguage.KOREAN)
-        print(subtitles_content.to_string())
+        print(subtitles_content)
 
     def test_split_subtitle_text(self):
         youtube_subtitle_logic = YouTubeSubtitleLogic()
