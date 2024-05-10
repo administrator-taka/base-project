@@ -39,10 +39,10 @@ class YoutubeDownloadService:
         }
         return subtitle_text_data
 
-    def update_channel_translation_info(self, channel_id, default_audio_language=None, translation_languages=None):
+    def update_channel_translation_info(self, channel_id, default_audio_language, translation_languages):
         translation_info, created = ChannelTranslationInfo.objects.get_or_create(channel_id=channel_id)
-        translation_info.default_audio_language = default_audio_language
-        translation_info.translation_languages = translation_languages
+        translation_info.default_audio_language = default_audio_language.value
+        translation_info.translation_languages = [lang.value for lang in translation_languages]
         translation_info.save()
 
     def get_translation_info(self, channel_id):

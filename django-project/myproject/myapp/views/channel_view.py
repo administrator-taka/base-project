@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 
 from myapp.applications.application.service.youtube_download_service import YoutubeDownloadService
 from myapp.applications.util.code.subtitle_type import SubtitleType
+from myapp.applications.util.code.youtube_language import YouTubeLanguage
 
 
 @api_view(['GET'])
@@ -57,8 +58,11 @@ def update_translation_language(request, channel_id):
     # リクエストのJSONの中身を取得
     request_data = request.data
 
-    default_audio_language = request_data.get('default_audio_language', None)
-    translation_languages = request_data.get('translation_languages', None)
+    # デフォルトの言語コードを取得
+    default_audio_language = YouTubeLanguage(request_data.get('default_audio_language', None))
+
+    # 翻訳言語リスト取得
+    translation_languages = [YouTubeLanguage(language) for language in request_data.get('translation_languages', None)]
 
     youtube_download_service = YoutubeDownloadService()
 
