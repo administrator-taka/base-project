@@ -521,7 +521,7 @@ class YoutubeDownloadService:
         for video in playlist_videos:
             video_id = video.video_id
             # 字幕IDが存在するかのチェックを行うデータ準備
-            subtitle_ids = [generate_subtitle_id(video_id, SubtitleType.AUTOMATIC, default_audio_language)]
+            subtitle_ids = [generate_subtitle_id(video_id, SubtitleType.MANUAL, default_audio_language)]
             for language in translation_languages:
                 subtitle_ids.append(generate_subtitle_id(video_id, SubtitleType.MANUAL, language))
             # TODO:自動字幕と手動字幕で登録するかしないかを分けるべき
