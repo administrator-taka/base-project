@@ -27,15 +27,15 @@ class YoutubeDownloadService:
         self.youtube_api_logic = YouTubeApiLogic()
 
     def get_subtitle_text_data(self,subtitle_text_id,language):
-        subtitle_transration_info, created = SubtitleTranslation.objects.get_or_create(subtitle_text_id=subtitle_text_id,language_code=language.value)
-        print(subtitle_transration_info.subtitle_transration_text)
+        subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(subtitle_text_id=subtitle_text_id,language_code=language.value)
+        print(subtitle_translation_info.subtitle_translation_text)
         subtitle_text_data = {
-            'subtitle_text_id': subtitle_transration_info.subtitle_text_id.subtitle_text_id,
-            't_start_ms': subtitle_transration_info.subtitle_text_id.t_start_ms,
-            'subtitle_text': subtitle_transration_info.subtitle_text_id.subtitle_text,
-            'language_code': subtitle_transration_info.language_code,
-            'subtitle_transration_text': subtitle_transration_info.subtitle_transration_text,
-            'subtitle_transration_text_detail': subtitle_transration_info.subtitle_transration_text_detail,
+            'subtitle_text_id': subtitle_translation_info.subtitle_text_id.subtitle_text_id,
+            't_start_ms': subtitle_translation_info.subtitle_text_id.t_start_ms,
+            'subtitle_text': subtitle_translation_info.subtitle_text_id.subtitle_text,
+            'language_code': subtitle_translation_info.language_code,
+            'subtitle_translation_text': subtitle_translation_info.subtitle_translation_text,
+            'subtitle_translation_text_detail': subtitle_translation_info.subtitle_translation_text_detail,
         }
         return subtitle_text_data
 
@@ -453,8 +453,8 @@ class YoutubeDownloadService:
                     SubtitleTranslation.objects.create(
                         subtitle_text_id=base_subtitle,
                         language_code=language.value,
-                        subtitle_transration_text=target_subtitle.subtitle_text,
-                        subtitle_transration_text_detail=None
+                        subtitle_translation_text=target_subtitle.subtitle_text,
+                        subtitle_translation_text_detail=None
                     )
 
     def get_video_subtitle_data(self, video_id):
@@ -507,7 +507,7 @@ class YoutubeDownloadService:
                 if other_subtitle and subtitle_translation_data:
                     base_subtitle_dict['translations'][language.value] = {
                         'subtitle_text': other_subtitle.subtitle_text,
-                        'translation_text': subtitle_translation_data.subtitle_transration_text
+                        'translation_text': subtitle_translation_data.subtitle_translation_text
                     }
 
             # ベース字幕と翻訳の辞書をリストに追加

@@ -200,10 +200,10 @@ class SubtitleTranslation(models.Model):
     language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
 
     # 翻訳字幕
-    subtitle_transration_text = models.TextField(blank=True, null=True, verbose_name='翻訳字幕')
+    subtitle_translation_text = models.TextField(blank=True, null=True, verbose_name='翻訳字幕')
 
     # 翻訳字幕詳細
-    subtitle_transration_text_detail = models.TextField(blank=True, null=True, verbose_name='翻訳字幕詳細')
+    subtitle_translation_text_detail = models.TextField(blank=True, null=True, verbose_name='翻訳字幕詳細')
 
     class Meta:
         db_table = 'subtitle_translation'
