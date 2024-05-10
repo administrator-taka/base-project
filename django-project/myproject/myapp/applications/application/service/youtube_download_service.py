@@ -36,11 +36,18 @@ class YoutubeDownloadService:
 
     def get_subtitle_text_data(self,subtitle_text_id,language):
         subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(subtitle_text_id=subtitle_text_id,language_code=language.value)
+        video_subtitle_info=VideoSubtitle.objects.filter(
+            subtitle_id__video_id=subtitle_translation_info.subtitle_text_id.subtitle_id.video_id,
+            subtitle_id__language_code=language.value,
+            t_start_ms=subtitle_translation_info.subtitle_text_id.t_start_ms,
+        ).first()
+
         subtitle_text_data = {
             'subtitle_text_id': subtitle_translation_info.subtitle_text_id.subtitle_text_id,
             't_start_ms': subtitle_translation_info.subtitle_text_id.t_start_ms,
             'subtitle_text': subtitle_translation_info.subtitle_text_id.subtitle_text,
             'language_code': subtitle_translation_info.language_code,
+            'subtitle_default_text': video_subtitle_info.subtitle_text,
             'subtitle_translation_text': subtitle_translation_info.subtitle_translation_text,
             'subtitle_translation_text_detail': subtitle_translation_info.subtitle_translation_text_detail,
         }
