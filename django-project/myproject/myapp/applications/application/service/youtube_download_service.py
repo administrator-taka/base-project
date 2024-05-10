@@ -26,9 +26,16 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
+    def update_subtitle_translation(self, subtitle_text_id, language, subtitle_translation_text,
+                                    subtitle_translation_text_detail):
+        subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(
+            subtitle_text_id=subtitle_text_id, language_code=language.value)
+        subtitle_translation_info.subtitle_translation_text = subtitle_translation_text
+        subtitle_translation_info.subtitle_translation_text_detail = subtitle_translation_text_detail
+        subtitle_translation_info.save()
+
     def get_subtitle_text_data(self,subtitle_text_id,language):
         subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(subtitle_text_id=subtitle_text_id,language_code=language.value)
-        print(subtitle_translation_info.subtitle_translation_text)
         subtitle_text_data = {
             'subtitle_text_id': subtitle_translation_info.subtitle_text_id.subtitle_text_id,
             't_start_ms': subtitle_translation_info.subtitle_text_id.t_start_ms,
