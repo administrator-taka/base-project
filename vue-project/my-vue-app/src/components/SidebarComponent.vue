@@ -22,7 +22,8 @@ export default {
   setup() {
     const sidebarLinks = ref([
       { name: 'Home', routeName: 'TopComponent' },
-      { name: 'Test Home', routeName: 'TestHome' }
+      { name: 'Test Home', routeName: 'TestHome' },
+      { name: 'YouTube App Home', routeName: 'YouTubeAppHome' }
       // 他のリンク情報をここに追加
     ])
 
