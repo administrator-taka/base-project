@@ -1,5 +1,10 @@
 import { ActionContext } from 'vuex'
 
+// ストアの状態を表す型
+interface RootState {
+  userData: string;
+}
+
 const test = {
   namespaced: true,
   state: {
@@ -7,19 +12,19 @@ const test = {
   },
 
   mutations: {
-    setUserData(state: { userData: string }, userData: string) {
+    setUserData(state: RootState, userData: string) {
       state.userData = userData
     }
   },
 
   actions: {
-    setUserDataAction(context: ActionContext<any, any>, userData: string) {
+    setUserDataAction(context: ActionContext<RootState, RootState>, userData: string) {
       context.commit('setUserData', userData)
     },
 
-    getUserData({ state }: { state: any }) {
-      console.log('Current User Data:', state.userData)
-      return state.userData
+    getUserData(context: ActionContext<RootState, RootState>): string {
+      console.log('Current User Data:', context.state.userData)
+      return context.state.userData
     }
   }
 }
