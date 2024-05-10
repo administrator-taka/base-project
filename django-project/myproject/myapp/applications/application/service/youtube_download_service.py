@@ -1,3 +1,4 @@
+import datetime
 import logging
 import logging
 import time
@@ -6,6 +7,7 @@ from collections import defaultdict
 from typing import List
 
 from django.db.models import Q
+from datetime import datetime
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
@@ -89,6 +91,7 @@ class YoutubeDownloadService:
                     'subtitle_type': subtitle_type.value,
                     'language_code': language.value,
                     'subtitle_status': SubtitleStatus.NO_SUBTITLE.value,
+                    'last_updated': datetime.utcnow(),
                     'remarks': None
                 }
             )
@@ -112,7 +115,7 @@ class YoutubeDownloadService:
                     'subtitle_type': subtitle_type.value,
                     'language_code': language.value,
                     'subtitle_status': subtitle_status.value,
-                    'last_updated': last_updated,
+                    'last_updated': datetime.utcnow(),
                 }
             )
 
