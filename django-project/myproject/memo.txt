@@ -1,0 +1,13 @@
+クエリが重くなるのの対策
+select_relatedを用いたクエリの最適化
+https://qiita.com/eiji-noguchi/items/08c751dcb7a476ea7485
+
+
+定期実行
+cron
+https://www.kagoya.jp/howto/it-glossary/server/cron/
+
+
+rest api pet store(GET PUT DELETE POSTの扱い)
+https://petstore.swagger.io/
+
