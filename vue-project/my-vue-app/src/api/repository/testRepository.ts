@@ -1,6 +1,6 @@
-import { apiClient, djangoApiClient,youtubeAppApiClient } from '@/api/sampleName/index'
-import { testRequest } from '@/api/interface/request/testRequest'
-import { testResponse } from '@/api/interface/response/testResponse'
+import { apiClient, djangoApiClient,youtubeAppApiClient } from '@/api/repository/index'
+import { testRequest } from '@/api/request/testRequest'
+import { testResponse } from '@/api/response/testResponse'
 import { AxiosResponse } from 'axios'
 
 export default {

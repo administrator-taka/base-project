@@ -21,7 +21,7 @@
 
 <script>
 import Sidebar from '@/components/SidebarComponent.vue'
-import testRepository from '@/api/sampleName/testRepository'
+import testRepository from '@/api/repository/testRepository'
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useCounterStore } from '@/store/counter.ts'
