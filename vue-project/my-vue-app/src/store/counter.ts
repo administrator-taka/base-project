@@ -14,7 +14,7 @@ export const useCounterStore = defineStore(
   },
   {
     persist: {
-     storage: sessionStorage,
-   },
+      storage: sessionStorage
+    }
   }
 )

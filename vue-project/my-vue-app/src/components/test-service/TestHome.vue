@@ -39,6 +39,8 @@ import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useCounterStore } from '@/store/counter.ts'
 import channelRepository from '@/api/repository/channelRepository'
+import videoRepository from '@/api/repository/videoRepository'
+import subtitleRepository from '@/api/repository/subtitleRepository'
 
 export default {
   components: {
@@ -163,7 +165,7 @@ export default {
 
     const getVideoData = async () => {
       try {
-        const data = channelRepository.getVideoData(videoId.value)
+        const data = videoRepository.getVideoData(videoId.value)
         console.log('Video data:', data)
       } catch (error) {
         console.error('Error fetching video data:', error)
@@ -172,7 +174,7 @@ export default {
 
     const getSubtitleTextData = async () => {
       try {
-        const data = channelRepository.getSubtitleTextData(
+        const data = subtitleRepository.getSubtitleTextData(
           subtitleTextId.value,
           'ja'
         )
@@ -184,7 +186,7 @@ export default {
 
     const updateSubtitleTranslation = async () => {
       try {
-        const data = channelRepository.updateSubtitleTranslation(
+        const data = subtitleRepository.updateSubtitleTranslation(
           subtitleTextId.value,
           'ja',
           'YOUR_SUBTITLE_TRANSLATION_TEXT',

@@ -1,4 +1,4 @@
-const { defineConfig } = require('@vue/cli-service');
+const { defineConfig } = require('@vue/cli-service')
 
 // // 環境変数からAPIのドメインを取得
 // const apiUrl = process.env.API_DOMAIN;
@@ -9,14 +9,14 @@ module.exports = defineConfig({
     // Webpackの設定を変更するためのフック
     config.plugin('define').tap((definitions) => {
       // Vueプロダクションモード時のハイドレーションミスマッチの詳細を無効化
-      definitions[0]['__VUE_PROD_HYDRATION_MISMATCH_DETAILS__'] = false;
-      return definitions;
-    });
+      definitions[0]['__VUE_PROD_HYDRATION_MISMATCH_DETAILS__'] = false
+      return definitions
+    })
   },
   // 依存関係のトランスパイルを有効にする
   transpileDependencies: true,
   devServer: {
-    port: 3000, // 開発サーバーのポート番号
+    port: 3000 // 開発サーバーのポート番号
     // proxy: {
     //   // '/api'へのリクエストをAPIのURLにプロキシする設定
     //   '/api': {
@@ -40,4 +40,4 @@ module.exports = defineConfig({
     //   }
     // }
   }
-});
+})

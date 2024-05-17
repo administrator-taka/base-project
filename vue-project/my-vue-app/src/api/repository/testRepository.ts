@@ -1,4 +1,8 @@
-import { apiClient, djangoApiClient,youtubeAppApiClient } from '@/api/repository/index'
+import {
+  apiClient,
+  djangoApiClient,
+  youtubeAppApiClient
+} from '@/api/repository/index'
 import { testRequest } from '@/api/request/testRequest'
 import { testResponse } from '@/api/response/testResponse'
 import { AxiosResponse } from 'axios'
@@ -26,10 +30,8 @@ export default {
   },
 
   async test() {
-    return await youtubeAppApiClient
-      .get('/video/t6lgpuGuScI')
-      .then((res) => {
-        return res.data
-      })
+    return await youtubeAppApiClient.get('/video/t6lgpuGuScI').then((res) => {
+      return res.data
+    })
   }
 }
