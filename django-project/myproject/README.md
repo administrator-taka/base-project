@@ -9,8 +9,10 @@ python manage.py makemigrations
 
 python manage.py migrate
 ```
+
 PKで生成する場合は以下
 timezone.now()
+
 ```
 ## 管理者ユーザー (スーパーユーザー) を作成
 
@@ -39,6 +41,7 @@ docker-composeでMinIO(S3互換)環境
 ## requirements.txtの更新
 pip freeze > requirements.txt
 ```
+
 ```
 ## 特定のライブラリのみ
 pip freeze | findstr *** >> requirements.txt

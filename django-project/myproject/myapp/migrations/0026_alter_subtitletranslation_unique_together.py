@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('myapp', '0025_remove_subtitletranslation_id_and_more'),
     ]

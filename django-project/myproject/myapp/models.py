@@ -194,7 +194,8 @@ class VideoSubtitle(models.Model):
 
 class SubtitleTranslation(models.Model):
     # 字幕翻訳テキストID
-    subtitle_translation_text_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='字幕翻訳テキストID')
+    subtitle_translation_text_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
+                                                    verbose_name='字幕翻訳テキストID')
     # 字幕テキストID
     subtitle_text_id = models.ForeignKey(VideoSubtitle, db_column='subtitle_text_id',
                                          on_delete=models.CASCADE,
@@ -212,4 +213,3 @@ class SubtitleTranslation(models.Model):
     class Meta:
         db_table = 'subtitle_translation'
         unique_together = ['subtitle_text_id', 'language_code']
-
