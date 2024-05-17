@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Sidebar from '@/components/SidebarComponent.vue'
 import testRepository from '@/api/repository/testRepository'
 import { ref, onMounted } from 'vue'

@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Sidebar from '@/components/SidebarComponent.vue'
 import channelRepository from '@/api/repository/channelRepository'
 import { ref, onMounted } from 'vue'
@@ -49,7 +49,10 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const channelId = ref(route.params.channelId || '')
+    const channelId = ref<string>(
+      typeof route.params.channelId === 'string' ? route.params.channelId : ''
+    )
+
     const channelData = ref()
     const videoList = ref()
 

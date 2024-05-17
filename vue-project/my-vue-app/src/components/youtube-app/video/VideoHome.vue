@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Sidebar from '@/components/SidebarComponent.vue'
 import videoRepository from '@/api/repository/videoRepository'
 import { ref, onMounted } from 'vue'
@@ -31,7 +31,9 @@ export default {
   },
   setup() {
     const route = useRoute()
-    const videoId = ref(route.params.videoId || '')
+    const videoId = ref<string>(
+      typeof route.params.videoId === 'string' ? route.params.videoId : ''
+    )
     const videoData = ref()
     const subtitleList = ref()
 

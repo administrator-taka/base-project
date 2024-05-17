@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Sidebar from '@/components/SidebarComponent.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
