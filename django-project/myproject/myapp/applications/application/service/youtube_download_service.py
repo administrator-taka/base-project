@@ -469,8 +469,8 @@ class YoutubeDownloadService:
             # ターゲット字幕とベース字幕をマージしてペアを見つける
             for base_subtitle in base_subtitles:
                 target_subtitle = target_subtitles.filter(t_start_ms=base_subtitle.t_start_ms).first()
-                logging.debug(f"{target_subtitle.subtitle_text}:登録中")
                 if target_subtitle:
+                    logging.debug(f"{target_subtitle.subtitle_text}:登録中")
                     # 翻訳を挿入
                     subtitle_translation, created = SubtitleTranslation.objects.get_or_create(
                         subtitle_text_id=base_subtitle,
