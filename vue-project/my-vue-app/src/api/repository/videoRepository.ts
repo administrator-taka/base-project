@@ -3,7 +3,7 @@ import toCamelCase from '@/utils/to_camel_case'
 import { AxiosResponse } from 'axios'
 
 export default {
-  async getVideoData(videoId: string){
+  async getVideoData(videoId: string) {
     return youtubeAppApiClient
       .get(`/video/${videoId}`)
       .then((response: AxiosResponse) => toCamelCase(response.data))

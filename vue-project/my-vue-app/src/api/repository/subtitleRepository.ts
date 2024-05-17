@@ -1,12 +1,9 @@
 import { youtubeAppApiClient } from '@/api/repository/index'
 import { AxiosResponse } from 'axios'
-import toCamelCase from '@/utils/to_camel_case';
+import toCamelCase from '@/utils/to_camel_case'
 
 export default {
-  async getSubtitleTextData(
-    subtitleTextId: string,
-    languageCode: string
-  ){
+  async getSubtitleTextData(subtitleTextId: string, languageCode: string) {
     const data = { language_code: languageCode }
     return youtubeAppApiClient
       .post(`/subtitle/${subtitleTextId}`, data)
@@ -22,7 +19,7 @@ export default {
     languageCode: string,
     subtitleTranslationText: string,
     subtitleTranslationTextDetail: string
-  ){
+  ) {
     const data = {
       language_code: languageCode,
       subtitle_translation_text: subtitleTranslationText,
