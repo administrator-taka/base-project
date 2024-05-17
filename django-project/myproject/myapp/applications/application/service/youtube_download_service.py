@@ -510,6 +510,13 @@ class YoutubeDownloadService:
 
         # クエリセットを実行
         base_results = list(base_queryset.order_by('t_start_ms'))
+        # ログ出力用
+        total_subtitles = len(base_results)
+        processed_subtitles = 0
+
+        if total_subtitles > 1000:
+            logging.debug(f"字幕行数が多すぎます。字幕数：{total_subtitles}")
+            return
 
         for base_result in base_results:
             base_subtitle_dict = {
@@ -537,6 +544,11 @@ class YoutubeDownloadService:
                         'subtitle_text': other_subtitle.subtitle_text,
                         'translation_text': subtitle_translation_data.subtitle_translation_text
                     }
+
+            # 処理された字幕数を更新
+            processed_subtitles += 1
+            # 経過率をデバッグに出力
+            logging.info(f"処理進行状況: {processed_subtitles}/{total_subtitles}")
 
             # ベース字幕と翻訳の辞書をリストに追加
             video_subtitle_data.append(base_subtitle_dict)
