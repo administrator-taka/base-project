@@ -1,5 +1,5 @@
 クエリが重くなるのの対策
-select_relatedを用いたクエリの最適化
+select_relatedを用いたクエリの最適化(n+1)
 https://qiita.com/eiji-noguchi/items/08c751dcb7a476ea7485
 
 
