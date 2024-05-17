@@ -27,14 +27,14 @@ class YoutubeDownloadService:
 
     def update_subtitle_translation(self, subtitle_text_id, language, subtitle_translation_text,
                                     subtitle_translation_text_detail):
-        subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(
+        subtitle_translation_info = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language.value)
         subtitle_translation_info.subtitle_translation_text = subtitle_translation_text
         subtitle_translation_info.subtitle_translation_text_detail = subtitle_translation_text_detail
         subtitle_translation_info.save()
 
     def get_subtitle_text_data(self, subtitle_text_id, language):
-        subtitle_translation_info, created = SubtitleTranslation.objects.get_or_create(
+        subtitle_translation_info = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language.value)
         video_subtitle_info = VideoSubtitle.objects.filter(
             subtitle_id__video_id=subtitle_translation_info.subtitle_text_id.subtitle_id.video_id,
@@ -464,11 +464,13 @@ class YoutubeDownloadService:
 
                 if target_subtitle:
                     # 翻訳を挿入
-                    SubtitleTranslation.objects.create(
+                    subtitle_translation, created = SubtitleTranslation.objects.get_or_create(
                         subtitle_text_id=base_subtitle,
                         language_code=language.value,
-                        subtitle_translation_text=target_subtitle.subtitle_text,
-                        subtitle_translation_text_detail=None
+                        defaults={
+                            'subtitle_translation_text': target_subtitle.subtitle_text,
+                            'subtitle_translation_text_detail': None
+                        }
                     )
 
     def get_video_subtitle_data(self, video_id):
