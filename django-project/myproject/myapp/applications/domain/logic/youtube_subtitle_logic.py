@@ -93,37 +93,43 @@ class YouTubeSubtitleLogic:
 
     # 字幕詳細からjsonのurlを取得し、処理する
     def extract_and_process_subtitle_json(self, subtitle_info, subtitle_type, language):
-        subtitles = subtitle_info.get(subtitle_type.to_string())
-        if subtitles:
-            captions_info = subtitles.get(language.value)
-            if captions_info:
-                # JSON形式の字幕データが存在する場合
-                json_data = [item for item in captions_info if item.get("ext") == "json3"]
-                if json_data:
-                    url = json_data[0]["url"]
-                    # 取得したURLを処理する
-                    try:
+        try:
+            if subtitle_info is None:
+                # エラーが発生した場合はログに出力して False とエラーメッセージを返す
+                error_message = f"字幕データが取得できませんでした。"
+                logging.warning(error_message)
+                return SubtitleStatus.REGISTRATION_FAILED, error_message
+            subtitles = subtitle_info.get(subtitle_type.to_string())
+            if subtitles:
+                captions_info = subtitles.get(language.value)
+                if captions_info:
+                    # JSON形式の字幕データが存在する場合
+                    json_data = [item for item in captions_info if item.get("ext") == "json3"]
+                    if json_data:
+                        url = json_data[0]["url"]
+                        # 取得したURLを処理する
                         # メソッドの処理を試行
                         subtitle = self.format_subtitle_json(url)
                         return SubtitleStatus.REGISTERED, subtitle
-                    except Exception as e:
-                        traceback.print_exc()
-                        # エラーが発生した場合はログに出力して False とエラーメッセージを返す
-                        error_message = f"字幕取得処理でエラーが発生しました: {str(e)} ({type(e).__name__})"
-                        logging.warning(error_message)
-                        return SubtitleStatus.REGISTRATION_FAILED, error_message
+                    else:
+                        # JSONデータが見つからない場合
+                        logging.debug("字幕のためのJSONデータが見つかりませんでした。")
+                        return SubtitleStatus.NO_SUBTITLE, None
                 else:
-                    # JSONデータが見つからない場合
-                    logging.debug("字幕のためのJSONデータが見つかりませんでした。")
+                    # 字幕のキャプション情報が見つからない場合
+                    logging.debug("字幕のキャプション情報が見つかりませんでした。")
                     return SubtitleStatus.NO_SUBTITLE, None
             else:
-                # 字幕のキャプション情報が見つからない場合
-                logging.debug("字幕のキャプション情報が見つかりませんでした。")
+                # 字幕が見つからない場合
+                logging.debug("字幕が見つかりませんでした。")
                 return SubtitleStatus.NO_SUBTITLE, None
-        else:
-            # 字幕が見つからない場合
-            logging.debug("字幕が見つかりませんでした。")
-            return SubtitleStatus.NO_SUBTITLE, None
+
+        except Exception as e:
+            traceback.print_exc()
+            # エラーが発生した場合はログに出力して False とエラーメッセージを返す
+            error_message = f"字幕取得処理でエラーが発生しました: {str(e)} ({type(e).__name__})"
+            logging.warning(error_message)
+            return SubtitleStatus.REGISTRATION_FAILED, error_message
 
     # 字幕データをフォーマットする
     def format_subtitle_json(self, url):
@@ -173,40 +179,46 @@ class YouTubeSubtitleLogic:
 
     # 字幕詳細からvttのurlを取得し、処理する
     def extract_and_process_subtitle_vtt(self, subtitle_info, subtitle_type, language):
-        subtitles = subtitle_info.get(subtitle_type.to_string())
-        if subtitles:
-            captions_info = subtitles.get(language.value)
-            if captions_info:
-                # vtt形式の字幕データが存在する場合
-                vtt_ata = [item for item in captions_info if item.get("ext") == "vtt"
-                           # m3u8_nativeのvttは排除
-                           and item.get("protocol") != "m3u8_native"
-                           ]
-                if vtt_ata:
-                    url = vtt_ata[0]["url"]
-                    # 取得したURLを処理する
-                    try:
+        try:
+            if subtitle_info is None:
+                # エラーが発生した場合はログに出力して False とエラーメッセージを返す
+                error_message = f"字幕データが取得できませんでした。"
+                logging.warning(error_message)
+                return SubtitleStatus.REGISTRATION_FAILED, error_message
+            subtitles = subtitle_info.get(subtitle_type.to_string())
+            if subtitles:
+                captions_info = subtitles.get(language.value)
+                if captions_info:
+                    # vtt形式の字幕データが存在する場合
+                    vtt_ata = [item for item in captions_info if item.get("ext") == "vtt"
+                               # m3u8_nativeのvttは排除
+                               and item.get("protocol") != "m3u8_native"
+                               ]
+                    if vtt_ata:
+                        url = vtt_ata[0]["url"]
+                        # 取得したURLを処理する
                         # メソッドの処理を試行
                         subtitle = self.format_subtitle_vtt(url)
                         return True, subtitle
-                    except Exception as e:
-                        traceback.print_exc()
-                        # エラーが発生した場合はログに出力して False とエラーメッセージを返す
-                        error_message = f"字幕取得処理でエラーが発生しました: {str(e)} ({type(e).__name__})"
-                        logging.warning(error_message)
-                        return False, error_message
+                    else:
+                        # vttデータが見つからない場合
+                        logging.debug("字幕のためのvttデータが見つかりませんでした。")
+                        return False, None
                 else:
-                    # vttデータが見つからない場合
-                    logging.debug("字幕のためのvttデータが見つかりませんでした。")
+                    # 字幕のキャプション情報が見つからない場合
+                    logging.debug("字幕のキャプション情報が見つかりませんでした。")
                     return False, None
             else:
-                # 字幕のキャプション情報が見つからない場合
-                logging.debug("字幕のキャプション情報が見つかりませんでした。")
+                # 字幕が見つからない場合
+                logging.debug("字幕が見つかりませんでした。")
                 return False, None
-        else:
-            # 字幕が見つからない場合
-            logging.debug("字幕が見つかりませんでした。")
-            return False, None
+
+        except Exception as e:
+            traceback.print_exc()
+            # エラーが発生した場合はログに出力して False とエラーメッセージを返す
+            error_message = f"字幕取得処理でエラーが発生しました: {str(e)} ({type(e).__name__})"
+            logging.warning(error_message)
+            return False, error_message
 
     # 字幕データをフォーマットする
     def format_subtitle_vtt(self, url):
