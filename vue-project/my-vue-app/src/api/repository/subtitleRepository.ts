@@ -11,7 +11,7 @@ export default {
       .post(`/subtitle/${subtitleTextId}`, data)
       .then((response: AxiosResponse) => response.data)
       .catch((error: string) => {
-        console.error('Error fetching subtitle text data:', error)
+        console.error('API実行結果エラー:', error)
         throw error
       })
   },
@@ -31,7 +31,7 @@ export default {
       .post(`/subtitle/${subtitleTextId}/update_subtitle_translation`, data)
       .then((response: AxiosResponse) => response.data)
       .catch((error: string) => {
-        console.error('Error updating subtitle translation:', error)
+        console.error('API実行結果エラー:', error)
         throw error
       })
   }

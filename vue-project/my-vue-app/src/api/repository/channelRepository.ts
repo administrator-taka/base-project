@@ -7,7 +7,7 @@ export default {
       .get(`/channel/${channelId}`)
       .then((response: AxiosResponse) => response.data)
       .catch((error: string) => {
-        console.error('Error fetching channel data:', error)
+        console.error('API実行結果エラー:', error)
         throw error
       })
   },
@@ -17,7 +17,7 @@ export default {
       .get(`/channel/${channelId}/download_channel_subtitles`)
       .then((response: AxiosResponse) => response.data)
       .catch((error: string) => {
-        console.error('Error downloading channel subtitles:', error)
+        console.error('API実行結果エラー:', error)
         throw error
       })
   },
@@ -27,7 +27,7 @@ export default {
       .post(`/channel/${channelId}/search_word`, { search_word: searchWord })
       .then((response: AxiosResponse) => response.data)
       .catch((error: string) => {
-        console.error('Error searching word:', error)
+        console.error('API実行結果エラー:', error)
         throw error
       })
   },
@@ -45,7 +45,7 @@ export default {
       .post(`/channel/${channelId}/update_translation_language`, data)
       .then((response: AxiosResponse) => response.data)
       .catch((error: string) => {
-        console.error('Error updating translation language:', error)
+        console.error('API実行結果エラー:', error)
         throw error
       })
   }

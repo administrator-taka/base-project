@@ -7,7 +7,7 @@ export default {
       .get(`/video/${videoId}`)
       .then((response: AxiosResponse) => response.data)
       .catch((error: string) => {
-        console.error('Error fetching video data:', error)
+        console.error('API実行結果エラー:', error)
         throw error
       })
   }
