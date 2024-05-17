@@ -13,7 +13,7 @@
       <div>
         <p>Count: {{ counterStore.count }}</p>
         <p>Doubled Count: {{ counterStore.doubleCount }}</p>
-        <button @click="counterStore.countUp()">Count up!</button>
+        <button @click="counterStore.increment()">Count up!</button>
       </div>
     </main>
   </div>
