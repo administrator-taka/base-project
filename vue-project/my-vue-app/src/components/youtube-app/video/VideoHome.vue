@@ -3,6 +3,11 @@
     <Sidebar />
     <main class="main-content">
       <div>動画ホーム画面</div>
+      <img
+        v-if="videoData && videoData.thumbnail"
+        :src="videoData.thumbnail"
+        alt="Image"
+      />
       <pre>{{ JSON.stringify(videoData, null, 2) }}</pre>
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>

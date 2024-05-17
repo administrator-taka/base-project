@@ -3,6 +3,11 @@
     <Sidebar />
     <main class="main-content">
       <div>チャンネルホーム画面</div>
+      <img
+        v-if="channelData && channelData.thumbnail"
+        :src="channelData.thumbnail"
+        alt="Image"
+      />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
       <div v-if="videoList">
         <h2>動画一覧</h2>
