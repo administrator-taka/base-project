@@ -38,7 +38,6 @@ export default {
     const subtitleList = ref()
 
     const getVideoData = async () => {
-      console.log(videoId.value)
       videoRepository
         .getVideoData(videoId.value)
         .then((response) => {

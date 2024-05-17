@@ -458,10 +458,18 @@ class YoutubeDownloadService:
                 subtitle_id__language_code=language.value
             )
 
+            # ログ出力用
+            total_subtitles = len(base_subtitles)
+            processed_subtitles = 0
+
+            if total_subtitles > 1000:
+                logging.debug(f"字幕行数が多すぎます。字幕数：{total_subtitles}")
+                return
+
             # ターゲット字幕とベース字幕をマージしてペアを見つける
             for base_subtitle in base_subtitles:
                 target_subtitle = target_subtitles.filter(t_start_ms=base_subtitle.t_start_ms).first()
-
+                logging.debug(f"{target_subtitle.subtitle_text}:登録中")
                 if target_subtitle:
                     # 翻訳を挿入
                     subtitle_translation, created = SubtitleTranslation.objects.get_or_create(
@@ -472,6 +480,10 @@ class YoutubeDownloadService:
                             'subtitle_translation_text_detail': None
                         }
                     )
+                # 処理された字幕数を更新
+                processed_subtitles += 1
+                # 経過率をデバッグに出力
+                logging.info(f"処理進行状況: {processed_subtitles}/{total_subtitles}")
 
     def get_video_subtitle_data(self, video_id):
         try:
