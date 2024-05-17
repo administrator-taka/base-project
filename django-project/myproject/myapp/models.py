@@ -41,7 +41,7 @@ class ChannelDetail(models.Model):
     # サムネイルURL
     thumbnail = models.TextField(verbose_name='サムネイルURL')
     # 国コード
-    country = models.CharField(max_length=50, verbose_name='国コード')
+    country = models.CharField(null=True,max_length=50, verbose_name='国コード')
 
     class Meta:
         db_table = 'channel_detail'
