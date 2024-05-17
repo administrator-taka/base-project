@@ -11,11 +11,9 @@
       <pre>{{ JSON.stringify(videoData, null, 2) }}</pre>
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>
-        <ul>
-          <li v-for="(subtitle, index) in subtitleList" :key="index">
-            <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
-          </li>
-        </ul>
+        <div v-for="(subtitle, index) in subtitleList" :key="index">
+          <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
+        </div>
       </div>
     </main>
   </div>
