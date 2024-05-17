@@ -211,3 +211,5 @@ class SubtitleTranslation(models.Model):
 
     class Meta:
         db_table = 'subtitle_translation'
+        unique_together = ['subtitle_text_id', 'language_code']
+
