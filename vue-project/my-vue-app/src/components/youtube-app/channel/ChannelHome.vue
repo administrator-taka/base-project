@@ -4,7 +4,6 @@
     <main class="main-content">
       <div>チャンネルホーム画面</div>
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
-      <!-- videoListをループして表示 -->
       <div v-if="videoList">
         <h2>動画一覧</h2>
         <ul>
@@ -12,8 +11,6 @@
             <img :src="video.thumbnail" alt="Image" />
             <button @click="goToVideoPage(video)">動画ページへ</button>
             <pre>{{ JSON.stringify(video, null, 2) }}</pre>
-
-            <!-- ここを表示したいデータに置き換える -->
           </li>
         </ul>
       </div>
