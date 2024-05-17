@@ -1,5 +1,6 @@
 import { youtubeAppApiClient } from '@/api/repository/index'
 import { AxiosResponse } from 'axios'
+import toCamelCase from '@/utils/to_camel_case';
 
 export default {
   async getSubtitleTextData(
@@ -9,7 +10,7 @@ export default {
     const data = { language_code: languageCode }
     return youtubeAppApiClient
       .post(`/subtitle/${subtitleTextId}`, data)
-      .then((response: AxiosResponse) => response.data)
+      .then((response: AxiosResponse) => toCamelCase(response.data))
       .catch((error: string) => {
         console.error('API実行結果エラー:', error)
         throw error
@@ -29,7 +30,7 @@ export default {
     }
     return youtubeAppApiClient
       .post(`/subtitle/${subtitleTextId}/update_subtitle_translation`, data)
-      .then((response: AxiosResponse) => response.data)
+      .then((response: AxiosResponse) => toCamelCase(response.data))
       .catch((error: string) => {
         console.error('API実行結果エラー:', error)
         throw error
