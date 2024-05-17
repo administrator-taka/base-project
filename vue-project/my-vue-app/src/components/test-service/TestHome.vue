@@ -10,6 +10,11 @@
       <div>{{ djangoResult }}</div>
       <button @click="testVuex">Vuex動作確認</button>
       <div>{{ testVuexData }}</div>
+      <div>
+        <p>Count: {{ counterStore.count }}</p>
+        <p>Doubled Count: {{ counterStore.doubleCount }}</p>
+        <button @click="counterStore.countUp()">Count up!</button>
+      </div>
     </main>
   </div>
 </template>
@@ -19,6 +24,7 @@ import Sidebar from '@/components/SidebarComponent.vue'
 import testRepository from '@/api/sampleName/testRepository'
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { useCounterStore } from '@/store/counter.ts'
 
 export default {
   components: {
@@ -28,6 +34,8 @@ export default {
     const result = ref()
     const djangoResult = ref()
     const store = useStore()
+
+    const counterStore = useCounterStore()
 
     const test = async () => {
       testRepository
@@ -84,7 +92,7 @@ export default {
       testInitialData()
     })
 
-    return { result, djangoResult, testVuex, testVuexData }
+    return { result, djangoResult, testVuex, testVuexData, counterStore }
   }
 }
 </script>
