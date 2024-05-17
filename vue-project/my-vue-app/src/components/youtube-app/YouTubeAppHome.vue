@@ -2,7 +2,7 @@
   <div>
     <Sidebar />
     <main class="main-content">
-      <div>YouTubeアプリケーションホーム画面</div>
+      <h1>YouTubeアプリケーションホーム画面</h1>
       <button @click="goToChannelPage">チャンネルページへ</button>
     </main>
   </div>
