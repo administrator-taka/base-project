@@ -27,7 +27,7 @@ export default {
 
   async test() {
     return await youtubeAppApiClient
-      .get('/video/t6lgpuGuScI/')
+      .get('/video/t6lgpuGuScI')
       .then((res) => {
         return res.data
       })

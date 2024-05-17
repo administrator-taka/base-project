@@ -12,7 +12,7 @@ class TestAPIEndpoints(unittest.TestCase):
 
     def test_get_channel_data(self):
         channel_id = TEST_YOUTUBE_CHANNEL_ID
-        url = f"{self.base_url}channel/{channel_id}/"
+        url = f"{self.base_url}channel/{channel_id}"
         response = requests.get(url)
         FileHandler.format_json_print(response.json())
 
@@ -41,13 +41,13 @@ class TestAPIEndpoints(unittest.TestCase):
 
     def test_get_video_data(self):
         video_id = TEST_YOUTUBE_VIDEO_ID
-        url = f"{self.base_url}video/{video_id}/"
+        url = f"{self.base_url}video/{video_id}"
         response = requests.get(url)
         FileHandler.format_json_print(response.json())
 
     def test_get_subtitle_text_data(self):
         subtitle_text_id = "29C698E5E667466F9BE70E47A721929E"
-        url = f"{self.base_url}subtitle/{subtitle_text_id}/"
+        url = f"{self.base_url}subtitle/{subtitle_text_id}"
         data = {
             "language_code": "ja"
         }
