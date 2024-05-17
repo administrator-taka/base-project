@@ -37,6 +37,20 @@ export default {
 
     const counterStore = useCounterStore()
 
+    const testYoutubeApp = async () => {
+      testRepository
+        .test()
+        .then((res) => {
+          console.log('★★★youtubeApp疎通確認★★★')
+          console.log(res)
+          result.value = res
+        })
+        .catch((error) => {
+          console.log('★★★youtubeAppエラー動作確認★★★')
+          console.log(error)
+        })
+    }
+
     const test = async () => {
       testRepository
         .testApi({ test: 'test_name_a' })
@@ -87,9 +101,13 @@ export default {
     }
 
     onMounted(() => {
-      test()
-      testDjango()
-      testInitialData()
+      const testBool = false
+      if (testBool) {
+        test()
+        testDjango()
+        testInitialData()
+      }
+      testYoutubeApp()
     })
 
     return { result, djangoResult, testVuex, testVuexData, counterStore }
