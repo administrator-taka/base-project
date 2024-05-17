@@ -5,14 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import '@/assets/main.scss'
 import store from './store'
-import { createPinia } from 'pinia';
-import {createPersistedState} from 'pinia-plugin-persistedstate'
+import { createPinia } from 'pinia'
+import { createPersistedState } from 'pinia-plugin-persistedstate'
 const app = createApp(App)
 
-const pinia = createPinia();
-pinia.use(createPersistedState()); // 追加
+const pinia = createPinia()
+pinia.use(createPersistedState()) // 追加
 
-app.use(pinia);
+app.use(pinia)
 app.use(router)
 app.use(store)
 app.mount('#app')

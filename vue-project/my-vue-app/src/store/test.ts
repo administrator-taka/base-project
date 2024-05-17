@@ -2,7 +2,7 @@ import { ActionContext } from 'vuex'
 
 // ストアの状態を表す型
 interface RootState {
-  userData: string;
+  userData: string
 }
 
 const test = {
@@ -18,7 +18,10 @@ const test = {
   },
 
   actions: {
-    setUserDataAction(context: ActionContext<RootState, RootState>, userData: string) {
+    setUserDataAction(
+      context: ActionContext<RootState, RootState>,
+      userData: string
+    ) {
       context.commit('setUserData', userData)
     },
 
