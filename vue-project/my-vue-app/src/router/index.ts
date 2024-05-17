@@ -2,6 +2,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import TestHome from '@/components/test-service/TestHome.vue'
 import YouTubeAppHome from '@/components/youtube-app/YouTubeAppHome.vue'
 import TopComponent from '@/components/TopComponent.vue'
+import ChannelHome from '@/components/youtube-app/channel/ChannelHome.vue'
+import VideoHome from '@/components/youtube-app/video/VideoHome.vue'
+import SubtitleHome from '@/components/youtube-app/subtitle/SubtitleHome.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,6 +21,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/YouTubeAppHome',
     name: 'YouTubeAppHome',
     component: YouTubeAppHome
+  },
+  {
+    path: '/channel/:channelId',
+    name: 'ChannelHome',
+    component: ChannelHome
+  },
+  {
+    path: '/video/:videoId',
+    name: 'VideoHome',
+    component: VideoHome
+  },
+  {
+    path: '/subtitle/:subtitleTextId',
+    name: 'SubtitleHome',
+    component: SubtitleHome
   }
 ]
 
