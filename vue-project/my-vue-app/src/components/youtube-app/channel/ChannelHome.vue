@@ -27,7 +27,7 @@
             "
           >
             <img :src="video.thumbnail" alt="Image" />
-            <button @click="goToVideoPage(video)">動画ページへ</button>
+            <button @click="goToVideoPage(video.videoId)">動画ページへ</button>
             <pre>{{ JSON.stringify(video, null, 2) }}</pre>
           </div>
         </div>
@@ -96,8 +96,8 @@ export default {
         })
     }
 
-    const goToVideoPage = (video) => {
-      router.push(`/video/${video.videoId}`)
+    const goToVideoPage = (videoId: string) => {
+      router.push(`/video/${videoId}`)
     }
 
     onMounted(() => {
