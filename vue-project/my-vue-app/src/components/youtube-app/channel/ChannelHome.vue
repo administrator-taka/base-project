@@ -9,8 +9,9 @@
         <h2>動画一覧</h2>
         <ul>
           <li v-for="(video, index) in videoList" :key="index">
-            <pre>{{ JSON.stringify(video, null, 2) }}</pre>
+            <img :src="video.thumbnail" alt="Image" />
             <button @click="goToVideoPage(video)">動画ページへ</button>
+            <pre>{{ JSON.stringify(video, null, 2) }}</pre>
 
             <!-- ここを表示したいデータに置き換える -->
           </li>
