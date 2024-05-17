@@ -411,7 +411,7 @@ class YoutubeDownloadService:
         queryset = VideoSubtitleInfo.objects.filter(
             subtitle_type=SubtitleType.MANUAL.value,
             video_id__channel_id=channel_id
-        )
+        ).order_by('-video_id__published_at')
 
         # video_idごとに字幕情報をまとめるための辞書を作成
         subtitle_info_by_video = defaultdict(list)
