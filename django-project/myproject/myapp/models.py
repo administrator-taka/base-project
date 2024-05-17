@@ -5,6 +5,8 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+import uuid
+
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
@@ -191,6 +193,8 @@ class VideoSubtitle(models.Model):
 
 
 class SubtitleTranslation(models.Model):
+    # 字幕翻訳テキストID
+    subtitle_translation_text_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='字幕翻訳テキストID')
     # 字幕テキストID
     subtitle_text_id = models.ForeignKey(VideoSubtitle, db_column='subtitle_text_id',
                                          on_delete=models.CASCADE,
