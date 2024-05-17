@@ -2,7 +2,7 @@
   <div>
     <Sidebar />
     <main class="main-content">
-      <h2>字幕ホーム画面</h2>
+      <h1>字幕ホーム画面</h1>
     </main>
   </div>
 </template>

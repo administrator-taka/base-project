@@ -2,7 +2,7 @@
   <div>
     <Sidebar />
     <main class="main-content">
-      <h2>動画ホーム画面</h2>
+      <h1>動画ホーム画面</h1>
       <img
         v-if="videoData && videoData.thumbnail"
         :src="videoData.thumbnail"

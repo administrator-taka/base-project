@@ -2,7 +2,7 @@
   <div>
     <Sidebar />
     <main class="main-content">
-      <h2>チャンネルホーム画面</h2>
+      <h1>チャンネルホーム画面</h1>
       <img
         v-if="channelData && channelData.thumbnail"
         :src="channelData.thumbnail"
