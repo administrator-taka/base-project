@@ -2,7 +2,7 @@ import { youtubeAppApiClient } from '@/api/repository/index'
 import { AxiosResponse } from 'axios'
 
 export default {
-  async getChannelData(channelId: string): Promise<string> {
+  async getChannelData(channelId: string) {
     return youtubeAppApiClient
       .get(`/channel/${channelId}`)
       .then((response: AxiosResponse) => response.data)
@@ -12,7 +12,7 @@ export default {
       })
   },
 
-  async downloadChannelSubtitles(channelId: string): Promise<string> {
+  async downloadChannelSubtitles(channelId: string) {
     return youtubeAppApiClient
       .get(`/channel/${channelId}/download_channel_subtitles`)
       .then((response: AxiosResponse) => response.data)
@@ -22,7 +22,7 @@ export default {
       })
   },
 
-  async searchWord(channelId: string, searchWord: string): Promise<string> {
+  async searchWord(channelId: string, searchWord: string) {
     return youtubeAppApiClient
       .post(`/channel/${channelId}/search_word`, { search_word: searchWord })
       .then((response: AxiosResponse) => response.data)
@@ -36,7 +36,7 @@ export default {
     channelId: string,
     defaultAudioLanguage: string,
     translationLanguages: string[]
-  ): Promise<string> {
+  ) {
     const data = {
       default_audio_language: defaultAudioLanguage,
       translation_languages: translationLanguages

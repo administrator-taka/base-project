@@ -22,40 +22,46 @@ export default {
     const channelId = ref(route.params.channelId || '')
 
     const getChannelData = async () => {
-      try {
-        const data = channelRepository.getChannelData(channelId.value)
-        console.log('Channel data:', data)
-      } catch (error) {
-        console.error('Error fetching channel data:', error)
-      }
+      channelRepository
+        .getChannelData(channelId.value)
+        .then((response) => console.log(response))
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
     }
 
     const downloadChannelSubtitles = async () => {
-      try {
-        const data = channelRepository.downloadChannelSubtitles(channelId.value)
-        console.log('Downloaded subtitles:', data)
-      } catch (error) {
-        console.error('Error downloading subtitles:', error)
-      }
+      channelRepository
+        .downloadChannelSubtitles(channelId.value)
+        .then((response) => console.log(response))
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
     }
 
     const searchWord = async () => {
-      try {
-        const data = channelRepository.searchWord(
-          channelId.value,
-          'YOUR_SEARCH_WORD'
-        )
-        console.log('Search result:', data)
-      } catch (error) {
-        console.error('Error searching word:', error)
-      }
+      channelRepository
+        .searchWord(channelId.value, 'YOUR_SEARCH_WORD')
+        .then((response) => console.log(response))
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
+    const updateTranslationLanguage = async () => {
+      channelRepository
+        .updateTranslationLanguage(channelId.value, 'ko', ['ja'])
+        .then((response) => console.log(response))
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
     }
 
     onMounted(() => {
       getChannelData()
     })
 
-    return { downloadChannelSubtitles, searchWord }
+    return { downloadChannelSubtitles, searchWord, updateTranslationLanguage }
   }
 }
 </script>

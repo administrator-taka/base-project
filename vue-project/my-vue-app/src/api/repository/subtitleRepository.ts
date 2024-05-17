@@ -5,7 +5,7 @@ export default {
   async getSubtitleTextData(
     subtitleTextId: string,
     languageCode: string
-  ): Promise<string> {
+  ){
     const data = { language_code: languageCode }
     return youtubeAppApiClient
       .post(`/subtitle/${subtitleTextId}`, data)
@@ -21,7 +21,7 @@ export default {
     languageCode: string,
     subtitleTranslationText: string,
     subtitleTranslationTextDetail: string
-  ): Promise<string> {
+  ){
     const data = {
       language_code: languageCode,
       subtitle_translation_text: subtitleTranslationText,

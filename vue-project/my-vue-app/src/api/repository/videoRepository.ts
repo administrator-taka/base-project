@@ -2,7 +2,7 @@ import { youtubeAppApiClient } from '@/api/repository/index'
 import { AxiosResponse } from 'axios'
 
 export default {
-  async getVideoData(videoId: string): Promise<string> {
+  async getVideoData(videoId: string){
     return youtubeAppApiClient
       .get(`/video/${videoId}`)
       .then((response: AxiosResponse) => response.data)
