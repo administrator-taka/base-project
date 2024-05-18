@@ -9,23 +9,11 @@
         alt="Image"
       />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
+      <button @click="toggleSubtitleFilter">字幕フィルターを切り替える</button>
       <div v-if="videoList">
         <h2>動画一覧</h2>
         <div v-for="(video, index) in videoList" :key="index">
-          <!-- 字幕データがあるもののみ一旦表示 -->
-          <div
-            v-if="
-              video.infos &&
-              video.infos.some(
-                (info) =>
-                  info.languageCode === 'ko' && info.subtitleStatus === 1
-              ) &&
-              video.infos.some(
-                (info) =>
-                  info.languageCode === 'ja' && info.subtitleStatus === 1
-              )
-            "
-          >
+          <div v-if="shouldDisplayVideo(video)">
             <img :src="video.thumbnail" alt="Image" />
             <button @click="goToVideoPage(video.videoId)">動画ページへ</button>
             <pre>{{ JSON.stringify(video, null, 2) }}</pre>
@@ -55,6 +43,7 @@ export default {
 
     const channelData = ref()
     const videoList = ref()
+    const showSubtitles = ref(true) // 初期値はtrue
 
     const getChannelData = async () => {
       channelRepository
@@ -69,31 +58,33 @@ export default {
         })
     }
 
-    const downloadChannelSubtitles = async () => {
-      channelRepository
-        .downloadChannelSubtitles(channelId.value)
-        .then((response) => console.log(response))
-        .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
-        })
+    // ボタン押下で字幕フィルターの状態を切り替える関数
+    const toggleSubtitleFilter = () => {
+      showSubtitles.value = !showSubtitles.value
     }
 
-    const searchWord = async () => {
-      channelRepository
-        .searchWord(channelId.value, 'YOUR_SEARCH_WORD')
-        .then((response) => console.log(response))
-        .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
-        })
-    }
+    // videoが表示されるべきかどうかを判定する関数
+    const shouldDisplayVideo = (video: {
+      infos: { languageCode: string; subtitleStatus: number }[]
+    }) => {
+      if (!video.infos) return false
 
-    const updateTranslationLanguage = async () => {
-      channelRepository
-        .updateTranslationLanguage(channelId.value, 'ko', ['ja'])
-        .then((response) => console.log(response))
-        .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
-        })
+      // 字幕フィルターが有効の場合
+      if (showSubtitles.value) {
+        return (
+          video.infos.some(
+            (info: { languageCode: string; subtitleStatus: number }) =>
+              info.languageCode === 'ko' && info.subtitleStatus === 1
+          ) &&
+          video.infos.some(
+            (info: { languageCode: string; subtitleStatus: number }) =>
+              info.languageCode === 'ja' && info.subtitleStatus === 1
+          )
+        )
+      } else {
+        // 字幕フィルターが無効の場合は常にtrueを返す
+        return true
+      }
     }
 
     const goToVideoPage = (videoId: string) => {
@@ -105,12 +96,11 @@ export default {
     })
 
     return {
-      downloadChannelSubtitles,
-      searchWord,
-      updateTranslationLanguage,
+      toggleSubtitleFilter,
       channelData,
       videoList,
-      goToVideoPage
+      goToVideoPage,
+      shouldDisplayVideo
     }
   }
 }
