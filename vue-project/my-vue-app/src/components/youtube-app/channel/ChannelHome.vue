@@ -9,6 +9,28 @@
         alt="Image"
       />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
+
+      <!-- 検索フォームの追加 -->
+      <div>
+        <input
+          v-model="searchWord"
+          type="text"
+          placeholder="検索ワードを入力"
+        />
+        <button @click="search()">検索</button>
+      </div>
+
+      <!-- 検索結果の表示 -->
+      <div v-if="searchResults">
+        <h2>検索結果</h2>
+        <div v-for="(result, index) in searchResults" :key="index">
+          <pre>{{ JSON.stringify(result, null, 2) }}</pre>
+          <a :href="result.youtubeUrl" target="_blank">
+            {{ result.youtubeUrl }}
+          </a>
+        </div>
+      </div>
+
       <button @click="toggleSubtitleFilter">字幕フィルターを切り替える</button>
       <div v-if="videoList">
         <h2>動画一覧</h2>
@@ -45,12 +67,27 @@ export default {
     const videoList = ref()
     const showSubtitles = ref(true) // 初期値はtrue
 
+    const searchWord = ref('')
+    const searchResults = ref()
+
     const getChannelData = async () => {
       channelRepository
         .getChannelData(channelId.value)
         .then((response) => {
           channelData.value = response.channelData
           videoList.value = response.videoList
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
+    const search = async () => {
+      channelRepository
+        .searchWord(channelId.value, searchWord.value)
+        .then((response) => {
+          searchResults.value = response.searchResults
           console.log(response)
         })
         .catch((error) => {
@@ -100,7 +137,10 @@ export default {
       channelData,
       videoList,
       goToVideoPage,
-      shouldDisplayVideo
+      shouldDisplayVideo,
+      search,
+      searchResults,
+      searchWord
     }
   }
 }

@@ -44,10 +44,10 @@ def search_word(request, channel_id):
 
     youtube_download_service = YoutubeDownloadService()
     # TODO:言語どうにかする
-    response = youtube_download_service.search_single_row_word(search_word, channel_id, SubtitleType.MANUAL)
+    search_results = youtube_download_service.search_single_row_word(search_word, channel_id, SubtitleType.MANUAL)
     # JSONレスポンスを作成
     data = {
-        "response": response
+        "search_results": search_results
     }
 
     return JsonResponse(data=data, status=200)
