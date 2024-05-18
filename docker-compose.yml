@@ -13,6 +13,7 @@ services:
       - ./spring-project:/srv:cached
     working_dir: /srv/mywebapp
   view:
+    restart: always
     container_name: view
     build: ./docker/view
     command: /bin/sh -c "if [ ! -e node_modules ]; then npm install --check-files; fi && npm run serve-develop"
@@ -23,10 +24,9 @@ services:
       - ./vue-project:/app:cached
     working_dir: /app/my-vue-app
   db:
+    restart: always
     container_name: postgresql
     image: postgres:13.4
-    # いるかわからん
-    # restart: always
     ports:
       - 5432:5432
     environment:
@@ -40,6 +40,7 @@ services:
       - ./docker/db/scripts:/docker-entrypoint-initdb.d
       - ./docker/db/sql:/sql
   django:
+    restart: always
     container_name: django-api
     build:
       context: .
