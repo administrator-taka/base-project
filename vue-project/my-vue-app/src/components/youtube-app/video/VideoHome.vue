@@ -9,6 +9,11 @@
         alt="Image"
       />
       <pre>{{ JSON.stringify(videoData, null, 2) }}</pre>
+      <div v-if="videoData && videoData.videoId">
+        <a :href="'https://youtu.be/' + videoData.videoId" target="_blank">
+          {{ 'https://youtu.be/' + videoData.videoId }}
+        </a>
+      </div>
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in subtitleList" :key="index">
