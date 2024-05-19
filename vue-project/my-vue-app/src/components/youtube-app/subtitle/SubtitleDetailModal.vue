@@ -7,13 +7,16 @@
     <div>
       <p>字幕ID: {{ subtitleTextId }}</p>
       <p>言語コード: {{ languageCode }}</p>
+
+      <pre>{{ JSON.stringify(subtitleTextData, null, 2) }}</pre>
     </div>
   </BaseModal>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, watchEffect } from 'vue'
 import BaseModal from '@/components/common/modal/BaseModal.vue'
+import subtitleRepository from '@/api/repository/subtitleRepository'
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
@@ -30,12 +33,31 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
+  setup(props) {
     const executeFunction = () => {
       console.log('関数が実行されました。')
     }
 
-    return { executeFunction }
+    const subtitleTextData = ref()
+
+    const getSubtitleTextData = async () => {
+      subtitleRepository
+        .getSubtitleTextData(props.subtitleTextId, props.languageCode)
+        .then((response) => {
+          subtitleTextData.value = response.subtitleTextData
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
+    watchEffect(() => {
+      if (props.subtitleTextId && props.languageCode) {
+        getSubtitleTextData()
+      }
+    })
+    return { executeFunction, subtitleTextData }
   }
 })
 </script>
