@@ -525,7 +525,7 @@ class YoutubeDownloadService:
                 'subtitle_text_id': base_result.subtitle_text_id,
                 't_start_ms': base_result.t_start_ms,
                 'subtitle_text': base_result.subtitle_text,
-                'translations': {}  # 翻訳の辞書
+                'translations': []  # 翻訳の辞書
             }
 
             for language in translation_languages:
@@ -540,10 +540,11 @@ class YoutubeDownloadService:
 
                 # 翻訳が存在する場合、辞書に追加
                 if other_subtitle and subtitle_translation_data:
-                    base_subtitle_dict['translations'][language.value] = {
+                    base_subtitle_dict['translations'].append({
+                        'language_code': language.value,
                         'subtitle_text': other_subtitle.subtitle_text,
                         'translation_text': subtitle_translation_data.subtitle_translation_text
-                    }
+                    })
 
             # 処理された字幕数を更新
             processed_subtitles += 1

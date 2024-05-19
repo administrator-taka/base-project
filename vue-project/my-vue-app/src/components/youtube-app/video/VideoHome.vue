@@ -29,8 +29,28 @@
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in subtitleList" :key="index">
           <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
+          <div
+            v-for="(subtitleText, index) in subtitle.translations"
+            :key="index"
+          >
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="
+                openModal(subtitle.subtitleTextId, subtitleText.languageCode)
+              "
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              {{ subtitleText.languageCode }}の詳細を表示
+            </button>
+          </div>
         </div>
       </div>
+      <SubtitleDetailModal
+        :subtitleTextId="selectedSubtitleTextId"
+        :languageCode="selectedLanguageCode"
+      />
     </main>
   </div>
 </template>
@@ -38,12 +58,15 @@
 <script lang="ts">
 import Sidebar from '@/components/SidebarComponent.vue'
 import videoRepository from '@/api/repository/videoRepository'
+import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
+
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 export default {
   components: {
-    Sidebar
+    Sidebar,
+    SubtitleDetailModal
   },
   setup() {
     const route = useRoute()
@@ -52,6 +75,8 @@ export default {
     )
     const videoData = ref()
     const subtitleList = ref()
+    const selectedSubtitleTextId = ref<string>('')
+    const selectedLanguageCode = ref<string>('')
 
     const getVideoData = async () => {
       videoRepository
@@ -65,10 +90,22 @@ export default {
           console.error(error + 'エラーが返ってきた')
         })
     }
+
+    const openModal = (subtitleTextId: string, languageCode: string) => {
+      selectedSubtitleTextId.value = subtitleTextId
+      selectedLanguageCode.value = languageCode
+    }
+
     onMounted(() => {
       getVideoData()
     })
-    return { videoData, subtitleList }
+    return {
+      videoData,
+      subtitleList,
+      selectedSubtitleTextId,
+      selectedLanguageCode,
+      openModal
+    }
   }
 }
 </script>
