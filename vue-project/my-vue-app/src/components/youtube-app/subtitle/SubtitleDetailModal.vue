@@ -1,20 +1,24 @@
 <template>
-  <Modal :modalTitle="'字幕詳細'">
+  <BaseModal
+    :modalTitle="'字幕詳細'"
+    :actionButtonLabel="'実行'"
+    :actionFunction="executeFunction"
+  >
     <div>
       <p>字幕ID: {{ subtitleTextId }}</p>
       <p>言語コード: {{ languageCode }}</p>
     </div>
-  </Modal>
+  </BaseModal>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import Modal from '@/components/Modal.vue'
+import BaseModal from '@/components/common/modal/BaseModal.vue'
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
   components: {
-    Modal
+    BaseModal
   },
   props: {
     subtitleTextId: {
@@ -27,7 +31,11 @@ export default defineComponent({
     }
   },
   setup() {
-    return {}
+    const executeFunction = () => {
+      console.log('関数が実行されました。')
+    }
+
+    return { executeFunction }
   }
 })
 </script>

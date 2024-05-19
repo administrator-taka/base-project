@@ -28,6 +28,14 @@
           >
             閉じる
           </button>
+          <button
+            v-if="actionButtonLabel"
+            type="button"
+            class="btn btn-primary"
+            @click="executeAction"
+          >
+            {{ actionButtonLabel }}
+          </button>
         </div>
       </div>
     </div>
@@ -38,11 +46,26 @@
 import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
-  name: 'Modal',
+  name: 'BaseModal',
   props: {
     modalTitle: {
       type: String as PropType<string>,
       required: true
+    },
+    actionButtonLabel: {
+      type: String as PropType<string>,
+      default: ''
+    },
+    actionFunction: {
+      type: Function as PropType<() => void>,
+      default: null
+    }
+  },
+  methods: {
+    executeAction() {
+      if (this.actionFunction) {
+        this.actionFunction()
+      }
     }
   }
 })
