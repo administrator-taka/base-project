@@ -1,7 +1,7 @@
 <template>
   <BaseModal
     :modalTitle="'字幕詳細'"
-    :actionButtonLabel="'実行'"
+    :actionButtonLabel="'編集'"
     :actionFunction="executeFunction"
   >
     <div>
