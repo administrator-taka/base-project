@@ -5,7 +5,11 @@
       <h1>動画ホーム画面</h1>
       <img
         v-if="videoData && videoData.thumbnail"
-        :src="videoData.thumbnail"
+        :src="
+          'https://img.youtube.com/vi/' +
+          videoData.videoId +
+          '/maxresdefault.jpg'
+        "
         alt="Image"
       />
       <pre>{{ JSON.stringify(videoData, null, 2) }}</pre>

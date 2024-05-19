@@ -7,6 +7,7 @@
         v-if="channelData && channelData.thumbnail"
         :src="channelData.thumbnail"
         alt="Image"
+        style="width: 200px"
       />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
 
