@@ -42,7 +42,7 @@
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
             >
-              {{ subtitleText.languageCode }}の詳細を表示
+              字幕詳細
             </button>
           </div>
         </div>

@@ -5,37 +5,46 @@
     :actionFunction="updateSubtitleTranslation"
   >
     <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <p>字幕ID: {{ subtitleTextId }}</p>
-          <p>言語コード: {{ languageCode }}</p>
-          <pre>{{ JSON.stringify(subtitleTextData, null, 2) }}</pre>
-        </div>
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label for="subtitleTranslationText" class="form-label"
-              >字幕翻訳テキスト</label
-            >
-            <input
-              type="text"
-              id="subtitleTranslationText"
-              class="form-control"
-              v-model="subtitleTranslationText"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="subtitleTranslationTextDetail" class="form-label"
-              >字幕翻訳詳細</label
-            >
-            <textarea
-              id="subtitleTranslationTextDetail"
-              class="form-control"
-              v-model="subtitleTranslationTextDetail"
-              required
-            ></textarea>
-          </div>
-        </div>
+      <pre>{{ JSON.stringify(subtitleTextData, null, 2) }}</pre>
+      <div class="mb-3">
+        <label for="aaa" class="form-label">字幕</label>
+        <input
+          type="text"
+          class="form-control"
+          :value="subtitleTextData ? subtitleTextData.subtitleText : ''"
+          disabled
+        />
+      </div>
+      <div class="mb-3">
+        <label for="bbb" class="form-label">翻訳</label>
+        <input
+          type="text"
+          class="form-control"
+          :value="subtitleTextData ? subtitleTextData.subtitleDefaultText : ''"
+          disabled
+        />
+      </div>
+      <div class="mb-3">
+        <label for="subtitleTranslationText" class="form-label"
+          >字幕翻訳テキスト</label
+        >
+        <input
+          type="text"
+          id="subtitleTranslationText"
+          class="form-control"
+          v-model="subtitleTranslationText"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="subtitleTranslationTextDetail" class="form-label"
+          >字幕翻訳詳細</label
+        >
+        <textarea
+          id="subtitleTranslationTextDetail"
+          class="form-control"
+          v-model="subtitleTranslationTextDetail"
+          rows="6"
+        ></textarea>
       </div>
     </div>
   </BaseModal>
