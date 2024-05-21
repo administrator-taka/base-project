@@ -16,6 +16,12 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.get(url)
         FileHandler.format_json_print(response.json())
 
+    def test_get_channel_video_list(self):
+        channel_id = TEST_YOUTUBE_CHANNEL_ID
+        url = f"{self.base_url}channel/{channel_id}/get_channel_video_list"
+        response = requests.get(url)
+        FileHandler.format_json_print(response.json())
+
     def test_download_channel_subtitles(self):
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         url = f"{self.base_url}channel/{channel_id}/download_channel_subtitles"

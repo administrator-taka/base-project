@@ -10,10 +10,20 @@ from myapp.applications.util.code.youtube_language import YouTubeLanguage
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
     channel_data = youtube_download_service.get_channel_data(channel_id)
-    video_list = youtube_download_service.get_channel_subtitle_list(channel_id)
     # JSONレスポンスを作成
     data = {
         "channel_data": channel_data,
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['GET'])
+def get_channel_video_list(request, channel_id):
+    youtube_download_service = YoutubeDownloadService()
+    video_list = youtube_download_service.get_channel_subtitle_list(channel_id)
+    # JSONレスポンスを作成
+    data = {
         "video_list": video_list
     }
 
