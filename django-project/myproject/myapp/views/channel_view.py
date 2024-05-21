@@ -42,6 +42,11 @@ def search_word(request, channel_id):
     # search_wordを取得
     search_word = request_data.get('search_word', None)
 
+    # search_wordが空文字、空白、またはNoneの場合、処理を中断しエラーレスポンスを返す
+    if not search_word or search_word.strip() == '':
+        # TODO:バリデーション、エラーレスポンス追加
+        return JsonResponse(data={'error': '検索ワードが無効です。'}, status=400)
+
     youtube_download_service = YoutubeDownloadService()
     # TODO:言語どうにかする
     search_results = youtube_download_service.search_single_row_word(search_word, channel_id, SubtitleType.MANUAL)

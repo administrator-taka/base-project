@@ -12,33 +12,47 @@
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
 
       <!-- 検索フォームの追加 -->
-      <div>
+      <div class="mb-3">
         <input
           v-model="searchWord"
           type="text"
+          class="form-control"
           placeholder="検索ワードを入力"
         />
-        <button @click="search()">検索</button>
+        <button @click="search()" class="btn btn-primary mt-2">検索</button>
       </div>
 
       <!-- 検索結果の表示 -->
-      <div v-if="searchResults">
+      <div v-if="searchResults" class="mb-3">
         <h2>検索結果</h2>
-        <div v-for="(result, index) in searchResults" :key="index">
+        <div v-for="(result, index) in searchResults" :key="index" class="mb-2">
           <pre>{{ JSON.stringify(result, null, 2) }}</pre>
-          <a :href="result.youtubeUrl" target="_blank">
+          <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
             {{ result.youtubeUrl }}
           </a>
         </div>
       </div>
 
-      <button @click="toggleSubtitleFilter">字幕フィルターを切り替える</button>
+      <div class="mb-3">
+        <button @click="toggleSubtitleFilter" class="btn btn-secondary">
+          字幕フィルターを切り替える
+        </button>
+        <button @click="downloadChannelSubtitles" class="btn btn-success ms-2">
+          字幕をダウンロード
+        </button>
+      </div>
+
       <div v-if="videoList">
         <h2>動画一覧</h2>
-        <div v-for="(video, index) in videoList" :key="index">
+        <div v-for="(video, index) in videoList" :key="index" class="mb-3">
           <div v-if="shouldDisplayVideo(video)">
-            <img :src="video.thumbnail" alt="Image" />
-            <button @click="goToVideoPage(video.videoId)">動画ページへ</button>
+            <img :src="video.thumbnail" alt="Image" class="img-thumbnail" />
+            <button
+              @click="goToVideoPage(video.videoId)"
+              class="btn btn-info mt-2"
+            >
+              動画ページへ
+            </button>
             <pre>{{ JSON.stringify(video, null, 2) }}</pre>
           </div>
         </div>
@@ -96,6 +110,17 @@ export default {
         })
     }
 
+    const downloadChannelSubtitles = async () => {
+      channelRepository
+        .downloadChannelSubtitles(channelId.value)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
     // ボタン押下で字幕フィルターの状態を切り替える関数
     const toggleSubtitleFilter = () => {
       showSubtitles.value = !showSubtitles.value
@@ -141,7 +166,8 @@ export default {
       shouldDisplayVideo,
       search,
       searchResults,
-      searchWord
+      searchWord,
+      downloadChannelSubtitles
     }
   }
 }

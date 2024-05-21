@@ -634,9 +634,9 @@ class YoutubeDownloadService:
         # # TODO:データを事前に用意している場合は以下を使用
         # subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
         # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
-        # # 自動生成字幕
-        # self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
-        #                                           default_audio_language)
+        # 自動生成字幕
+        self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
+                                                  default_audio_language)
         # 手動作成字幕
         self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
                                                   default_audio_language)
