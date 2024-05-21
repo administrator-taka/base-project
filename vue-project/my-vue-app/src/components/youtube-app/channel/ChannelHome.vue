@@ -13,6 +13,7 @@
 
       <!-- 検索フォームの追加 -->
       <div class="mb-3">
+        <h2>出現箇所検索</h2>
         <input
           v-model="searchWord"
           type="text"
