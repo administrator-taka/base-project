@@ -15,11 +15,7 @@
           :key="page"
           :class="{ active: currentPage === page }"
         >
-          <button
-            v-if="page == currentPage"
-            class="btn btn-primary"
-            @click="changePage(page)"
-          >
+          <button v-if="page === currentPage" class="btn btn-primary">
             {{ page }}
           </button>
           <button v-else class="page-link" @click="changePage(page)">
