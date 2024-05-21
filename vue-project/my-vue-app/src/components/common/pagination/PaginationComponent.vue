@@ -5,7 +5,7 @@
       <ul class="pagination">
         <!-- Previous ボタン -->
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <button class="page-link" @click="previousPage">Previous</button>
+          <button class="page-link" @click="previousPage">&lt;</button>
         </li>
 
         <!-- ページ番号 -->
@@ -29,7 +29,7 @@
 
         <!-- Next ボタン -->
         <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-          <button class="page-link" @click="nextPage">Next</button>
+          <button class="page-link" @click="nextPage">&gt;</button>
         </li>
       </ul>
     </nav>
