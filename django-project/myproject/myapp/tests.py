@@ -19,7 +19,7 @@ class TestAPIEndpoints(unittest.TestCase):
     def test_get_channel_video_list(self):
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         url = f"{self.base_url}channel/{channel_id}/get_channel_video_list"
-        response = requests.get(url)
+        response = requests.get(url, params={'page': 1, 'page_size': 10})  # ページ番号とページサイズを指定します
         FileHandler.format_json_print(response.json())
 
     def test_download_channel_subtitles(self):

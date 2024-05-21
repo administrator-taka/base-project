@@ -42,6 +42,11 @@
           字幕をダウンロード
         </button>
       </div>
+      <PaginationComponent
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @page-changed="handlePageChange"
+      />
 
       <div v-if="videoList">
         <h2>動画一覧</h2>
@@ -67,10 +72,12 @@ import Sidebar from '@/components/SidebarComponent.vue'
 import channelRepository from '@/api/repository/channelRepository'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import PaginationComponent from '@/components/common/pagination/PaginationComponent.vue'
 
 export default {
   components: {
-    Sidebar
+    Sidebar,
+    PaginationComponent
   },
   setup() {
     const route = useRoute()
@@ -98,16 +105,29 @@ export default {
         })
     }
 
+    const currentPage = ref(1)
+    const totalPages = ref(1)
+    const pageSize = 30 // 1ページあたりのアイテム数
+
     const getChannelVideoList = async () => {
       channelRepository
-        .getChannelVideoList(channelId.value)
+        .getChannelVideoList(channelId.value, currentPage.value, pageSize)
         .then((response) => {
-          videoList.value = response.videoList
           console.log(response)
+          totalPages.value = parseInt(
+            response.results.paginationInfo.totalPages
+          )
+          currentPage.value = parseInt(response.results.paginationInfo.page)
+          videoList.value = response.results.videoList
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
         })
+    }
+
+    const handlePageChange = (page: number) => {
+      currentPage.value = page
+      getChannelVideoList()
     }
 
     const search = async () => {
@@ -180,7 +200,10 @@ export default {
       search,
       searchResults,
       searchWord,
-      downloadChannelSubtitles
+      downloadChannelSubtitles,
+      currentPage,
+      totalPages,
+      handlePageChange
     }
   }
 }

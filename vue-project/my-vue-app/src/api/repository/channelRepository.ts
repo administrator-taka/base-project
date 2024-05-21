@@ -12,16 +12,20 @@ export default {
         throw error
       })
   },
-  async getChannelVideoList(channelId: string) {
+  async getChannelVideoList(channelId: string, page: number, pageSize: number) {
+    const params = {
+      page: page.toString(),
+      page_size: pageSize.toString()
+    };
+  
     return youtubeAppApiClient
-      .get(`/channel/${channelId}/get_channel_video_list`)
+      .get(`/channel/${channelId}/get_channel_video_list`, { params })
       .then((response: AxiosResponse) => toCamelCase(response.data))
       .catch((error: string) => {
         console.error('API実行結果エラー:', error)
         throw error
-      })
+      });
   },
-
   async downloadChannelSubtitles(channelId: string) {
     return youtubeAppApiClient
       .get(`/channel/${channelId}/download_channel_subtitles`)

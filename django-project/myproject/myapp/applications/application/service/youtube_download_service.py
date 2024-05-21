@@ -4,8 +4,10 @@ import time
 import unittest
 from collections import defaultdict
 from datetime import datetime
+from math import ceil
 from typing import List
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
@@ -14,6 +16,7 @@ from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
+from myapp.applications.util.pagination_info import PaginationInfo
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
     ChannelTranslationInfo
@@ -406,32 +409,43 @@ class YoutubeDownloadService:
             logging.debug("動画情報は既に最新です。")
 
     # 字幕のステータスの一覧を取得
-    def get_channel_subtitle_list(self, channel_id):
-        # Django ORMを使用してクエリを構築
-        queryset = VideoSubtitleInfo.objects.filter(
-            subtitle_type=SubtitleType.MANUAL.value,
+    def get_channel_subtitle_list(self, channel_id, page=1, page_size=10):
+        # ビデオごとの字幕情報をクエリ
+        video_ids = VideoSubtitleInfo.objects.filter(
             video_id__channel_id=channel_id
-        ).order_by('-video_id__published_at')
+        ).values_list('video_id', flat=True).distinct()
 
-        # video_idごとに字幕情報をまとめるための辞書を作成
-        subtitle_info_by_video = defaultdict(list)
-        for info in queryset:
-            subtitle_info_by_video[info.video_id].append(info)
-        # 辞書をJSON形式に変換して返す
-        result = []
+        # ページごとのビデオ ID を取得
+        paginator = Paginator(video_ids, page_size)
 
-        # 辞書の内容を表示
-        for video_detail, infos in subtitle_info_by_video.items():
+        try:
+            video_ids_page = paginator.page(page)
+        except PageNotAnInteger:
+            video_ids_page = paginator.page(1)
+        except EmptyPage:
+            video_ids_page = paginator.page(paginator.num_pages)
+
+        # ページごとのビデオごとの情報を取得してリストに追加
+        video_list = []
+        for video_id in video_ids_page.object_list:
+            # ビデオごとの情報をクエリ
+            video_detail = VideoDetail.objects.get(video_id=video_id)
+            subtitle_infos = VideoSubtitleInfo.objects.filter(video_id=video_id)
             video_info = {
                 'video_id': video_detail.video_id,
                 'title': video_detail.title,
                 'thumbnail': video_detail.thumbnail,
                 'published_at': video_detail.published_at,
                 'infos': [{'language_code': info.language_code, 'subtitle_status': info.subtitle_status} for info in
-                          infos]
+                          subtitle_infos]
             }
-            result.append(video_info)
-        return result
+            video_list.append(video_info)
+
+        pagination_info = PaginationInfo(paginator, page, page_size)
+        return {
+            'video_list': video_list,
+            'pagination_info': pagination_info.to_dict()
+        }
 
     # 初期字幕翻訳情報追加
     def insert_initial_subtitle_detail(self, video_id):

@@ -1,0 +1,78 @@
+<template>
+  <div class="mb-3">
+    <!-- ページングコントロール -->
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <!-- Previous ボタン -->
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <button class="page-link" @click="previousPage">Previous</button>
+        </li>
+
+        <!-- ページ番号 -->
+        <li
+          class="page-item"
+          v-for="page in totalPages"
+          :key="page"
+          :class="{ active: currentPage === page }"
+        >
+          <button
+            v-if="page == currentPage"
+            class="btn btn-primary"
+            @click="changePage(page)"
+          >
+            {{ page }}
+          </button>
+          <button v-else class="page-link" @click="changePage(page)">
+            {{ page }}
+          </button>
+        </li>
+
+        <!-- Next ボタン -->
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <button class="page-link" @click="nextPage">Next</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  props: {
+    currentPage: {
+      type: Number,
+      required: true
+    },
+    totalPages: {
+      type: Number,
+      required: true
+    }
+  },
+  emits: ['page-changed'],
+  methods: {
+    changePage(page: number) {
+      this.$emit('page-changed', page)
+    },
+    previousPage() {
+      if (this.currentPage > 1) {
+        this.changePage(this.currentPage - 1)
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.changePage(this.currentPage + 1)
+      }
+    }
+  }
+})
+</script>
+
+<style scoped>
+.page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+</style>
