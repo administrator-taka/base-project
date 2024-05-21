@@ -12,6 +12,15 @@ export default {
         throw error
       })
   },
+  async getChannelVideoList(channelId: string) {
+    return youtubeAppApiClient
+      .get(`/channel/${channelId}/get_channel_video_list`)
+      .then((response: AxiosResponse) => toCamelCase(response.data))
+      .catch((error: string) => {
+        console.error('API実行結果エラー:', error)
+        throw error
+      })
+  },
 
   async downloadChannelSubtitles(channelId: string) {
     return youtubeAppApiClient

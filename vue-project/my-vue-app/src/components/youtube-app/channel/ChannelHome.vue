@@ -91,6 +91,17 @@ export default {
         .getChannelData(channelId.value)
         .then((response) => {
           channelData.value = response.channelData
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
+    const getChannelVideoList = async () => {
+      channelRepository
+        .getChannelVideoList(channelId.value)
+        .then((response) => {
           videoList.value = response.videoList
           console.log(response)
         })
@@ -157,6 +168,7 @@ export default {
 
     onMounted(() => {
       getChannelData()
+      getChannelVideoList()
     })
 
     return {
