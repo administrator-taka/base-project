@@ -13,14 +13,23 @@
 
       <!-- 検索フォームの追加 -->
       <div class="mb-3">
-        <h2>出現箇所検索</h2>
-        <input
-          v-model="searchWord"
-          type="text"
-          class="form-control"
-          placeholder="検索ワードを入力"
-        />
-        <button @click="search()" class="btn btn-primary mt-2">検索</button>
+        <form @submit.prevent="search">
+          <h2>出現箇所検索</h2>
+          <input
+            v-model="searchWord"
+            type="text"
+            class="form-control"
+            placeholder="検索ワードを入力"
+            required
+          />
+          <button
+            type="submit"
+            class="btn btn-primary mt-2"
+            :disabled="!searchWord"
+          >
+            検索
+          </button>
+        </form>
       </div>
 
       <!-- 検索結果の表示 -->
