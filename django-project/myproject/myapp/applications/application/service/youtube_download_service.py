@@ -46,6 +46,7 @@ class YoutubeDownloadService:
         ).first()
 
         subtitle_text_data = {
+            'video_id': subtitle_translation_info.subtitle_text_id.subtitle_id.video_id.video_id,
             'subtitle_text_id': subtitle_translation_info.subtitle_text_id.subtitle_text_id,
             't_start_ms': subtitle_translation_info.subtitle_text_id.t_start_ms,
             'subtitle_text': subtitle_translation_info.subtitle_text_id.subtitle_text,

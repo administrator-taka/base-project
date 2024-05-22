@@ -6,6 +6,27 @@
   >
     <div class="container">
       <pre>{{ JSON.stringify(subtitleTextData, null, 2) }}</pre>
+      <div v-if="subtitleTextData">
+        <a
+          :href="
+            'https://www.youtube.com/watch?v=' +
+            subtitleTextData.videoId +
+            '&t=' +
+            subtitleTextData.tStartMs +
+            'ms'
+          "
+          target="_blank"
+          class="btn btn-link"
+        >
+          {{
+            'https://www.youtube.com/watch?v=' +
+            subtitleTextData.videoId +
+            '&t=' +
+            subtitleTextData.tStartMs +
+            'ms'
+          }}
+        </a>
+      </div>
       <div class="mb-3">
         <label for="aaa" class="form-label">字幕</label>
         <input
