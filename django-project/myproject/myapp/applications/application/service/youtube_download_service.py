@@ -413,7 +413,7 @@ class YoutubeDownloadService:
         # ビデオごとの字幕情報をクエリ
         video_ids = VideoSubtitleInfo.objects.filter(
             video_id__channel_id=channel_id
-        ).values_list('video_id', flat=True).distinct()
+        ).values_list('video_id', flat=True).distinct().order_by('-video_id__published_at')
 
         # ページごとのビデオ ID を取得
         paginator = Paginator(video_ids, page_size)

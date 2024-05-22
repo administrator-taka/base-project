@@ -35,11 +35,11 @@
       </div>
 
       <div class="mb-3">
-        <button @click="toggleSubtitleFilter" class="btn btn-secondary">
-          字幕フィルターを切り替える
-        </button>
-        <button @click="downloadChannelSubtitles" class="btn btn-success ms-2">
+        <button @click="downloadChannelSubtitles" class="btn btn-danger ms-2">
           字幕をダウンロード
+        </button>
+        <button @click="updateTranslationLanguage" class="btn btn-success ms-2">
+          言語更新
         </button>
       </div>
       <PaginationComponent
@@ -50,6 +50,9 @@
 
       <div v-if="videoList">
         <h2>動画一覧</h2>
+        <button @click="toggleSubtitleFilter" class="btn btn-secondary ms-2">
+          字幕フィルターを切り替える
+        </button>
         <div v-for="(video, index) in videoList" :key="index" class="mb-3">
           <div v-if="shouldDisplayVideo(video)">
             <img :src="video.thumbnail" alt="Image" class="img-thumbnail" />
@@ -182,6 +185,17 @@ export default {
       }
     }
 
+    const updateTranslationLanguage = async () => {
+      channelRepository
+        .updateTranslationLanguage(channelId.value, 'ko', ['ja'])
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
     const goToVideoPage = (videoId: string) => {
       router.push(`/video/${videoId}`)
     }
@@ -203,7 +217,8 @@ export default {
       downloadChannelSubtitles,
       currentPage,
       totalPages,
-      handlePageChange
+      handlePageChange,
+      updateTranslationLanguage
     }
   }
 }

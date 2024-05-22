@@ -1,9 +1,14 @@
+import time
+from datetime import datetime
+
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
 from myapp.applications.application.service.youtube_download_service import YoutubeDownloadService
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
+from myapp.applications.util.file_handler import FileHandler
+from myapp.applications.util.util_convert import milliseconds_to_timestamp
 
 
 @api_view(['GET'])
@@ -35,14 +40,30 @@ def get_channel_video_list(request, channel_id):
 
 @api_view(['GET'])
 def download_channel_subtitles(request, channel_id):
+    start_time = time.time()
+    start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     youtube_download_service = YoutubeDownloadService()
     youtube_download_service.download_channel_subtitles(channel_id)
 
+    end_time = time.time()
+    end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # 処理時間を計算
+    elapsed_time = end_time - start_time
+
     # JSONレスポンスを作成
     data = {
-        # TODO:字幕更新のレスポンスを考える。ページング等も
-        "response": "response"
+        "start_time": start_datetime,
+        "end_time": end_datetime,
+        "elapsed_time": milliseconds_to_timestamp(int(elapsed_time * 1000))
     }
+
+    # チャンネルIDを含むファイル名を生成
+    file_name = f"download_channel_subtitles_{channel_id}"
+
+    # JSONレスポンスをファイルに書き込む
+    FileHandler.write_json_response(data, file_name=file_name)
 
     return JsonResponse(data=data, status=200)
 
