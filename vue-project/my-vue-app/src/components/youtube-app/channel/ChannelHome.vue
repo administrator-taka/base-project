@@ -15,13 +15,15 @@
       <div class="mb-3">
         <form @submit.prevent="search">
           <h2>出現箇所検索</h2>
-          <input
-            v-model="searchWord"
-            type="text"
-            class="form-control"
-            placeholder="検索ワードを入力"
-            required
-          />
+          <div class="col-md-6">
+            <input
+              v-model="searchWord"
+              type="text"
+              class="form-control"
+              placeholder="検索ワードを入力"
+              required
+            />
+          </div>
           <button
             type="submit"
             class="btn btn-primary mt-2"
