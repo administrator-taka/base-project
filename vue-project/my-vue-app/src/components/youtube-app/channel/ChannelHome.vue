@@ -60,7 +60,7 @@
       />
 
       <div v-if="videoList">
-        <h2>動画一覧</h2>
+        <h2>動画一覧(全{{ total }}件)</h2>
         <button @click="toggleSubtitleFilter" class="btn btn-secondary ms-2">
           字幕フィルターを切り替える
         </button>
@@ -122,7 +122,7 @@ export default {
     const currentPage = ref(1)
     const totalPages = ref(1)
     const pageSize = 30 // 1ページあたりのアイテム数
-
+    const total = ref(0)
     const getChannelVideoList = async () => {
       channelRepository
         .getChannelVideoList(channelId.value, currentPage.value, pageSize)
@@ -132,6 +132,7 @@ export default {
             response.results.paginationInfo.totalPages
           )
           currentPage.value = parseInt(response.results.paginationInfo.page)
+          total.value = parseInt(response.results.paginationInfo.total)
           videoList.value = response.results.videoList
         })
         .catch((error) => {
@@ -229,7 +230,8 @@ export default {
       currentPage,
       totalPages,
       handlePageChange,
-      updateTranslationLanguage
+      updateTranslationLanguage,
+      total
     }
   }
 }
