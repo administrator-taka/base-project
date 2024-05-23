@@ -74,3 +74,16 @@ where video_subtitle_info.subtitle_type=1
 and video_subtitle_info.video_id='MMt-p8w-h8c'
 order by video_subtitle.t_start_ms,
 video_subtitle_info.language_code desc
+
+--検索
+select * from video_detail
+join video_subtitle_info
+on video_detail.video_id=video_subtitle_info.video_id
+join video_subtitle
+on video_subtitle.subtitle_id=video_subtitle_info.subtitle_id
+WHERE video_subtitle_info.subtitle_type=0
+ORDER BY
+video_subtitle_info.language_code,
+video_subtitle_info.video_id,
+video_subtitle.t_start_ms
+LIMIT 100
