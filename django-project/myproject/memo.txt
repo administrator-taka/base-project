@@ -11,3 +11,8 @@ https://www.kagoya.jp/howto/it-glossary/server/cron/
 rest api pet store(GET PUT DELETE POSTの扱い)
 https://petstore.swagger.io/
 
+prefetch_related：樹形図的なテーブルを検索二回かけて結合する。
+https://qiita.com/rkiyose/items/4bb1f31e43bad763e573
+
+外部キーが設定されているものはループごとに呼び出さなくても既に情報として持っている？
+https://qiita.com/taki_21/items/d461072e6ea65630171a
