@@ -412,9 +412,9 @@ class YoutubeDownloadService:
     # 字幕のステータスの一覧を取得
     def get_channel_subtitle_list(self, channel_id, page=1, page_size=10):
         # ビデオごとの字幕情報をクエリ
-        video_ids = VideoSubtitleInfo.objects.filter(
-            video_id__channel_id=channel_id
-        ).values_list('video_id', flat=True).distinct().order_by('-video_id__published_at')
+        video_ids = VideoDetail.objects.filter(
+            channel_id=channel_id
+        ).distinct().order_by('-published_at')
 
         # ページごとのビデオ ID を取得
         paginator = Paginator(video_ids, page_size)
@@ -430,13 +430,12 @@ class YoutubeDownloadService:
         video_list = []
         for video_id in video_ids_page.object_list:
             # ビデオごとの情報をクエリ
-            video_detail = VideoDetail.objects.get(video_id=video_id)
-            subtitle_infos = VideoSubtitleInfo.objects.filter(video_id=video_id)
+            subtitle_infos = VideoSubtitleInfo.objects.filter(video_id=video_id.video_id)
             video_info = {
-                'video_id': video_detail.video_id,
-                'title': video_detail.title,
-                'thumbnail': video_detail.thumbnail,
-                'published_at': video_detail.published_at,
+                'video_id': video_id.video_id,
+                'title': video_id.title,
+                'thumbnail': video_id.thumbnail,
+                'published_at': video_id.published_at,
                 'infos': [{'language_code': info.language_code, 'subtitle_status': info.subtitle_status} for info in
                           subtitle_infos]
             }
