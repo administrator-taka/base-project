@@ -85,5 +85,6 @@ WHERE video_subtitle_info.subtitle_type=0
 ORDER BY
 video_subtitle_info.language_code,
 video_subtitle_info.video_id,
-video_subtitle.t_start_ms
+video_subtitle.t_start_ms,
+video_subtitle.t_offset_ms
 LIMIT 100
