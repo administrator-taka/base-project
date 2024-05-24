@@ -13,7 +13,7 @@
             style="width: 200px"
           />
           <button
-            @click="goToChannelPage(channel.videoId)"
+            @click="goToChannelPage(channel.channelId)"
             class="btn btn-info mt-2"
           >
             チャンネルページへ
