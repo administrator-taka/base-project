@@ -3,6 +3,24 @@
     <Sidebar />
     <main class="main-content">
       <h1>YouTubeアプリケーションホーム画面</h1>
+      <div class="mb-3">
+        <label for="learningStatusDropdown" class="form-label"
+          >学習ステータス</label
+        >
+        <DropdownSelect
+          :options="learningStatus"
+          v-model="selectedLearningStatus"
+        />
+        <div>{{ selectedLearningStatus }}</div>
+      </div>
+      <div class="mb-3">
+        <label for="languageCodeDropdown" class="form-label">学習言語</label>
+        <DropdownSelect
+          :options="languageCode"
+          v-model="selectedLanguageCode"
+        />
+        <div>{{ selectedLanguageCode }}</div>
+      </div>
       <div v-if="learningSubtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in learningSubtitleList" :key="index">
@@ -19,8 +37,8 @@
         </div>
       </div>
       <SubtitleDetailModal
-        :subtitleTextId="selectedSubtitleTextId"
-        :languageCode="selectedLanguageCode"
+        :subtitleTextId="selectedModalSubtitleTextId"
+        :languageCode="selectedModalLanguageCode"
       />
     </main>
   </div>
@@ -31,29 +49,36 @@ import learningLanguageMemoryRepository from '@/api/repository/learningLanguageM
 import Sidebar from '@/components/SidebarComponent.vue'
 import { onMounted, ref } from 'vue'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
+import { YouTubeLanguageLabel } from '@/enums/youtube-language'
+import { LearningStatusLabel } from '@/enums/learning-status'
+import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 
 export default {
   components: {
     Sidebar,
-    SubtitleDetailModal
+    SubtitleDetailModal,
+    DropdownSelect
   },
   setup() {
     const learningSubtitleList = ref()
-    const selectedSubtitleTextId = ref<string>('')
-    const selectedLanguageCode = ref<string>('')
+    const selectedModalSubtitleTextId = ref<string>('')
+    const selectedModalLanguageCode = ref<string>('')
 
-    const learningLanguageCode = ref<string>('ko')
+    const languageCode = YouTubeLanguageLabel
+    const selectedLanguageCode = ref<string>('ko')
+
+    const learningStatus = LearningStatusLabel
     const selectedLearningStatus = ref(3)
 
     const openModal = (subtitleTextId: string, languageCode: string) => {
-      selectedSubtitleTextId.value = subtitleTextId
-      selectedLanguageCode.value = languageCode
+      selectedModalSubtitleTextId.value = subtitleTextId
+      selectedModalLanguageCode.value = languageCode
     }
 
     const getLearningSubtitleList = async () => {
       learningLanguageMemoryRepository
         .getLearningSubtitleList(
-          learningLanguageCode.value,
+          selectedLanguageCode.value,
           selectedLearningStatus.value
         )
         .then((response) => {
@@ -70,9 +95,13 @@ export default {
     })
     return {
       learningSubtitleList,
-      selectedSubtitleTextId,
+      selectedModalSubtitleTextId,
+      selectedModalLanguageCode,
+      openModal,
+      languageCode,
       selectedLanguageCode,
-      openModal
+      learningStatus,
+      selectedLearningStatus
     }
   }
 }
