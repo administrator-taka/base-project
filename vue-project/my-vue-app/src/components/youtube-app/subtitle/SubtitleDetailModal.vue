@@ -5,6 +5,15 @@
     :actionFunction="updateSubtitleTranslation"
   >
     <div class="container">
+      <div class="mb-3">
+        <label for="learningStatusDropdown" class="form-label"
+          >学習ステータス</label
+        >
+        <DropdownSelect
+          :options="learningStatus"
+          v-model="selectedLearningStatus"
+        />
+      </div>
       <pre>{{ JSON.stringify(subtitleTextData, null, 2) }}</pre>
       <div v-if="subtitleTextData">
         <a
@@ -69,22 +78,12 @@
           rows="6"
         ></textarea>
       </div>
-      <div class="mb-3">
-        <label for="learningStatusDropdown" class="form-label"
-          >学習ステータス</label
-        >
-        <DropdownSelect
-          :options="learningStatus"
-          v-model="selectedLearningStatus"
-        />
-        <div>{{ selectedLearningStatus }}</div>
-      </div>
     </div>
   </BaseModal>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watchEffect } from 'vue'
+import { defineComponent, PropType, ref, watch, watchEffect } from 'vue'
 import BaseModal from '@/components/common/modal/BaseModal.vue'
 import subtitleRepository from '@/api/repository/subtitleRepository'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
@@ -147,10 +146,31 @@ export default defineComponent({
         })
     }
 
+    const updateLearningStatus = async () => {
+      subtitleRepository
+        .updateLearningStatus(
+          props.subtitleTextId,
+          props.languageCode,
+          selectedLearningStatus.value
+        )
+        .then((response) => {
+          console.log(response)
+          getSubtitleTextData()
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
     watchEffect(() => {
       if (props.subtitleTextId && props.languageCode) {
         getSubtitleTextData()
       }
+    })
+
+    // selectedLearningStatusの変更を監視し、変更があるたびに関数を実行
+    watch(selectedLearningStatus, () => {
+      updateLearningStatus()
     })
 
     return {
