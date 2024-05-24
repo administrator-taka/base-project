@@ -52,8 +52,8 @@ import learningLanguageMemoryRepository from '@/api/repository/learningLanguageM
 import Sidebar from '@/components/SidebarComponent.vue'
 import { onMounted, ref } from 'vue'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
-import { YouTubeLanguageLabel } from '@/enums/youtube-language'
-import { LearningStatusLabel } from '@/enums/learning-status'
+import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
+import { LearningStatus, LearningStatusLabel } from '@/enums/learning-status'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 
 export default {
@@ -68,10 +68,10 @@ export default {
     const selectedModalLanguageCode = ref<string>('')
 
     const languageCode = YouTubeLanguageLabel
-    const selectedLanguageCode = ref<string>('ko')
+    const selectedLanguageCode = ref<string>(YouTubeLanguage.KOREAN)
 
     const learningStatus = LearningStatusLabel
-    const selectedLearningStatus = ref(3)
+    const selectedLearningStatus = ref(LearningStatus.ONE_WORD_UNKNOWN)
 
     const openModal = (subtitleTextId: string, languageCode: string) => {
       selectedModalSubtitleTextId.value = subtitleTextId

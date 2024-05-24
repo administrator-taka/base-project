@@ -12,7 +12,7 @@ class LearningLanguageService:
         subtitle_learning_memorys = SubtitleLearningMemory.objects.filter(
             subtitle_translation_text_id__subtitle_text_id__subtitle_id__language_code=language.value,
             learning_status=learning_status.value
-        )
+        ).order_by('-last_updated')
 
         learning_subtitle_list = []
         for subtitle_learning_memory in subtitle_learning_memorys:
@@ -25,6 +25,7 @@ class LearningLanguageService:
                 'subtitle_translation_text': subtitle_learning_memory.subtitle_translation_text_id.subtitle_translation_text,
                 'subtitle_literal_translation_text': subtitle_learning_memory.subtitle_translation_text_id.subtitle_literal_translation_text,
                 'subtitle_translation_text_detail': subtitle_learning_memory.subtitle_translation_text_id.subtitle_translation_text_detail,
+                'last_updated': subtitle_learning_memory.last_updated,
             }
             learning_subtitle_list.append(subtitle_text_data)
         return learning_subtitle_list
