@@ -3,7 +3,7 @@
     <Sidebar />
     <main class="main-content">
       <h1>言語学習記録確認画面</h1>
-      <form @submit.prevent="getLearningSubtitleList" class="row g-3">
+      <div class="row g-3">
         <div class="col-md-3">
           <label for="languageCodeDropdown" class="form-label">学習言語</label>
           <DropdownSelect
@@ -20,10 +20,7 @@
             v-model="selectedLearningStatus"
           />
         </div>
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">検索</button>
-        </div>
-      </form>
+      </div>
       <div v-if="learningSubtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in learningSubtitleList" :key="index">
@@ -50,7 +47,7 @@
 <script lang="ts">
 import learningLanguageMemoryRepository from '@/api/repository/learningLanguageMemoryRepository'
 import Sidebar from '@/components/SidebarComponent.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
 import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
 import { LearningStatus, LearningStatusLabel } from '@/enums/learning-status'
@@ -96,6 +93,12 @@ export default {
     onMounted(() => {
       getLearningSubtitleList()
     })
+
+    // selectedLanguageCode か selectedLearningStatus が変更されたら、自動的に字幕リストを更新する
+    watch([selectedLanguageCode, selectedLearningStatus], () => {
+      getLearningSubtitleList()
+    })
+
     return {
       learningSubtitleList,
       selectedModalSubtitleTextId,
@@ -104,8 +107,7 @@ export default {
       languageCode,
       selectedLanguageCode,
       learningStatus,
-      selectedLearningStatus,
-      getLearningSubtitleList
+      selectedLearningStatus
     }
   }
 }
