@@ -3,8 +3,8 @@
     <Sidebar />
     <main class="main-content">
       <h1>YouTubeアプリケーションホーム画面</h1>
-      <form @submit.prevent="getLearningSubtitleList">
-        <div class="mb-3">
+      <form @submit.prevent="getLearningSubtitleList" class="row g-3">
+        <div class="col-md-3">
           <label for="learningStatusDropdown" class="form-label"
             >学習ステータス</label
           >
@@ -12,17 +12,17 @@
             :options="learningStatus"
             v-model="selectedLearningStatus"
           />
-          <div>{{ selectedLearningStatus }}</div>
         </div>
-        <div class="mb-3">
+        <div class="col-md-3">
           <label for="languageCodeDropdown" class="form-label">学習言語</label>
           <DropdownSelect
             :options="languageCode"
             v-model="selectedLanguageCode"
           />
-          <div>{{ selectedLanguageCode }}</div>
         </div>
-        <button type="submit" class="btn btn-primary">検索</button>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">検索</button>
+        </div>
       </form>
       <div v-if="learningSubtitleList">
         <h2>字幕一覧</h2>
