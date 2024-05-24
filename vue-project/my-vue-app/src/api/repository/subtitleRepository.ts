@@ -17,12 +17,12 @@ export default {
   async updateSubtitleTranslation(
     subtitleTextId: string,
     languageCode: string,
-    subtitleTranslationText: string,
+    subtitleLiteralTranslationText: string,
     subtitleTranslationTextDetail: string
   ) {
     const data = {
       language_code: languageCode,
-      subtitle_translation_text: subtitleTranslationText,
+      subtitle_literal_translation_text: subtitleLiteralTranslationText,
       subtitle_translation_text_detail: subtitleTranslationTextDetail
     }
     return youtubeAppApiClient

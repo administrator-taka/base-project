@@ -71,21 +71,15 @@ LIMIT 100
 
 
 --字幕データ整形
-select
--- *
-video_subtitle.subtitle_id,
-video_subtitle_info.language_code,
-video_subtitle.subtitle_text_id,
-video_subtitle.t_start_ms,
-video_subtitle.subtitle_text,
-subtitle_translation.subtitle_translation_text
-from video_subtitle
-join video_subtitle_info
+
+select * from
+video_subtitle_info
+join video_subtitle
 on video_subtitle_info.subtitle_id=video_subtitle.subtitle_id
 left join subtitle_translation
 on video_subtitle.subtitle_text_id=subtitle_translation.subtitle_text_id
 where video_subtitle_info.subtitle_type=1
-and video_subtitle_info.video_id='MMt-p8w-h8c'
+and video_subtitle_info.video_id='dU_coAmDBmc'
 order by video_subtitle.t_start_ms,
 video_subtitle_info.language_code desc
 LIMIT 100

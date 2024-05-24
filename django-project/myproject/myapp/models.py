@@ -207,6 +207,9 @@ class SubtitleTranslation(models.Model):
     # 翻訳字幕
     subtitle_translation_text = models.TextField(blank=True, null=True, verbose_name='翻訳字幕')
 
+    # 直訳翻訳
+    subtitle_literal_translation_text = models.TextField(blank=True, null=True, verbose_name='直訳翻訳')
+
     # 翻訳字幕詳細
     subtitle_translation_text_detail = models.TextField(blank=True, null=True, verbose_name='翻訳字幕詳細')
 

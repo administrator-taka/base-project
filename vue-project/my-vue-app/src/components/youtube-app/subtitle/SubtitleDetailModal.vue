@@ -41,19 +41,21 @@
         <input
           type="text"
           class="form-control"
-          :value="subtitleTextData ? subtitleTextData.subtitleDefaultText : ''"
+          :value="
+            subtitleTextData ? subtitleTextData.subtitleTranslationText : ''
+          "
           disabled
         />
       </div>
       <div class="mb-3">
-        <label for="subtitleTranslationText" class="form-label"
+        <label for="subtitleLiteralTranslationText" class="form-label"
           >字幕翻訳テキスト</label
         >
         <input
           type="text"
-          id="subtitleTranslationText"
+          id="subtitleLiteralTranslationText"
           class="form-control"
-          v-model="subtitleTranslationText"
+          v-model="subtitleLiteralTranslationText"
         />
       </div>
       <div class="mb-3">
@@ -92,7 +94,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const subtitleTranslationText = ref('')
+    const subtitleLiteralTranslationText = ref('')
     const subtitleTranslationTextDetail = ref('')
     const subtitleTextData = ref()
 
@@ -102,8 +104,8 @@ export default defineComponent({
         .then((response) => {
           subtitleTextData.value = response.subtitleTextData
           // Set initial values for the form fields
-          subtitleTranslationText.value =
-            response.subtitleTextData.subtitleTranslationText
+          subtitleLiteralTranslationText.value =
+            response.subtitleTextData.subtitleLiteralTranslationText
           subtitleTranslationTextDetail.value =
             response.subtitleTextData.subtitleTranslationTextDetail
         })
@@ -117,7 +119,7 @@ export default defineComponent({
         .updateSubtitleTranslation(
           props.subtitleTextId,
           props.languageCode,
-          subtitleTranslationText.value,
+          subtitleLiteralTranslationText.value,
           subtitleTranslationTextDetail.value
         )
         .then((response) => {
@@ -138,7 +140,7 @@ export default defineComponent({
     return {
       updateSubtitleTranslation,
       subtitleTextData,
-      subtitleTranslationText,
+      subtitleLiteralTranslationText,
       subtitleTranslationTextDetail
     }
   }

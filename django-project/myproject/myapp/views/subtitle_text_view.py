@@ -30,13 +30,13 @@ def update_subtitle_translation(request, subtitle_text_id):
     request_data = request.data
 
     language_code = request_data.get('language_code', None)
-    subtitle_translation_text = request_data.get('subtitle_translation_text', None)
+    subtitle_literal_translation_text = request_data.get('subtitle_literal_translation_text', None)
     subtitle_translation_text_detail = request_data.get('subtitle_translation_text_detail', None)
 
     youtube_download_service = YoutubeDownloadService()
     youtube_download_service.update_subtitle_translation(subtitle_text_id,
                                                          YouTubeLanguage(language_code),
-                                                         subtitle_translation_text,
+                                                         subtitle_literal_translation_text,
                                                          subtitle_translation_text_detail)
 
     # JSONレスポンスを作成

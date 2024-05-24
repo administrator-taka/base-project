@@ -26,22 +26,17 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
-    def update_subtitle_translation(self, subtitle_text_id, language, subtitle_translation_text,
+    def update_subtitle_translation(self, subtitle_text_id, language, subtitle_literal_translation_text,
                                     subtitle_translation_text_detail):
         subtitle_translation_info = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language.value)
-        subtitle_translation_info.subtitle_translation_text = subtitle_translation_text
+        subtitle_translation_info.subtitle_literal_translation_text = subtitle_literal_translation_text
         subtitle_translation_info.subtitle_translation_text_detail = subtitle_translation_text_detail
         subtitle_translation_info.save()
 
     def get_subtitle_text_data(self, subtitle_text_id, language):
         subtitle_translation_info = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language.value)
-        video_subtitle_info = VideoSubtitle.objects.filter(
-            subtitle_id__video_id=subtitle_translation_info.subtitle_text_id.subtitle_id.video_id,
-            subtitle_id__language_code=language.value,
-            t_start_ms=subtitle_translation_info.subtitle_text_id.t_start_ms,
-        ).first()
 
         subtitle_text_data = {
             'video_id': subtitle_translation_info.subtitle_text_id.subtitle_id.video_id.video_id,
@@ -49,8 +44,8 @@ class YoutubeDownloadService:
             't_start_ms': subtitle_translation_info.subtitle_text_id.t_start_ms,
             'subtitle_text': subtitle_translation_info.subtitle_text_id.subtitle_text,
             'language_code': subtitle_translation_info.language_code,
-            'subtitle_default_text': video_subtitle_info.subtitle_text,
             'subtitle_translation_text': subtitle_translation_info.subtitle_translation_text,
+            'subtitle_literal_translation_text': subtitle_translation_info.subtitle_literal_translation_text,
             'subtitle_translation_text_detail': subtitle_translation_info.subtitle_translation_text_detail,
         }
         return subtitle_text_data
@@ -491,6 +486,7 @@ class YoutubeDownloadService:
                         language_code=language.value,
                         defaults={
                             'subtitle_translation_text': target_subtitle.subtitle_text,
+                            'subtitle_literal_translation_text': None,
                             'subtitle_translation_text_detail': None
                         }
                     )
