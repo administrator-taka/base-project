@@ -7,22 +7,15 @@
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in learningSubtitleList" :key="index">
           <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
-          <div
-            v-for="(subtitleText, index) in subtitle.translations"
-            :key="index"
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="openModal(subtitle.subtitleTextId, subtitle.languageCode)"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
           >
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="
-                openModal(subtitle.subtitleTextId, subtitleText.languageCode)
-              "
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              字幕詳細
-            </button>
-          </div>
+            字幕詳細
+          </button>
         </div>
       </div>
       <SubtitleDetailModal
