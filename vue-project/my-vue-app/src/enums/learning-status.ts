@@ -9,7 +9,7 @@ const LearningStatusLabel: { name: string; value: number }[] = [
     { name: 'まだ内容を確認していない', value: LearningStatus.NOT_CHECKED },
     { name: '内容を確認したが理解できていない', value: LearningStatus.NOT_UNDERSTOOD },
     { name: '一つだけ単語がわからない', value: LearningStatus.ONE_WORD_UNKNOWN },
-    { name: 'すべて理解している', value: LearningStatus.FULLY_UNDERSTOOD }
+    { name: '完全に理解した（）', value: LearningStatus.FULLY_UNDERSTOOD }
 ];
 
 

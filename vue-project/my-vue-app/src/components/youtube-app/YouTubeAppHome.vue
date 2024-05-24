@@ -61,6 +61,8 @@ export default {
       'UCV9WL7sW6_KjanYkUUaIDfQ',
       // 비챤
       'UCs6EwgxKLY9GG4QNUrP5hoQ',
+      // 왁타버스
+      'UCzh4yY8rl38knH33XpNqXbQ',
       // Shu Yamino
       'UCG0rzBZV_QMP4MtWg6IjhEA',
       // Petra Gurin
