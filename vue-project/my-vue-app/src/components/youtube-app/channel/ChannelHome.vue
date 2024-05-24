@@ -39,6 +39,12 @@
         <h2>検索結果</h2>
         <div v-for="(result, index) in searchResults" :key="index" class="mb-2">
           <pre>{{ JSON.stringify(result, null, 2) }}</pre>
+          <button
+            @click="goToVideoPage(result.videoId)"
+            class="btn btn-info mt-2"
+          >
+            動画ページへ
+          </button>
           <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
             {{ result.youtubeUrl }}
           </a>
