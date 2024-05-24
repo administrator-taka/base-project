@@ -10,7 +10,7 @@ class LearningLanguageService:
 
     def get_learning_subtitle_text_list(self, language, learning_status):
         subtitle_learning_memorys = SubtitleLearningMemory.objects.filter(
-            subtitle_translation_text_id__language_code=language.value,
+            subtitle_translation_text_id__subtitle_text_id__subtitle_id__language_code=language.value,
             learning_status=learning_status.value
         )
 

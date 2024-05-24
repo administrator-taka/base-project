@@ -83,7 +83,7 @@ class TestAPIEndpoints(unittest.TestCase):
     def test_get_learning_subtitle_text_list(self):
         url = f"{self.base_url}learning"
         data = {
-            "language_code": "ja",
+            "language_code": "ko",
             "learning_status": 3}
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
