@@ -18,6 +18,7 @@ class LearningLanguageService:
         for subtitle_learning_memory in subtitle_learning_memorys:
             subtitle_text_data = {
                 'video_id': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_id.video_id.video_id,
+                'thumbnail': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_id.video_id.thumbnail,
                 'subtitle_text_id': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_text_id,
                 't_start_ms': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.t_start_ms,
                 'subtitle_text': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_text,

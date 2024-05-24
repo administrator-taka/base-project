@@ -24,7 +24,7 @@
       <div v-if="learningSubtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in learningSubtitleList" :key="index">
-          <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
+          <img :src="subtitle.thumbnail" alt="Image" class="img-thumbnail" />
           <button
             type="button"
             class="btn btn-primary"
@@ -37,6 +37,7 @@
           <button @click="goToVideoPage(subtitle.videoId)" class="btn btn-info">
             動画ページへ
           </button>
+          <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
         </div>
       </div>
       <SubtitleDetailModal
