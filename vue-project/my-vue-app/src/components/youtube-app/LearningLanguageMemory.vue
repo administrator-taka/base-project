@@ -34,6 +34,9 @@
           >
             字幕詳細
           </button>
+          <button @click="goToVideoPage(subtitle.videoId)" class="btn btn-info">
+            動画ページへ
+          </button>
         </div>
       </div>
       <SubtitleDetailModal
@@ -52,6 +55,7 @@ import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetai
 import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
 import { LearningStatus, LearningStatusLabel } from '@/enums/learning-status'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
+import router from '@/router'
 
 export default {
   components: {
@@ -89,6 +93,9 @@ export default {
           console.error(error + 'エラーが返ってきた')
         })
     }
+    const goToVideoPage = (videoId: string) => {
+      router.push(`/video/${videoId}`)
+    }
 
     onMounted(() => {
       getLearningSubtitleList()
@@ -107,7 +114,8 @@ export default {
       languageCode,
       selectedLanguageCode,
       learningStatus,
-      selectedLearningStatus
+      selectedLearningStatus,
+      goToVideoPage
     }
   }
 }
