@@ -88,6 +88,7 @@ import { defineComponent, PropType, ref, watchEffect } from 'vue'
 import BaseModal from '@/components/common/modal/BaseModal.vue'
 import subtitleRepository from '@/api/repository/subtitleRepository'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
+import { LearningStatusLabel } from '@/enums/learning-status'
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
@@ -110,11 +111,7 @@ export default defineComponent({
     const subtitleTranslationTextDetail = ref('')
     const subtitleTextData = ref()
 
-    const learningStatus = [
-      { name: 'a', value: 0 },
-      { name: 'b', value: 1 },
-      { name: 'c', value: 2 }
-    ]
+    const learningStatus = LearningStatusLabel
     const selectedLearningStatus = ref(0)
 
     const getSubtitleTextData = async () => {
