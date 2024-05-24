@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import List
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
@@ -501,65 +501,41 @@ class YoutubeDownloadService:
         except VideoDetail.DoesNotExist:
             return
         default_audio_language, translation_languages = self.get_translation_info(video_detail.channel_id)
-        # Django ORMを使用してクエリを構築
+
+        # VideoSubtitleをベースにクエリを構築
         queryset = VideoSubtitle.objects.filter(
             subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
+            subtitle_id__language_code=default_audio_language.value,
             subtitle_id__video_id=video_id
+        ).select_related('subtitle_id').order_by('t_start_ms')
+
+        # PrefetchでSubtitleTranslationをLEFT JOIN
+        queryset = queryset.prefetch_related(
+            Prefetch('subtitletranslation_set', queryset=SubtitleTranslation.objects.all())
         )
-
-        # ベース字幕のクエリ
-        base_queryset = queryset.filter(subtitle_id__language_code=default_audio_language.value)
-
-        # ベース字幕以外のクエリ
-        other_queryset = queryset.exclude(subtitle_id__language_code=default_audio_language.value)
-
-        subtitle_translation = SubtitleTranslation.objects.filter(subtitle_text_id__in=base_queryset)
 
         # 辞書のリストを初期化
         video_subtitle_data = []
 
-        # クエリセットを実行
-        base_results = list(base_queryset.order_by('t_start_ms'))
-        # ログ出力用
-        total_subtitles = len(base_results)
-        processed_subtitles = 0
-
-        if total_subtitles > 1000:
-            logging.debug(f"字幕行数が多すぎます。字幕数：{total_subtitles}")
-            return
-
-        for base_result in base_results:
+        # クエリセットを実行して結果を辞書に変換
+        for subtitle in queryset:
             base_subtitle_dict = {
-                'subtitle_id': base_result.subtitle_id.subtitle_id,
-                'language_code': base_result.subtitle_id.language_code,
-                'subtitle_text_id': base_result.subtitle_text_id,
-                't_start_ms': base_result.t_start_ms,
-                'subtitle_text': base_result.subtitle_text,
+                'subtitle_id': subtitle.subtitle_id.subtitle_id,
+                'language_code': subtitle.subtitle_id.language_code,
+                'subtitle_text_id': subtitle.subtitle_text_id,
+                't_start_ms': subtitle.t_start_ms,
+                'subtitle_text': subtitle.subtitle_text,
                 'translations': []  # 翻訳の辞書
             }
 
-            for language in translation_languages:
-                # other_querysetのlanguage_codeで検索
-                other_subtitle = other_queryset.filter(subtitle_id__language_code=language.value,
-                                                       t_start_ms=base_result.t_start_ms).first()
-
-                subtitle_translation_data = subtitle_translation.filter(
-                    subtitle_text_id=base_result.subtitle_text_id,
-                    language_code=language.value
-                ).first()
-
-                # 翻訳が存在する場合、辞書に追加
-                if other_subtitle and subtitle_translation_data:
-                    base_subtitle_dict['translations'].append({
-                        'language_code': language.value,
-                        'subtitle_text': other_subtitle.subtitle_text,
-                        'translation_text': subtitle_translation_data.subtitle_translation_text
-                    })
-
-            # 処理された字幕数を更新
-            processed_subtitles += 1
-            # 経過率をデバッグに出力
-            logging.info(f"処理進行状況: {processed_subtitles}/{total_subtitles}")
+            # 翻訳データを取得して辞書に追加
+            for translation in subtitle.subtitletranslation_set.all():
+                base_subtitle_dict['translations'].append({
+                    'language_code': translation.language_code,
+                    'subtitle_translation_text': translation.subtitle_translation_text,
+                    'subtitle_literal_translation_text': translation.subtitle_literal_translation_text,
+                    'subtitle_translation_text_detail': translation.subtitle_translation_text_detail
+                })
 
             # ベース字幕と翻訳の辞書をリストに追加
             video_subtitle_data.append(base_subtitle_dict)
