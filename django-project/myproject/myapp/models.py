@@ -10,6 +10,7 @@ import uuid
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
+from myapp.applications.util.code.learning_status import LearningStatus
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
@@ -41,7 +42,7 @@ class ChannelDetail(models.Model):
     # サムネイルURL
     thumbnail = models.TextField(verbose_name='サムネイルURL')
     # 国コード
-    country = models.CharField(null=True,max_length=50, verbose_name='国コード')
+    country = models.CharField(null=True, max_length=50, verbose_name='国コード')
 
     class Meta:
         db_table = 'channel_detail'
@@ -216,3 +217,24 @@ class SubtitleTranslation(models.Model):
     class Meta:
         db_table = 'subtitle_translation'
         unique_together = ['subtitle_text_id', 'language_code']
+
+
+class SubtitleLearningMemory(models.Model):
+
+    # 字幕学習記録ID
+    subtitle_learning_memory_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
+                                                    verbose_name='字幕学習記録ID')
+    # 字幕翻訳テキストID
+    subtitle_translation_text_id = models.ForeignKey(SubtitleTranslation, db_column='subtitle_translation_text_id',
+                                                     on_delete=models.CASCADE,
+                                                     verbose_name='字幕翻訳テキストID')
+
+    # 学習ステータス
+    learning_status = models.CharField(choices=[(tag.value, tag.name) for tag in LearningStatus],
+                                       verbose_name='言語コード')
+
+    last_updated = models.DateTimeField(verbose_name='最終更新日時', null=True)
+
+    class Meta:
+        db_table = 'subtitle_learning_memory'
+        unique_together = ['subtitle_translation_text_id']

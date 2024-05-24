@@ -17,7 +17,7 @@ from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.pagination_info import PaginationInfo
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
-    ChannelTranslationInfo
+    ChannelTranslationInfo, SubtitleLearningMemory
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
 
@@ -25,6 +25,20 @@ class YoutubeDownloadService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
+
+    def insert_or_update_subtitle_learning_memory(self, subtitle_text_id, language_code, learning_status):
+        # 対象のSubtitleTranslationレコードを取得
+        subtitle_translation = SubtitleTranslation.objects.get(
+            subtitle_text_id=subtitle_text_id, language_code=language_code.value)
+
+        # update_or_createメソッドを使用して、存在確認と更新または新規作成を行う
+        SubtitleLearningMemory.objects.update_or_create(
+            subtitle_translation_text_id=subtitle_translation,
+            defaults={
+                'learning_status': learning_status.value,
+                'last_updated': datetime.now()
+            }
+        )
 
     def update_subtitle_translation(self, subtitle_text_id, language, subtitle_literal_translation_text,
                                     subtitle_translation_text_detail):
@@ -35,18 +49,18 @@ class YoutubeDownloadService:
         subtitle_translation_info.save()
 
     def get_subtitle_text_data(self, subtitle_text_id, language):
-        subtitle_translation_info = SubtitleTranslation.objects.get(
+        subtitle_translation = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language.value)
 
         subtitle_text_data = {
-            'video_id': subtitle_translation_info.subtitle_text_id.subtitle_id.video_id.video_id,
-            'subtitle_text_id': subtitle_translation_info.subtitle_text_id.subtitle_text_id,
-            't_start_ms': subtitle_translation_info.subtitle_text_id.t_start_ms,
-            'subtitle_text': subtitle_translation_info.subtitle_text_id.subtitle_text,
-            'language_code': subtitle_translation_info.language_code,
-            'subtitle_translation_text': subtitle_translation_info.subtitle_translation_text,
-            'subtitle_literal_translation_text': subtitle_translation_info.subtitle_literal_translation_text,
-            'subtitle_translation_text_detail': subtitle_translation_info.subtitle_translation_text_detail,
+            'video_id': subtitle_translation.subtitle_text_id.subtitle_id.video_id.video_id,
+            'subtitle_text_id': subtitle_translation.subtitle_text_id.subtitle_text_id,
+            't_start_ms': subtitle_translation.subtitle_text_id.t_start_ms,
+            'subtitle_text': subtitle_translation.subtitle_text_id.subtitle_text,
+            'language_code': subtitle_translation.language_code,
+            'subtitle_translation_text': subtitle_translation.subtitle_translation_text,
+            'subtitle_literal_translation_text': subtitle_translation.subtitle_literal_translation_text,
+            'subtitle_translation_text_detail': subtitle_translation.subtitle_translation_text_detail,
         }
         return subtitle_text_data
 

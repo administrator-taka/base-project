@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
 from myapp.applications.application.service.youtube_download_service import YoutubeDownloadService
+from myapp.applications.util.code.learning_status import LearningStatus
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 
 
@@ -38,6 +39,27 @@ def update_subtitle_translation(request, subtitle_text_id):
                                                          YouTubeLanguage(language_code),
                                                          subtitle_literal_translation_text,
                                                          subtitle_translation_text_detail)
+
+    # JSONレスポンスを作成
+    data = {
+        "response": "response"
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['POST'])
+def insert_or_update_subtitle_learning_memory(request, subtitle_text_id):
+    # リクエストのJSONの中身を取得
+    request_data = request.data
+
+    language_code = request_data.get('language_code', None)
+    learning_status = request_data.get('learning_status', None)
+
+    youtube_download_service = YoutubeDownloadService()
+    youtube_download_service.insert_or_update_subtitle_learning_memory(subtitle_text_id,
+                                                                       YouTubeLanguage(language_code),
+                                                                       LearningStatus(learning_status))
 
     # JSONレスポンスを作成
     data = {

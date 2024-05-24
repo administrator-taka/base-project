@@ -71,5 +71,14 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
+    def test_insert_or_update_subtitle_learning_memory(self):
+        subtitle_text_id = "D5791D90FDA5431EAA5BE2EF0E1DB5BC"
+        url = f"{self.base_url}subtitle/{subtitle_text_id}/insert_or_update_subtitle_learning_memory"
+        data = {
+            "language_code": "ja",
+            "learning_status": 3}
+        response = requests.post(url, json=data)
+        FileHandler.format_json_print(response.json())
+
 # if __name__ == '__main__':
 #     unittest.main()
