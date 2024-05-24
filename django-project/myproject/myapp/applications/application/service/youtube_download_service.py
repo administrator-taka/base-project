@@ -84,7 +84,7 @@ class YoutubeDownloadService:
         return subtitle_text_data
 
     def update_channel_translation_info(self, channel_id, default_audio_language, translation_languages):
-        translation_info, created = ChannelTranslationInfo.objects.get_or_create(channel_id=channel_id)
+        translation_info, created = ChannelTranslationInfo.objects.get_or_create(channel_id_id=channel_id)
         translation_info.default_audio_language = default_audio_language.value
         translation_info.translation_languages = [lang.value for lang in translation_languages]
         translation_info.save()
@@ -344,8 +344,8 @@ class YoutubeDownloadService:
                 'published_at': channel_detail.published_at,
                 'thumbnail': channel_detail.thumbnail,
                 'country': channel_detail.country,
-                'default_audio_language': channel_translation_info.default_audio_language,
-                'translation_languages': channel_translation_info.translation_languages
+                'default_audio_language': channel_translation_info.default_audio_language if channel_translation_info else None,
+                'translation_languages': channel_translation_info.translation_languages if channel_translation_info else None
             }
         else:
             # チャンネル情報が見つからない場合は空の辞書を返す

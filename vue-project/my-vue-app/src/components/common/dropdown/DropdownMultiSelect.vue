@@ -1,17 +1,15 @@
 <template>
-  <div class="dropdown">
-    <multiselect
-      v-model="selectedOptions"
-      :options="options"
-      :multiple="true"
-      :close-on-select="false"
-      placeholder="Select options"
-      label="name"
-      track-by="value"
-      class="form-control"
-    >
-    </multiselect>
-  </div>
+  <multiselect
+    v-model="selectedOptions"
+    :options="options"
+    :multiple="true"
+    :close-on-select="false"
+    placeholder="Select options"
+    label="name"
+    track-by="value"
+    class="form-control"
+  >
+  </multiselect>
 </template>
 
 <script>
@@ -79,14 +77,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.dropdown {
-  width: 300px;
-  margin: 0 auto;
-}
-.form-control {
-  display: inline-block;
-  width: 100%;
-}
-</style>
