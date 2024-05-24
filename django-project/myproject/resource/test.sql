@@ -101,6 +101,6 @@ LIMIT 100
 
 
 --データ確認
-SELECT relname
+SELECT relname,n_live_tup
 FROM pg_stat_user_tables
 WHERE n_live_tup > 0;
