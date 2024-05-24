@@ -14,7 +14,7 @@ class LearningLanguageService:
             learning_status=learning_status.value
         )
 
-        learning_subtitle_text_list = []
+        learning_subtitle_list = []
         for subtitle_learning_memory in subtitle_learning_memorys:
             subtitle_text_data = {
                 'video_id': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_id.video_id.video_id,
@@ -26,5 +26,5 @@ class LearningLanguageService:
                 'subtitle_literal_translation_text': subtitle_learning_memory.subtitle_translation_text_id.subtitle_literal_translation_text,
                 'subtitle_translation_text_detail': subtitle_learning_memory.subtitle_translation_text_id.subtitle_translation_text_detail,
             }
-            learning_subtitle_text_list.append(subtitle_text_data)
-        return learning_subtitle_text_list
+            learning_subtitle_list.append(subtitle_text_data)
+        return learning_subtitle_list
