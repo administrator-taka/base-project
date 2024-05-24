@@ -98,3 +98,9 @@ video_subtitle.t_start_ms,
 video_subtitle.t_offset_ms
 LIMIT 100
 ;
+
+
+--データ確認
+SELECT relname
+FROM pg_stat_user_tables
+WHERE n_live_tup > 0;
