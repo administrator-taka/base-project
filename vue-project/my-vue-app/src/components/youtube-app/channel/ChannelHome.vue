@@ -10,26 +10,32 @@
         style="width: 200px"
       />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
-      <div class="col-md-3">
-        <label for="languageCodeDropdown" class="form-label"
-          >デフォルト言語</label
-        >
-        <DropdownSelect
-          :options="languageCode"
-          v-model="selectedLanguageCode"
-        />
-      </div>
-      <div class="col-md-3">
-        <label for="languageCodeDropdown" class="form-label">学習言語</label>
-        <DropdownMultiSelect
-          :options="languageCode"
-          v-model="selectedLanguageCodeList"
-        />
+      <div class="mb-3">
+        <form @submit.prevent="updateTranslationLanguage">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label for="languageCodeDropdown" class="form-label"
+                >デフォルト言語</label
+              >
+              <DropdownSelect
+                :options="languageCode"
+                v-model="selectedLanguageCode"
+              />
+            </div>
+            <div class="col-md-3">
+              <label for="languageCodeDropdown" class="form-label"
+                >学習言語</label
+              >
+              <DropdownMultiSelect
+                :options="languageCode"
+                v-model="selectedLanguageCodeList"
+              />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">言語更新</button>
+        </form>
       </div>
 
-      <button @click="updateTranslationLanguage" class="btn btn-success ms-2">
-        言語更新
-      </button>
       <!-- 検索フォームの追加 -->
       <div class="mb-3">
         <form @submit.prevent="search">
