@@ -26,6 +26,22 @@ class YoutubeDownloadService:
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
 
+    def get_activate_channel_list(self):
+        channel_translation_infos = ChannelTranslationInfo.objects.filter(
+        ).order_by('default_audio_language')
+
+        channel_list = []
+        for channel_translation_info in channel_translation_infos:
+            channel_data = {
+                'channel_id': channel_translation_info.channel_id.channel_id,
+                'title': channel_translation_info.channel_id.title,
+                'thumbnail': channel_translation_info.channel_id.thumbnail,
+                'default_audio_language': channel_translation_info.default_audio_language,
+                'translation_languages': channel_translation_info.translation_languages,
+            }
+            channel_list.append(channel_data)
+        return channel_list
+
     def insert_or_update_subtitle_learning_memory(self, subtitle_text_id, language_code, learning_status):
         # 対象のSubtitleTranslationレコードを取得
         subtitle_translation = SubtitleTranslation.objects.get(

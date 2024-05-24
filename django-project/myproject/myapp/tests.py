@@ -10,6 +10,11 @@ class TestAPIEndpoints(unittest.TestCase):
     def setUp(self):
         self.base_url = "http://127.0.0.1:8000/youtube_app/"
 
+    def test_get_channel_list(self):
+        url = f"{self.base_url}channel"
+        response = requests.get(url)
+        FileHandler.format_json_print(response.json())
+
     def test_get_channel_data(self):
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         url = f"{self.base_url}channel/{channel_id}"

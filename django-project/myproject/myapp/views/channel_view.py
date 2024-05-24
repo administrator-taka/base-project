@@ -12,6 +12,18 @@ from myapp.applications.util.util_convert import milliseconds_to_timestamp
 
 
 @api_view(['GET'])
+def get_channel_list(request):
+    youtube_download_service = YoutubeDownloadService()
+    channel_list = youtube_download_service.get_activate_channel_list()
+    # JSONレスポンスを作成
+    data = {
+        "channel_list": channel_list,
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['GET'])
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
     channel_data = youtube_download_service.get_channel_data(channel_id)
