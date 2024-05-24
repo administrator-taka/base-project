@@ -334,6 +334,7 @@ class YoutubeDownloadService:
 
         # チャンネル情報を辞書型に変換して返す
         if channel_detail:
+            channel_translation_info = ChannelTranslationInfo.objects.filter(channel_id=channel_detail).first()
             channel_data = {
                 'channel_id': channel_detail.channel_id,
                 'playlist_id': channel_detail.playlist_id,
@@ -342,7 +343,9 @@ class YoutubeDownloadService:
                 'custom_url': channel_detail.custom_url,
                 'published_at': channel_detail.published_at,
                 'thumbnail': channel_detail.thumbnail,
-                'country': channel_detail.country
+                'country': channel_detail.country,
+                'default_audio_language': channel_translation_info.default_audio_language,
+                'translation_languages': channel_translation_info.translation_languages
             }
         else:
             # チャンネル情報が見つからない場合は空の辞書を返す

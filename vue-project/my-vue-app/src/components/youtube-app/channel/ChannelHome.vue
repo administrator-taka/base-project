@@ -26,7 +26,10 @@
           v-model="selectedLanguageCodeList"
         />
       </div>
-      <div>{{ selectedLanguageCode }}{{ selectedLanguageCodeList }}</div>
+
+      <button @click="updateTranslationLanguage" class="btn btn-success ms-2">
+        言語更新
+      </button>
       <!-- 検索フォームの追加 -->
       <div class="mb-3">
         <form @submit.prevent="search">
@@ -71,9 +74,6 @@
         <button @click="downloadChannelSubtitles" class="btn btn-danger ms-2">
           字幕をダウンロード
         </button>
-        <button @click="updateTranslationLanguage" class="btn btn-success ms-2">
-          言語更新
-        </button>
       </div>
       <PaginationComponent
         :currentPage="currentPage"
@@ -111,7 +111,7 @@ import { useRoute, useRouter } from 'vue-router'
 import PaginationComponent from '@/components/common/pagination/PaginationComponent.vue'
 import DropdownMultiSelect from '@/components/common/dropdown/DropdownMultiSelect.vue'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
-import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
+import { YouTubeLanguageLabel } from '@/enums/youtube-language'
 
 export default {
   components: {
@@ -139,6 +139,9 @@ export default {
         .getChannelData(channelId.value)
         .then((response) => {
           channelData.value = response.channelData
+          selectedLanguageCode.value = response.channelData.defaultAudioLanguage
+          selectedLanguageCodeList.value =
+            response.channelData.translationLanguages
           console.log(response)
         })
         .catch((error) => {
@@ -226,7 +229,11 @@ export default {
 
     const updateTranslationLanguage = async () => {
       channelRepository
-        .updateTranslationLanguage(channelId.value, 'ko', ['ja'])
+        .updateTranslationLanguage(
+          channelId.value,
+          selectedLanguageCode.value,
+          selectedLanguageCodeList.value
+        )
         .then((response) => {
           console.log(response)
         })
@@ -239,8 +246,8 @@ export default {
       router.push(`/video/${videoId}`)
     }
     const languageCode = YouTubeLanguageLabel
-    const selectedLanguageCode = ref<string>(YouTubeLanguage.KOREAN)
-    const selectedLanguageCodeList = ref([YouTubeLanguage.KOREAN])
+    const selectedLanguageCode = ref()
+    const selectedLanguageCodeList = ref([])
 
     onMounted(() => {
       getChannelData()

@@ -34,13 +34,17 @@ export default {
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const selectedOptions = ref(
-      props.options.filter((option) => props.modelValue.includes(option.value))
+      props.modelValue &&
+        props.options.filter((option) =>
+          props.modelValue.includes(option.value)
+        )
     )
 
     watch(
       () => props.modelValue,
       (newValue) => {
         if (
+          newValue &&
           JSON.stringify(
             selectedOptions.value.map((option) => option.value)
           ) !== JSON.stringify(newValue)
@@ -56,8 +60,9 @@ export default {
       selectedOptions,
       (newValue) => {
         if (
+          newValue &&
           JSON.stringify(newValue.map((option) => option.value)) !==
-          JSON.stringify(props.modelValue)
+            JSON.stringify(props.modelValue)
         ) {
           emit(
             'update:modelValue',

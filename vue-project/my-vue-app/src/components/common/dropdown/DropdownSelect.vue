@@ -6,7 +6,7 @@
       data-bs-toggle="dropdown"
       aria-expanded="false"
     >
-      {{ options.find((option) => option.value === selectedOption).name }}
+      {{ labelName }}
     </button>
     <ul class="dropdown-menu">
       <li v-for="(option, index) in options" :key="index">
@@ -34,12 +34,24 @@ export default {
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const selectedOption = ref(props.modelValue)
+    const labelName = ref(
+      props.options.find((option) => option.value === selectedOption.value)
+        ?.name || ''
+    )
+
     const isOpen = ref(false)
+
+    const updateLabelName = () => {
+      labelName.value =
+        props.options.find((option) => option.value === selectedOption.value)
+          ?.name || ''
+    }
 
     watch(
       () => props.modelValue,
       (newValue) => {
         selectedOption.value = newValue
+        updateLabelName()
       }
     )
 
@@ -47,12 +59,14 @@ export default {
       selectedOption.value = option.value
       emit('update:modelValue', option.value)
       isOpen.value = false
+      updateLabelName()
     }
 
     return {
       selectedOption,
       isOpen,
-      selectOption
+      selectOption,
+      labelName
     }
   }
 }
