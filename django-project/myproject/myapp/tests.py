@@ -80,5 +80,13 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
+    def test_get_learning_subtitle_text_list(self):
+        url = f"{self.base_url}learning"
+        data = {
+            "language_code": "ja",
+            "learning_status": 3}
+        response = requests.post(url, json=data)
+        FileHandler.format_json_print(response.json())
+
 # if __name__ == '__main__':
 #     unittest.main()
