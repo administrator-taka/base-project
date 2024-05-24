@@ -122,6 +122,9 @@ export default defineComponent({
             response.subtitleTextData.subtitleLiteralTranslationText
           subtitleTranslationTextDetail.value =
             response.subtitleTextData.subtitleTranslationTextDetail
+          selectedLearningStatus.value = parseInt(
+            response.subtitleTextData.learningStatus
+          )
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
