@@ -2,9 +2,7 @@ import datetime
 import logging
 import time
 import unittest
-from collections import defaultdict
 from datetime import datetime
-from math import ceil
 from typing import List
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -436,8 +434,10 @@ class YoutubeDownloadService:
                 'title': video_id.title,
                 'thumbnail': video_id.thumbnail,
                 'published_at': video_id.published_at,
-                'infos': [{'language_code': info.language_code, 'subtitle_status': info.subtitle_status} for info in
-                          subtitle_infos]
+                'infos': [{'language_code': info.language_code,
+                           'subtitle_status': info.subtitle_status,
+                           'subtitle_type': info.subtitle_type}
+                          for info in subtitle_infos]
             }
             video_list.append(video_info)
 
