@@ -69,6 +69,16 @@
           rows="6"
         ></textarea>
       </div>
+      <div class="mb-3">
+        <label for="learningStatusDropdown" class="form-label"
+          >学習ステータス</label
+        >
+        <DropdownSelect
+          :options="learningStatus"
+          v-model="selectedLearningStatus"
+        />
+        <div>{{ selectedLearningStatus }}</div>
+      </div>
     </div>
   </BaseModal>
 </template>
@@ -77,11 +87,13 @@
 import { defineComponent, PropType, ref, watchEffect } from 'vue'
 import BaseModal from '@/components/common/modal/BaseModal.vue'
 import subtitleRepository from '@/api/repository/subtitleRepository'
+import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
   components: {
-    BaseModal
+    BaseModal,
+    DropdownSelect
   },
   props: {
     subtitleTextId: {
@@ -98,12 +110,18 @@ export default defineComponent({
     const subtitleTranslationTextDetail = ref('')
     const subtitleTextData = ref()
 
+    const learningStatus = [
+      { name: 'a', value: 0 },
+      { name: 'b', value: 1 },
+      { name: 'c', value: 2 }
+    ]
+    const selectedLearningStatus = ref(0)
+
     const getSubtitleTextData = async () => {
       subtitleRepository
         .getSubtitleTextData(props.subtitleTextId, props.languageCode)
         .then((response) => {
           subtitleTextData.value = response.subtitleTextData
-          // Set initial values for the form fields
           subtitleLiteralTranslationText.value =
             response.subtitleTextData.subtitleLiteralTranslationText
           subtitleTranslationTextDetail.value =
@@ -137,11 +155,14 @@ export default defineComponent({
         getSubtitleTextData()
       }
     })
+
     return {
       updateSubtitleTranslation,
       subtitleTextData,
       subtitleLiteralTranslationText,
-      subtitleTranslationTextDetail
+      subtitleTranslationTextDetail,
+      learningStatus,
+      selectedLearningStatus
     }
   }
 })
