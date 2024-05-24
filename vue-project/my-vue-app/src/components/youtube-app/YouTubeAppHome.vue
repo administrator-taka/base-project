@@ -22,10 +22,14 @@
         </div>
       </div>
 
+      <h2>データ準備</h2>
       <ul>
         <li v-for="(channelId, index) in channelIds" :key="index">
-          <button @click="goToChannelPage(channelId)">
-            チャンネルページへ {{ channelId }}
+          <button
+            class="btn btn-secondary mt-2"
+            @click="goToChannelPage(channelId)"
+          >
+            {{ channelId }}
           </button>
         </li>
       </ul>
@@ -56,7 +60,11 @@ export default {
       // 고세구
       'UCV9WL7sW6_KjanYkUUaIDfQ',
       // 비챤
-      'UCs6EwgxKLY9GG4QNUrP5hoQ'
+      'UCs6EwgxKLY9GG4QNUrP5hoQ',
+      // Shu Yamino
+      'UCG0rzBZV_QMP4MtWg6IjhEA',
+      // Petra Gurin
+      'UCgA2jKRkqpY_8eysPUs8sjw'
     ])
     const router = useRouter()
 
