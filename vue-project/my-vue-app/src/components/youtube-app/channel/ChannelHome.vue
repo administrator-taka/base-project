@@ -10,7 +10,23 @@
         style="width: 200px"
       />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
-
+      <div class="col-md-3">
+        <label for="languageCodeDropdown" class="form-label"
+          >デフォルト言語</label
+        >
+        <DropdownSelect
+          :options="languageCode"
+          v-model="selectedLanguageCode"
+        />
+      </div>
+      <div class="col-md-3">
+        <label for="languageCodeDropdown" class="form-label">学習言語</label>
+        <DropdownMultiSelect
+          :options="languageCode"
+          v-model="selectedLanguageCodeList"
+        />
+      </div>
+      <div>{{ selectedLanguageCode }}{{ selectedLanguageCodeList }}</div>
       <!-- 検索フォームの追加 -->
       <div class="mb-3">
         <form @submit.prevent="search">
@@ -93,11 +109,16 @@ import channelRepository from '@/api/repository/channelRepository'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PaginationComponent from '@/components/common/pagination/PaginationComponent.vue'
+import DropdownMultiSelect from '@/components/common/dropdown/DropdownMultiSelect.vue'
+import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
+import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
 
 export default {
   components: {
     Sidebar,
-    PaginationComponent
+    PaginationComponent,
+    DropdownMultiSelect,
+    DropdownSelect
   },
   setup() {
     const route = useRoute()
@@ -217,6 +238,9 @@ export default {
     const goToVideoPage = (videoId: string) => {
       router.push(`/video/${videoId}`)
     }
+    const languageCode = YouTubeLanguageLabel
+    const selectedLanguageCode = ref<string>(YouTubeLanguage.KOREAN)
+    const selectedLanguageCodeList = ref([YouTubeLanguage.KOREAN])
 
     onMounted(() => {
       getChannelData()
@@ -237,7 +261,10 @@ export default {
       totalPages,
       handlePageChange,
       updateTranslationLanguage,
-      total
+      total,
+      languageCode,
+      selectedLanguageCodeList,
+      selectedLanguageCode
     }
   }
 }
