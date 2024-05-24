@@ -3,6 +3,15 @@ import toCamelCase from '@/utils/to_camel_case'
 import { AxiosResponse } from 'axios'
 
 export default {
+  async getChannelList() {
+    return youtubeAppApiClient
+      .get(`/channel`)
+      .then((response: AxiosResponse) => toCamelCase(response.data))
+      .catch((error: string) => {
+        console.error('API実行結果エラー:', error)
+        throw error
+      })
+  },
   async getChannelData(channelId: string) {
     return youtubeAppApiClient
       .get(`/channel/${channelId}`)
