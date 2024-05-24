@@ -52,6 +52,8 @@ class YoutubeDownloadService:
         subtitle_translation = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language.value)
 
+        learning_memory = SubtitleLearningMemory.objects.filter(
+            subtitle_translation_text_id=subtitle_translation).first()
         subtitle_text_data = {
             'video_id': subtitle_translation.subtitle_text_id.subtitle_id.video_id.video_id,
             'subtitle_text_id': subtitle_translation.subtitle_text_id.subtitle_text_id,
@@ -61,10 +63,7 @@ class YoutubeDownloadService:
             'subtitle_translation_text': subtitle_translation.subtitle_translation_text,
             'subtitle_literal_translation_text': subtitle_translation.subtitle_literal_translation_text,
             'subtitle_translation_text_detail': subtitle_translation.subtitle_translation_text_detail,
-            'learning_status': SubtitleLearningMemory.objects.filter(
-                subtitle_translation_text_id=subtitle_translation).first().learning_status
-            if SubtitleLearningMemory.objects.filter(
-                subtitle_translation_text_id=subtitle_translation).first() else 0,
+            'learning_status': learning_memory.learning_status if learning_memory else 0,
         }
         return subtitle_text_data
 
