@@ -119,6 +119,8 @@ def update_translation_language(request, channel_id):
 
     youtube_download_service.update_channel_translation_info(channel_id, default_audio_language, translation_languages)
 
+    youtube_download_service.insert_initial_video_data(channel_id)
+
     # JSONレスポンスを作成
     data = {
         "status": 0
