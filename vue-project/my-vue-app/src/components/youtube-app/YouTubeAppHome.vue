@@ -5,19 +5,22 @@
       <div v-if="channelList">
         <h2>チャンネル一覧</h2>
         <div v-for="(channel, index) in channelList" :key="index" class="m-2">
-          <img
-            :src="channel.thumbnail"
-            alt="Image"
-            class="img-thumbnail"
-            style="width: 200px"
-          />
-          <button
-            @click="goToChannelPage(channel.channelId)"
-            class="btn btn-info m-2"
-          >
-            チャンネルページへ
-          </button>
-          <JsonTable :data="channel" />
+          <div class="row">
+            <div class="col-md-3">
+              <img :src="channel.thumbnail" alt="Image" class="img-thumbnail" />
+            </div>
+            <div class="col-md-8">
+              <JsonTable :data="channel" />
+            </div>
+            <div class="col-md-1">
+              <button
+                @click="goToChannelPage(channel.channelId)"
+                class="btn btn-info m-2"
+              >
+                チャンネルページへ
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
