@@ -73,7 +73,7 @@
             動画ページへ
           </button>
           <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
-            {{ result.youtubeUrl }}
+            <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
           </a>
         </div>
       </div>
