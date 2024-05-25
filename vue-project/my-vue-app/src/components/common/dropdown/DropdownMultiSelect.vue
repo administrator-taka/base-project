@@ -7,7 +7,6 @@
     placeholder="Select options"
     label="name"
     track-by="value"
-    class="form-control"
   >
   </multiselect>
 </template>
