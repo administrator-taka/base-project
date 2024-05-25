@@ -11,6 +11,7 @@
       />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
       <div class="mb-3">
+        <h2>言語更新</h2>
         <form @submit.prevent="updateTranslationLanguage">
           <div class="row g-3">
             <div class="col-md-3">
@@ -37,7 +38,12 @@
           </button>
         </form>
       </div>
-
+      <div class="mb-3">
+        <h2>字幕データ更新</h2>
+        <button @click="downloadChannelSubtitles" class="btn btn-danger">
+          <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
+        </button>
+      </div>
       <!-- 検索フォームの追加 -->
       <div class="mb-3">
         <form @submit.prevent="search">
@@ -78,11 +84,6 @@
         </div>
       </div>
 
-      <div class="mb-3">
-        <button @click="downloadChannelSubtitles" class="btn btn-danger ms-2">
-          <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
-        </button>
-      </div>
       <PaginationComponent
         :currentPage="currentPage"
         :totalPages="totalPages"
@@ -91,7 +92,7 @@
 
       <div v-if="videoList">
         <h2>動画一覧(全{{ total }}件)</h2>
-        <button @click="toggleSubtitleFilter" class="btn btn-secondary ms-2">
+        <button @click="toggleSubtitleFilter" class="btn btn-secondary">
           字幕フィルターを切り替える
         </button>
         <div v-for="(video, index) in videoList" :key="index" class="mb-3">
