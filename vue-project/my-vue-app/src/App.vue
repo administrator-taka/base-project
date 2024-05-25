@@ -1,16 +1,15 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-auto sidebar">
+      <div>
         <Sidebar />
       </div>
-      <div class="col">
+      <div class="col-md-9">
         <router-view />
       </div>
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import Sidebar from '@/components/SidebarComponent.vue'
 
