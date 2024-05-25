@@ -8,7 +8,7 @@
             v-if="channelData && channelData.thumbnail"
             :src="channelData.thumbnail"
             alt="Image"
-            class="img-thumbnail"
+            class="img-thumbnail m-2"
           />
         </div>
         <div class="col-md-6">
@@ -100,22 +100,20 @@
         </button>
         <div v-for="(video, index) in videoList" :key="index" class="m-2">
           <div v-if="shouldDisplayVideo(video)">
-            <div class="row">
-              <div class="col-md-4">
-                <img :src="video.thumbnail" alt="Image" class="img-thumbnail" />
+            <RangeSelector @range-selected="goToVideoPage(video.videoId)">
+              <div class="row">
+                <div class="col-md-4">
+                  <img
+                    :src="video.thumbnail"
+                    alt="Image"
+                    class="img-thumbnail m-2"
+                  />
+                </div>
+                <div class="col-md-8">
+                  <JsonTable :data="video" />
+                </div>
               </div>
-              <div class="col-md-7">
-                <JsonTable :data="video" />
-              </div>
-              <div class="col-md-1">
-                <button
-                  @click="goToVideoPage(video.videoId)"
-                  class="btn btn-info m-2"
-                >
-                  動画詳細
-                </button>
-              </div>
-            </div>
+            </RangeSelector>
           </div>
         </div>
       </div>
@@ -132,13 +130,15 @@ import DropdownMultiSelect from '@/components/common/dropdown/DropdownMultiSelec
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { YouTubeLanguageLabel } from '@/enums/youtube-language'
 import JsonTable from '@/components/common/table/JsonTable.vue'
+import RangeSelector from '@/components/common/button/RangeSelector.vue'
 
 export default {
   components: {
     PaginationComponent,
     DropdownMultiSelect,
     DropdownSelect,
-    JsonTable
+    JsonTable,
+    RangeSelector
   },
   setup() {
     const route = useRoute()

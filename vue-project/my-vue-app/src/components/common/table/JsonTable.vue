@@ -1,31 +1,37 @@
 <template>
-  <table class="table m-2">
-    <tbody>
-      <tr v-for="(value, key) in data" :key="key">
-        <td>{{ key }}</td>
-        <td>
-          <div v-if="Array.isArray(value)">
-            <table v-if="isArrayOfObjects(value)" class="table table-sm">
-              <tr>
-                <th v-for="(val, k) in value[0]" :key="k">{{ k }}</th>
-              </tr>
-              <tr v-for="(val, index) in value" :key="index">
-                <td v-for="(item, k) in val" :key="k">{{ item }}</td>
-              </tr>
-            </table>
-            <div v-else>
-              <span v-for="(item, index) in value" :key="index">{{
-                item
-              }}</span>
-            </div>
-          </div>
-          <div v-else>
-            {{ value }}
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="row">
+    <div class="col">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+            <tr v-for="(value, key) in data" :key="key">
+              <td>{{ key }}</td>
+              <td style="word-break: break-word">
+                <div v-if="Array.isArray(value)">
+                  <table v-if="isArrayOfObjects(value)" class="table table-sm">
+                    <tr>
+                      <th v-for="(val, k) in value[0]" :key="k">{{ k }}</th>
+                    </tr>
+                    <tr v-for="(val, index) in value" :key="index">
+                      <td v-for="(item, k) in val" :key="k">{{ item }}</td>
+                    </tr>
+                  </table>
+                  <div v-else>
+                    <span v-for="(item, index) in value" :key="index">{{
+                      item
+                    }}</span>
+                  </div>
+                </div>
+                <div v-else>
+                  {{ value }}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

@@ -30,7 +30,7 @@
               <img
                 :src="subtitle.thumbnail"
                 alt="Image"
-                class="img-thumbnail"
+                class="img-thumbnail m-2"
               />
             </div>
             <div class="col-md-6">

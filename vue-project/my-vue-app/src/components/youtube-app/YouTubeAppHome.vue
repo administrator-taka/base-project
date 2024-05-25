@@ -5,22 +5,22 @@
       <div v-if="channelList">
         <h2>チャンネル一覧</h2>
         <div v-for="(channel, index) in channelList" :key="index" class="m-2">
-          <div class="row">
-            <div class="col-md-3">
-              <img :src="channel.thumbnail" alt="Image" class="img-thumbnail" />
+          <RangeSelector @range-selected="goToChannelPage(channel.channelId)">
+            <div class="row">
+              <div class="col-md-3">
+                <img
+                  :src="channel.thumbnail"
+                  alt="Image"
+                  class="img-thumbnail m-2"
+                />
+              </div>
+              <div class="col-md-9">
+                <div class="m-3">
+                  <JsonTable :data="channel" />
+                </div>
+              </div>
             </div>
-            <div class="col-md-8">
-              <JsonTable :data="channel" />
-            </div>
-            <div class="col-md-1">
-              <button
-                @click="goToChannelPage(channel.channelId)"
-                class="btn btn-info m-2"
-              >
-                チャンネル詳細
-              </button>
-            </div>
-          </div>
+          </RangeSelector>
         </div>
       </div>
 
@@ -44,9 +44,10 @@ import channelRepository from '@/api/repository/channelRepository'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import JsonTable from '@/components/common/table/JsonTable.vue'
+import RangeSelector from '@/components/common/button/RangeSelector.vue'
 
 export default {
-  components: { JsonTable },
+  components: { JsonTable, RangeSelector },
   setup() {
     const channelIds = ref([
       // 아이네
