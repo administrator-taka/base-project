@@ -466,8 +466,9 @@ class YoutubeDownloadService:
                 'published_at': video_id.published_at,
                 'thumbnail': video_id.thumbnail,
                 'infos': [{'language_code': info.language_code,
+                           'subtitle_type': info.subtitle_type,
                            'subtitle_status': info.subtitle_status,
-                           'subtitle_type': info.subtitle_type}
+                           }
                           for info in subtitle_infos]
             }
             video_list.append(video_info)

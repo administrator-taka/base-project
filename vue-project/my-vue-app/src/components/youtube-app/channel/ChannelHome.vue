@@ -214,7 +214,11 @@ export default {
 
     // videoが表示されるべきかどうかを判定する関数
     const shouldDisplayVideo = (video: {
-      infos: { languageCode: string; subtitleStatus: number }[]
+      infos: {
+        languageCode: string
+        subtitleType: number
+        subtitleStatus: number
+      }[]
     }) => {
       if (!video.infos) return false
 
@@ -222,12 +226,24 @@ export default {
       if (showSubtitles.value) {
         return (
           video.infos.some(
-            (info: { languageCode: string; subtitleStatus: number }) =>
-              info.languageCode === 'ko' && info.subtitleStatus === 1
+            (info: {
+              languageCode: string
+              subtitleType: number
+              subtitleStatus: number
+            }) =>
+              info.languageCode === selectedLanguageCode.value &&
+              info.subtitleStatus === 1 &&
+              info.subtitleType === 1
           ) &&
           video.infos.some(
-            (info: { languageCode: string; subtitleStatus: number }) =>
-              info.languageCode === 'ja' && info.subtitleStatus === 1
+            (info: {
+              languageCode: string
+              subtitleType: number
+              subtitleStatus: number
+            }) =>
+              info.languageCode === 'ja' &&
+              info.subtitleStatus === 1 &&
+              info.subtitleType === 1
           )
         )
       } else {
