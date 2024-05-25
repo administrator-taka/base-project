@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown">
     <button
-      class="btn btn-outline-secondary dropdown-toggle"
+      class="btn btn-light dropdown-toggle"
       type="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"

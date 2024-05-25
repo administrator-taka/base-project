@@ -21,4 +21,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+html body {
+  background-color: #5d6e73; /* カスタム背景色を適用 */
+}
+</style>

@@ -6,6 +6,7 @@
         v-if="channelData && channelData.thumbnail"
         :src="channelData.thumbnail"
         alt="Image"
+        class="img-thumbnail"
         style="width: 200px"
       />
       <JsonTable :data="channelData" />
