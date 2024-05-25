@@ -51,3 +51,8 @@ api のレスポンスで自動生成のものと、手動のものでファイ�
 
 Pinia
 https://zenn.dev/kiriyama/scraps/4e05acd94a4b10
+
+chat gpt の応答
+動画ごとに追加できる処理
+タイムスタンプ url を共通メソッドに
+学習ステータスを変更後の画面再読み込み

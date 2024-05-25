@@ -75,10 +75,11 @@ class YoutubeDownloadService:
             'subtitle_text_id': subtitle_translation.subtitle_text_id.subtitle_text_id,
             't_start_ms': subtitle_translation.subtitle_text_id.t_start_ms,
             'subtitle_text': subtitle_translation.subtitle_text_id.subtitle_text,
-            'language_code': subtitle_translation.language_code,
             'subtitle_translation_text': subtitle_translation.subtitle_translation_text,
             'subtitle_literal_translation_text': subtitle_translation.subtitle_literal_translation_text,
             'subtitle_translation_text_detail': subtitle_translation.subtitle_translation_text_detail,
+            'language_code': subtitle_translation.language_code,
+            'last_updated': learning_memory.last_updated,
             'learning_status': learning_memory.learning_status if learning_memory else 0,
         }
         return subtitle_text_data
