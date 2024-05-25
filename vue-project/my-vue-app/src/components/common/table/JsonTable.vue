@@ -1,5 +1,5 @@
 <template>
-  <table class="table mt-3 mb-3">
+  <table class="table m-2">
     <tbody>
       <tr v-for="(value, key) in data" :key="key">
         <td>{{ key }}</td>

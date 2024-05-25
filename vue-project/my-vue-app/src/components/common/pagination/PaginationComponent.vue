@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div class="m-2">
     <!-- ページングコントロール -->
     <nav aria-label="Page navigation example">
       <ul class="pagination">

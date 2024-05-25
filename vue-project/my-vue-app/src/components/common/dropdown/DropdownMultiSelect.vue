@@ -7,7 +7,7 @@
     placeholder="Select options"
     label="name"
     track-by="value"
-    class="mb-2 mt-2"
+    class="m-2"
   >
   </multiselect>
 </template>

@@ -4,7 +4,7 @@
       <h1>YouTubeアプリケーションホーム画面</h1>
       <div v-if="channelList">
         <h2>チャンネル一覧</h2>
-        <div v-for="(channel, index) in channelList" :key="index" class="mb-3">
+        <div v-for="(channel, index) in channelList" :key="index" class="m-2">
           <img
             :src="channel.thumbnail"
             alt="Image"

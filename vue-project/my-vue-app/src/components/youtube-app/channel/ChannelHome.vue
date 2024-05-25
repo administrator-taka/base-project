@@ -10,7 +10,7 @@
         style="width: 200px"
       />
       <JsonTable :data="channelData" />
-      <div class="mb-3">
+      <div class="m-2">
         <h2>言語更新</h2>
         <form @submit.prevent="updateTranslationLanguage">
           <div class="row g-3">
@@ -38,14 +38,14 @@
           </button>
         </form>
       </div>
-      <div class="mb-3">
+      <div class="m-2">
         <h2>字幕データ更新</h2>
         <button @click="downloadChannelSubtitles" class="btn btn-danger m-2">
           <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
         </button>
       </div>
       <!-- 検索フォームの追加 -->
-      <div class="mb-3">
+      <div class="m-2">
         <form @submit.prevent="search">
           <h2>出現箇所検索</h2>
           <div class="col-md-6">
@@ -68,7 +68,7 @@
       </div>
 
       <!-- 検索結果の表示 -->
-      <div v-if="searchResults" class="mb-3">
+      <div v-if="searchResults" class="m-2">
         <h2>検索結果</h2>
         <div v-for="(result, index) in searchResults" :key="index" class="mb-2">
           <JsonTable :data="result" />
@@ -95,7 +95,7 @@
         <button @click="toggleSubtitleFilter" class="btn btn-secondary m-2">
           字幕フィルターを切り替える
         </button>
-        <div v-for="(video, index) in videoList" :key="index" class="mb-3">
+        <div v-for="(video, index) in videoList" :key="index" class="m-2">
           <div v-if="shouldDisplayVideo(video)">
             <img :src="video.thumbnail" alt="Image" class="img-thumbnail" />
             <button

@@ -5,7 +5,7 @@
     :actionFunction="updateSubtitleTranslation"
   >
     <div class="container">
-      <div class="mb-3">
+      <div class="m-2">
         <label for="learningStatusDropdown" class="form-label"
           >学習ステータス</label
         >
@@ -39,7 +39,7 @@
           </a>
         </div>
       </div>
-      <div class="mb-3">
+      <div class="m-2">
         <label for="aaa" class="form-label">字幕</label>
         <input
           type="text"
@@ -48,7 +48,7 @@
           disabled
         />
       </div>
-      <div class="mb-3">
+      <div class="m-2">
         <label for="bbb" class="form-label">翻訳</label>
         <input
           type="text"
@@ -59,7 +59,7 @@
           disabled
         />
       </div>
-      <div class="mb-3">
+      <div class="m-2">
         <label for="subtitleLiteralTranslationText" class="form-label"
           >字幕翻訳テキスト</label
         >
@@ -70,7 +70,7 @@
           v-model="subtitleLiteralTranslationText"
         />
       </div>
-      <div class="mb-3">
+      <div class="m-2">
         <label for="subtitleTranslationTextDetail" class="form-label"
           >字幕翻訳詳細</label
         >
