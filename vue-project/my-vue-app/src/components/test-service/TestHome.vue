@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Sidebar />
     <main class="main-content">
       <div>test home（仮）</div>
       <div>↓API疎通確認</div>
@@ -33,7 +32,6 @@
 </template>
 
 <script lang="ts">
-import Sidebar from '@/components/SidebarComponent.vue'
 import testRepository from '@/api/repository/testRepository'
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
@@ -43,9 +41,7 @@ import videoRepository from '@/api/repository/videoRepository'
 import subtitleRepository from '@/api/repository/subtitleRepository'
 
 export default {
-  components: {
-    Sidebar
-  },
+  components: {},
   setup() {
     const result = ref()
     const djangoResult = ref()

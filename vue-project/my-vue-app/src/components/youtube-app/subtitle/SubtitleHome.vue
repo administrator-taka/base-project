@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Sidebar />
     <main class="main-content">
       <h1>字幕ホーム画面</h1>
     </main>
@@ -8,12 +7,8 @@
 </template>
 
 <script lang="ts">
-import Sidebar from '@/components/SidebarComponent.vue'
-
 export default {
-  components: {
-    Sidebar
-  },
+  components: {},
   setup() {
     return {}
   }

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Sidebar />
     <main class="main-content">
       <h1>言語学習記録確認画面</h1>
       <div class="row g-3">
@@ -52,7 +51,6 @@
 
 <script lang="ts">
 import learningLanguageMemoryRepository from '@/api/repository/learningLanguageMemoryRepository'
-import Sidebar from '@/components/SidebarComponent.vue'
 import { onMounted, ref, watch } from 'vue'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
 import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
@@ -62,7 +60,6 @@ import router from '@/router'
 
 export default {
   components: {
-    Sidebar,
     SubtitleDetailModal,
     DropdownSelect
   },

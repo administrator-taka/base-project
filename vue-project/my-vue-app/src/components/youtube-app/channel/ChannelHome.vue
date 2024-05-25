@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Sidebar />
     <main class="main-content">
       <h1>チャンネルホーム画面</h1>
       <img
@@ -114,7 +113,6 @@
 </template>
 
 <script lang="ts">
-import Sidebar from '@/components/SidebarComponent.vue'
 import channelRepository from '@/api/repository/channelRepository'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -126,7 +124,6 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 
 export default {
   components: {
-    Sidebar,
     PaginationComponent,
     DropdownMultiSelect,
     DropdownSelect,

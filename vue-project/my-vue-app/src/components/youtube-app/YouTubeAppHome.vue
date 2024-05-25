@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Sidebar />
     <main class="main-content">
       <h1>YouTubeアプリケーションホーム画面</h1>
       <div v-if="channelList">
@@ -39,14 +38,11 @@
 
 <script lang="ts">
 import channelRepository from '@/api/repository/channelRepository'
-import Sidebar from '@/components/SidebarComponent.vue'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
-  components: {
-    Sidebar
-  },
+  components: {},
   setup() {
     const channelIds = ref([
       // 아이네

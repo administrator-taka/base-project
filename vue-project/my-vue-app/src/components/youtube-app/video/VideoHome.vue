@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Sidebar />
     <main class="main-content">
       <h1>動画ホーム画面</h1>
       <!-- <img
@@ -60,7 +59,6 @@
 </template>
 
 <script lang="ts">
-import Sidebar from '@/components/SidebarComponent.vue'
 import videoRepository from '@/api/repository/videoRepository'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
 
@@ -69,7 +67,6 @@ import { useRoute } from 'vue-router'
 
 export default {
   components: {
-    Sidebar,
     SubtitleDetailModal
   },
   setup() {

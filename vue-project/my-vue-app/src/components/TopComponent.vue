@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Sidebar />
     <main class="main-content">
       <div>トップ画面（仮）</div>
     </main>
@@ -8,12 +7,8 @@
 </template>
 
 <script lang="ts">
-import Sidebar from '@/components/SidebarComponent.vue' // SidebarComponent.vue をインポート
-
 export default {
-  components: {
-    Sidebar // コンポーネントを登録
-  }
+  components: {}
 }
 </script>
 
