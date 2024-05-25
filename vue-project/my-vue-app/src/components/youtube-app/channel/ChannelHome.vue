@@ -33,14 +33,14 @@
               />
             </div>
           </div>
-          <button type="submit" class="btn btn-danger mt-2">
+          <button type="submit" class="btn btn-danger m-2">
             <i class="bi bi-exclamation-triangle"></i> 言語更新
           </button>
         </form>
       </div>
       <div class="mb-3">
         <h2>字幕データ更新</h2>
-        <button @click="downloadChannelSubtitles" class="btn btn-danger">
+        <button @click="downloadChannelSubtitles" class="btn btn-danger m-2">
           <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
         </button>
       </div>
@@ -59,7 +59,7 @@
           </div>
           <button
             type="submit"
-            class="btn btn-primary mt-2"
+            class="btn btn-primary m-2"
             :disabled="!searchWord"
           >
             <i class="bi bi-search"></i> 検索
@@ -74,7 +74,7 @@
           <JsonTable :data="result" />
           <button
             @click="goToVideoPage(result.videoId)"
-            class="btn btn-info mt-2"
+            class="btn btn-info m-2"
           >
             動画ページへ
           </button>
@@ -92,7 +92,7 @@
 
       <div v-if="videoList">
         <h2>動画一覧(全{{ total }}件)</h2>
-        <button @click="toggleSubtitleFilter" class="btn btn-secondary">
+        <button @click="toggleSubtitleFilter" class="btn btn-secondary m-2">
           字幕フィルターを切り替える
         </button>
         <div v-for="(video, index) in videoList" :key="index" class="mb-3">
@@ -100,7 +100,7 @@
             <img :src="video.thumbnail" alt="Image" class="img-thumbnail" />
             <button
               @click="goToVideoPage(video.videoId)"
-              class="btn btn-info mt-2"
+              class="btn btn-info m-2"
             >
               動画ページへ
             </button>

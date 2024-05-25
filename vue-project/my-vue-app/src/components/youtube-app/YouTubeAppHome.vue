@@ -13,7 +13,7 @@
           />
           <button
             @click="goToChannelPage(channel.channelId)"
-            class="btn btn-info mt-2"
+            class="btn btn-info m-2"
           >
             チャンネルページへ
           </button>
@@ -25,7 +25,7 @@
       <ul>
         <li v-for="(channelId, index) in channelIds" :key="index">
           <button
-            class="btn btn-secondary mt-2"
+            class="btn btn-secondary m-2"
             @click="goToChannelPage(channelId)"
           >
             {{ channelId }}

@@ -4,7 +4,7 @@
       <div>
         <Sidebar />
       </div>
-      <div class="col-md-9 mt-3 mb-3">
+      <div class="col-md-9 mt-3">
         <router-view />
       </div>
     </div>

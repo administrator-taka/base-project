@@ -28,14 +28,17 @@
           <img :src="subtitle.thumbnail" alt="Image" class="img-thumbnail" />
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary m-2"
             @click="openModal(subtitle.subtitleTextId, subtitle.languageCode)"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
             字幕詳細
           </button>
-          <button @click="goToVideoPage(subtitle.videoId)" class="btn btn-info">
+          <button
+            @click="goToVideoPage(subtitle.videoId)"
+            class="btn btn-info m-2"
+          >
             動画ページへ
           </button>
           <JsonTable :data="subtitle" />
