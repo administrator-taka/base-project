@@ -10,6 +10,7 @@
         style="width: 200px"
       />
       <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
+      <JsonTable :data="channelData" />
       <div class="mb-3">
         <h2>言語更新</h2>
         <form @submit.prevent="updateTranslationLanguage">
@@ -121,13 +122,15 @@ import PaginationComponent from '@/components/common/pagination/PaginationCompon
 import DropdownMultiSelect from '@/components/common/dropdown/DropdownMultiSelect.vue'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { YouTubeLanguageLabel } from '@/enums/youtube-language'
+import JsonTable from '@/components/common/table/JsonTable.vue'
 
 export default {
   components: {
     Sidebar,
     PaginationComponent,
     DropdownMultiSelect,
-    DropdownSelect
+    DropdownSelect,
+    JsonTable
   },
   setup() {
     const route = useRoute()
