@@ -17,7 +17,7 @@
                 @click="goToChannelPage(channel.channelId)"
                 class="btn btn-info m-2"
               >
-                チャンネルページへ
+                チャンネル詳細
               </button>
             </div>
           </div>

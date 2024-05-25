@@ -76,7 +76,7 @@
             @click="goToVideoPage(result.videoId)"
             class="btn btn-info m-2"
           >
-            動画ページへ
+            動画詳細
           </button>
           <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
             <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
@@ -109,7 +109,7 @@
                   @click="goToVideoPage(video.videoId)"
                   class="btn btn-info m-2"
                 >
-                  動画ページへ
+                  動画詳細
                 </button>
               </div>
             </div>

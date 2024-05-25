@@ -25,23 +25,37 @@
       <div v-if="learningSubtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in learningSubtitleList" :key="index">
-          <img :src="subtitle.thumbnail" alt="Image" class="img-thumbnail" />
-          <button
-            type="button"
-            class="btn btn-primary m-2"
-            @click="openModal(subtitle.subtitleTextId, subtitle.languageCode)"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-          >
-            字幕詳細
-          </button>
-          <button
-            @click="goToVideoPage(subtitle.videoId)"
-            class="btn btn-info m-2"
-          >
-            動画ページへ
-          </button>
-          <JsonTable :data="subtitle" />
+          <div class="row">
+            <div class="col-md-4">
+              <img
+                :src="subtitle.thumbnail"
+                alt="Image"
+                class="img-thumbnail"
+              />
+            </div>
+            <div class="col-md-6">
+              <JsonTable :data="subtitle" />
+            </div>
+            <div class="col-md-2">
+              <button
+                type="button"
+                class="btn btn-primary m-2"
+                @click="
+                  openModal(subtitle.subtitleTextId, subtitle.languageCode)
+                "
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                字幕詳細
+              </button>
+              <button
+                @click="goToVideoPage(subtitle.videoId)"
+                class="btn btn-info m-2"
+              >
+                動画詳細
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <SubtitleDetailModal
