@@ -14,7 +14,7 @@
           v-model="selectedLearningStatus"
         />
       </div>
-      <pre>{{ JSON.stringify(subtitleTextData, null, 2) }}</pre>
+      <JsonTable :data="subtitleTextData" />
       <div v-if="subtitleTextData">
         <label for="aaa" class="form-label">タイムスタンプ付き動画リンク</label>
         <div>
@@ -91,12 +91,14 @@ import BaseModal from '@/components/common/modal/BaseModal.vue'
 import subtitleRepository from '@/api/repository/subtitleRepository'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { LearningStatusLabel } from '@/enums/learning-status'
+import JsonTable from '@/components/common/table/JsonTable.vue'
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
   components: {
     BaseModal,
-    DropdownSelect
+    DropdownSelect,
+    JsonTable
   },
   props: {
     subtitleTextId: {

@@ -38,7 +38,7 @@
           <button @click="goToVideoPage(subtitle.videoId)" class="btn btn-info">
             動画ページへ
           </button>
-          <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
+          <JsonTable :data="subtitle" />
         </div>
       </div>
       <SubtitleDetailModal
@@ -57,11 +57,13 @@ import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
 import { LearningStatus, LearningStatusLabel } from '@/enums/learning-status'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import router from '@/router'
+import JsonTable from '@/components/common/table/JsonTable.vue'
 
 export default {
   components: {
     SubtitleDetailModal,
-    DropdownSelect
+    DropdownSelect,
+    JsonTable
   },
   setup() {
     const learningSubtitleList = ref()

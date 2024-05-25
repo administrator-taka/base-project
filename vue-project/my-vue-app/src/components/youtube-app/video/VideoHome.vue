@@ -27,11 +27,11 @@
           {{ 'https://youtu.be/' + videoData.videoId }}
         </a>
       </div>
-      <pre>{{ JSON.stringify(videoData, null, 2) }}</pre>
+      <JsonTable :data="videoData" />
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in subtitleList" :key="index">
-          <pre>{{ JSON.stringify(subtitle, null, 2) }}</pre>
+          <JsonTable :data="subtitle" />
           <div
             v-for="(subtitleText, index) in subtitle.translations"
             :key="index"
@@ -61,13 +61,15 @@
 <script lang="ts">
 import videoRepository from '@/api/repository/videoRepository'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
+import JsonTable from '@/components/common/table/JsonTable.vue'
 
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 export default {
   components: {
-    SubtitleDetailModal
+    SubtitleDetailModal,
+    JsonTable
   },
   setup() {
     const route = useRoute()

@@ -8,7 +8,6 @@
         alt="Image"
         style="width: 200px"
       />
-      <pre>{{ JSON.stringify(channelData, null, 2) }}</pre>
       <JsonTable :data="channelData" />
       <div class="mb-3">
         <h2>言語更新</h2>
@@ -71,7 +70,7 @@
       <div v-if="searchResults" class="mb-3">
         <h2>検索結果</h2>
         <div v-for="(result, index) in searchResults" :key="index" class="mb-2">
-          <pre>{{ JSON.stringify(result, null, 2) }}</pre>
+          <JsonTable :data="result" />
           <button
             @click="goToVideoPage(result.videoId)"
             class="btn btn-info mt-2"
@@ -104,7 +103,7 @@
             >
               動画ページへ
             </button>
-            <pre>{{ JSON.stringify(video, null, 2) }}</pre>
+            <JsonTable :data="video" />
           </div>
         </div>
       </div>

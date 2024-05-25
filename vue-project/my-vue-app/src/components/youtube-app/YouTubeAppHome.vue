@@ -17,7 +17,7 @@
           >
             チャンネルページへ
           </button>
-          <pre>{{ JSON.stringify(channel, null, 2) }}</pre>
+          <JsonTable :data="channel" />
         </div>
       </div>
 
@@ -40,9 +40,10 @@
 import channelRepository from '@/api/repository/channelRepository'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import JsonTable from '@/components/common/table/JsonTable.vue'
 
 export default {
-  components: {},
+  components: { JsonTable },
   setup() {
     const channelIds = ref([
       // 아이네
