@@ -208,7 +208,7 @@ class YoutubeDownloadService:
             logging.debug(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
             result_dict = {
                 "video_id": result.subtitle_id.video_id_id,
-                "start_time_ms": result.t_start_ms,
+                "t_start_ms": result.t_start_ms,
                 "subtitle_text": result.subtitle_text,
                 "youtube_url": f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms"
             }
