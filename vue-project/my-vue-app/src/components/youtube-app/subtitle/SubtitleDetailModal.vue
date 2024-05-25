@@ -111,7 +111,7 @@ export default defineComponent({
     const subtitleTextData = ref()
 
     const learningStatus = LearningStatusLabel
-    const selectedLearningStatus = ref(0)
+    const selectedLearningStatus = ref()
 
     const getSubtitleTextData = async () => {
       subtitleRepository
