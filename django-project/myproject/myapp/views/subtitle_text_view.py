@@ -42,7 +42,7 @@ def update_subtitle_translation(request, subtitle_text_id):
 
     # JSONレスポンスを作成
     data = {
-        "response": "response"
+        "status": 0
     }
 
     return JsonResponse(data=data, status=200)
@@ -63,7 +63,7 @@ def insert_or_update_subtitle_learning_memory(request, subtitle_text_id):
 
     # JSONレスポンスを作成
     data = {
-        "response": "response"
+        "status": 0
     }
 
     return JsonResponse(data=data, status=200)

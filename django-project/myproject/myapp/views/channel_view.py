@@ -121,7 +121,7 @@ def update_translation_language(request, channel_id):
 
     # JSONレスポンスを作成
     data = {
-        "response": "response"
+        "status": 0
     }
 
     return JsonResponse(data=data, status=200)
