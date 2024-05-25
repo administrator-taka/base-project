@@ -3,7 +3,7 @@
     <Sidebar />
     <main class="main-content">
       <h1>動画ホーム画面</h1>
-      <img
+      <!-- <img
         v-if="videoData && videoData.thumbnail"
         :src="
           'https://img.youtube.com/vi/' +
@@ -11,8 +11,7 @@
           '/maxresdefault.jpg'
         "
         alt="Image"
-      />
-      <pre>{{ JSON.stringify(videoData, null, 2) }}</pre>
+      /> -->
       <div v-if="videoData && videoData.videoId">
         <div>
           <iframe
@@ -29,6 +28,7 @@
           {{ 'https://youtu.be/' + videoData.videoId }}
         </a>
       </div>
+      <pre>{{ JSON.stringify(videoData, null, 2) }}</pre>
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in subtitleList" :key="index">
