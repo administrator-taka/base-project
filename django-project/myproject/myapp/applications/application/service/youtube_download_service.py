@@ -496,6 +496,14 @@ class YoutubeDownloadService:
 
         # 各言語のターゲット字幕について翻訳を挿入
         for language in translation_languages:
+            # 値が既に存在する場合はreturn
+            if SubtitleTranslation.objects.filter(
+                    subtitle_text_id__subtitle_id__video_id=video_id,
+                    language_code=language.value
+            ).exists():
+                logging.debug(f"字幕解説登録済み")
+                return
+
             # 各言語のターゲット字幕を取得
             target_subtitles = VideoSubtitle.objects.filter(
                 subtitle_id__subtitle_type=SubtitleType.MANUAL.value,
