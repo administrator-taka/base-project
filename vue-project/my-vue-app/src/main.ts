@@ -7,6 +7,11 @@ import '@/assets/main.scss'
 import store from './store'
 import { createPinia } from 'pinia'
 import { createPersistedState } from 'pinia-plugin-persistedstate'
+
+
+// https://icons.getbootstrap.jp/
+import 'bootstrap-icons/font/bootstrap-icons.css'
+
 const app = createApp(App)
 
 const pinia = createPinia()

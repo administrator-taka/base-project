@@ -32,7 +32,9 @@
               />
             </div>
           </div>
-          <button type="submit" class="btn btn-danger mt-2">言語更新</button>
+          <button type="submit" class="btn btn-danger mt-2">
+            <i class="bi bi-exclamation-triangle"></i> 言語更新
+          </button>
         </form>
       </div>
 
@@ -54,7 +56,7 @@
             class="btn btn-primary mt-2"
             :disabled="!searchWord"
           >
-            検索
+            <i class="bi bi-search"></i> 検索
           </button>
         </form>
       </div>
@@ -78,7 +80,7 @@
 
       <div class="mb-3">
         <button @click="downloadChannelSubtitles" class="btn btn-danger ms-2">
-          字幕をダウンロード
+          <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
         </button>
       </div>
       <PaginationComponent

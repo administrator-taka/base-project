@@ -16,25 +16,28 @@
       </div>
       <pre>{{ JSON.stringify(subtitleTextData, null, 2) }}</pre>
       <div v-if="subtitleTextData">
-        <a
-          :href="
-            'https://www.youtube.com/watch?v=' +
-            subtitleTextData.videoId +
-            '&t=' +
-            subtitleTextData.tStartMs +
-            'ms'
-          "
-          target="_blank"
-          class="btn btn-link"
-        >
-          {{
-            'https://www.youtube.com/watch?v=' +
-            subtitleTextData.videoId +
-            '&t=' +
-            subtitleTextData.tStartMs +
-            'ms'
-          }}
-        </a>
+        <label for="aaa" class="form-label">タイムスタンプ付き動画リンク</label>
+        <div>
+          <a
+            :href="
+              'https://www.youtube.com/watch?v=' +
+              subtitleTextData.videoId +
+              '&t=' +
+              subtitleTextData.tStartMs +
+              'ms'
+            "
+            target="_blank"
+            class="btn btn-link"
+            ><i class="bi bi-youtube"></i>
+            {{
+              'https://www.youtube.com/watch?v=' +
+              subtitleTextData.videoId +
+              '&t=' +
+              subtitleTextData.tStartMs +
+              'ms'
+            }}
+          </a>
+        </div>
       </div>
       <div class="mb-3">
         <label for="aaa" class="form-label">字幕</label>
