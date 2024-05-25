@@ -104,3 +104,7 @@ LIMIT 100
 SELECT relname,n_live_tup
 FROM pg_stat_user_tables
 WHERE n_live_tup > 0;
+
+--動画情報更新用
+update video_detail
+set e_tag='test';
