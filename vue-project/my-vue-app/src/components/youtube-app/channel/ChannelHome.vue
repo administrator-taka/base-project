@@ -32,7 +32,7 @@
               />
             </div>
           </div>
-          <button type="submit" class="btn btn-primary mt-2">言語更新</button>
+          <button type="submit" class="btn btn-danger mt-2">言語更新</button>
         </form>
       </div>
 
