@@ -131,6 +131,8 @@ export default defineComponent({
         })
     }
 
+    const updateCancelFlag = ref(false)
+
     const updateSubtitleTranslation = async () => {
       subtitleRepository
         .updateSubtitleTranslation(
@@ -167,13 +169,19 @@ export default defineComponent({
 
     watchEffect(() => {
       if (props.subtitleTextId && props.languageCode) {
+        updateCancelFlag.value = true
         getSubtitleTextData()
       }
     })
 
     // selectedLearningStatusの変更を監視し、変更があるたびに関数を実行
     watch(selectedLearningStatus, () => {
-      updateLearningStatus()
+      // 別モーダルからの遷移で更新しないように修正
+      if (updateCancelFlag.value) {
+        updateCancelFlag.value = false
+      } else {
+        updateLearningStatus()
+      }
     })
 
     return {
