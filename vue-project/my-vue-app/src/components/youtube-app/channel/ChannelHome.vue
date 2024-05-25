@@ -97,14 +97,22 @@
         </button>
         <div v-for="(video, index) in videoList" :key="index" class="m-2">
           <div v-if="shouldDisplayVideo(video)">
-            <img :src="video.thumbnail" alt="Image" class="img-thumbnail" />
-            <button
-              @click="goToVideoPage(video.videoId)"
-              class="btn btn-info m-2"
-            >
-              動画ページへ
-            </button>
-            <JsonTable :data="video" />
+            <div class="row">
+              <div class="col-md-4">
+                <img :src="video.thumbnail" alt="Image" class="img-thumbnail" />
+              </div>
+              <div class="col-md-7">
+                <JsonTable :data="video" />
+              </div>
+              <div class="col-md-1">
+                <button
+                  @click="goToVideoPage(video.videoId)"
+                  class="btn btn-info m-2"
+                >
+                  動画ページへ
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
