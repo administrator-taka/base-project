@@ -206,7 +206,7 @@ class YouTubeApiLogic:
             title = item.get("snippet", {}).get("title")
             published_at = item.get("snippet", {}).get("publishedAt")
             description = item.get("snippet", {}).get("description")
-            thumbnail = item.get("snippet", {}).get("thumbnails", {}).get("high", {}).get("url")
+            thumbnail = self.get_thumbnail_url(item)
             channel_id = item.get("snippet", {}).get("channelId")
             channel_title = item.get("snippet", {}).get("channelTitle")
 
@@ -226,6 +226,32 @@ class YouTubeApiLogic:
                 })
 
         return videos
+
+    def get_thumbnail_url(self,item):
+        snippet = item.get("snippet", {})
+        thumbnails = snippet.get("thumbnails", {})
+
+        maxres = thumbnails.get("maxres", {}).get("url")
+        if maxres:
+            return maxres
+
+        standard = thumbnails.get("standard", {}).get("url")
+        if standard:
+            return standard
+
+        high = thumbnails.get("high", {}).get("url")
+        if high:
+            return high
+
+        medium = thumbnails.get("medium", {}).get("url")
+        if medium:
+            return medium
+
+        default = thumbnails.get("default", {}).get("url")
+        if default:
+            return default
+
+        return None  # サムネイルが全て存在しない場合
 
     # 動画の字幕情報を取得するメソッド
     @retry_on_quota_exceeded
