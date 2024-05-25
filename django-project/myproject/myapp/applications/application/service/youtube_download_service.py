@@ -33,11 +33,11 @@ class YoutubeDownloadService:
         channel_list = []
         for channel_translation_info in channel_translation_infos:
             channel_data = {
-                'channel_id': channel_translation_info.channel_id.channel_id,
                 'title': channel_translation_info.channel_id.title,
-                'thumbnail': channel_translation_info.channel_id.thumbnail,
+                'channel_id': channel_translation_info.channel_id.channel_id,
                 'default_audio_language': channel_translation_info.default_audio_language,
                 'translation_languages': channel_translation_info.translation_languages,
+                'thumbnail': channel_translation_info.channel_id.thumbnail,
             }
             channel_list.append(channel_data)
         return channel_list
@@ -222,51 +222,51 @@ class YoutubeDownloadService:
             video_detail = VideoDetail.objects.get(video_id=video_id)
             if video_detail.initial_flag:
                 video_detail_dict = {
-                    'video_id': video_detail.video_id,
                     'title': video_detail.title,
-                    'published_at': video_detail.published_at,
                     'description': video_detail.description,
-                    'thumbnail': video_detail.thumbnail,
+                    'video_id': video_detail.video_id,
+                    'published_at': video_detail.published_at,
                     'channel_id': video_detail.channel_id.channel_id,
                     'default_language': video_detail.default_language,
                     'default_audio_language': video_detail.default_audio_language,
                     'actual_start_time': video_detail.actual_start_time,
                     'actual_end_time': video_detail.actual_end_time,
-                    'scheduled_start_time': video_detail.scheduled_start_time
+                    'scheduled_start_time': video_detail.scheduled_start_time,
+                    'thumbnail': video_detail.thumbnail,
                 }
                 logging.debug("動画最新")
             else:
                 video_data = self.youtube_api_logic.get_video_details_data(video_id)
                 self.insert_video_data(video_data)
                 video_detail_dict = {
-                    'video_id': video_detail.video_id,
                     'title': video_detail.title,
-                    'published_at': video_detail.published_at,
                     'description': video_detail.description,
-                    'thumbnail': video_detail.thumbnail,
+                    'video_id': video_detail.video_id,
+                    'published_at': video_detail.published_at,
                     'channel_id': video_detail.channel_id.channel_id,
                     'default_language': video_detail.default_language,
                     'default_audio_language': video_detail.default_audio_language,
                     'actual_start_time': video_detail.actual_start_time,
                     'actual_end_time': video_detail.actual_end_time,
-                    'scheduled_start_time': video_detail.scheduled_start_time
+                    'scheduled_start_time': video_detail.scheduled_start_time,
+                    'thumbnail': video_detail.thumbnail,
                 }
                 logging.debug("動画更新")
         except VideoDetail.DoesNotExist:
             video_data = self.youtube_api_logic.get_video_details_data(video_id)
             if video_data:
                 video_detail_dict = {
-                    'video_id': video_data['video_id'],
                     'title': video_data['title'],
-                    'published_at': video_data['published_at'],
                     'description': video_data['description'],
-                    'thumbnail': video_data['thumbnail'],
+                    'video_id': video_data['video_id'],
+                    'published_at': video_data['published_at'],
                     'channel_id': video_data['channel_id'],
                     'default_language': video_data['default_language'],
                     'default_audio_language': video_data['default_audio_language'],
                     'actual_start_time': video_data['actual_start_time'],
                     'actual_end_time': video_data['actual_end_time'],
-                    'scheduled_start_time': video_data['scheduled_start_time']
+                    'scheduled_start_time': video_data['scheduled_start_time'],
+                    'thumbnail': video_data['thumbnail'],
                 }
             logging.debug("動画なし")
 
@@ -336,16 +336,16 @@ class YoutubeDownloadService:
         if channel_detail:
             channel_translation_info = ChannelTranslationInfo.objects.filter(channel_id=channel_detail).first()
             channel_data = {
-                'channel_id': channel_detail.channel_id,
-                'playlist_id': channel_detail.playlist_id,
                 'title': channel_detail.title,
                 'description': channel_detail.description,
+                'channel_id': channel_detail.channel_id,
+                'playlist_id': channel_detail.playlist_id,
                 'custom_url': channel_detail.custom_url,
                 'published_at': channel_detail.published_at,
-                'thumbnail': channel_detail.thumbnail,
                 'country': channel_detail.country,
                 'default_audio_language': channel_translation_info.default_audio_language if channel_translation_info else None,
-                'translation_languages': channel_translation_info.translation_languages if channel_translation_info else None
+                'translation_languages': channel_translation_info.translation_languages if channel_translation_info else None,
+                'thumbnail': channel_detail.thumbnail,
             }
         else:
             # チャンネル情報が見つからない場合は空の辞書を返す
@@ -461,10 +461,10 @@ class YoutubeDownloadService:
             # ビデオごとの情報をクエリ
             subtitle_infos = VideoSubtitleInfo.objects.filter(video_id=video_id.video_id)
             video_info = {
-                'video_id': video_id.video_id,
                 'title': video_id.title,
-                'thumbnail': video_id.thumbnail,
+                'video_id': video_id.video_id,
                 'published_at': video_id.published_at,
+                'thumbnail': video_id.thumbnail,
                 'infos': [{'language_code': info.language_code,
                            'subtitle_status': info.subtitle_status,
                            'subtitle_type': info.subtitle_type}
