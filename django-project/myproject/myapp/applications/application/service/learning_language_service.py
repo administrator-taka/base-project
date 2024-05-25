@@ -18,15 +18,15 @@ class LearningLanguageService:
         for subtitle_learning_memory in subtitle_learning_memorys:
             subtitle_text_data = {
                 'video_id': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_id.video_id.video_id,
-                'thumbnail': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_id.video_id.thumbnail,
                 'subtitle_text_id': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_text_id,
                 't_start_ms': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.t_start_ms,
                 'subtitle_text': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_text,
-                'language_code': subtitle_learning_memory.subtitle_translation_text_id.language_code,
                 'subtitle_translation_text': subtitle_learning_memory.subtitle_translation_text_id.subtitle_translation_text,
                 'subtitle_literal_translation_text': subtitle_learning_memory.subtitle_translation_text_id.subtitle_literal_translation_text,
                 'subtitle_translation_text_detail': subtitle_learning_memory.subtitle_translation_text_id.subtitle_translation_text_detail,
+                'language_code': subtitle_learning_memory.subtitle_translation_text_id.language_code,
                 'last_updated': subtitle_learning_memory.last_updated,
+                'thumbnail': subtitle_learning_memory.subtitle_translation_text_id.subtitle_text_id.subtitle_id.video_id.thumbnail,
             }
             learning_subtitle_list.append(subtitle_text_data)
         return learning_subtitle_list

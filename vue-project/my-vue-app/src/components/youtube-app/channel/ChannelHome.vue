@@ -2,48 +2,51 @@
   <div>
     <main class="main-content">
       <h1>チャンネルホーム画面</h1>
-      <img
-        v-if="channelData && channelData.thumbnail"
-        :src="channelData.thumbnail"
-        alt="Image"
-        class="img-thumbnail"
-        style="width: 200px"
-      />
-      <JsonTable :data="channelData" />
-      <div class="m-2">
-        <h2>言語更新</h2>
-        <form @submit.prevent="updateTranslationLanguage">
-          <div class="row g-3">
-            <div class="col-md-3">
-              <label for="languageCodeDropdown" class="form-label"
-                >デフォルト言語</label
-              >
-              <DropdownSelect
-                :options="languageCode"
-                v-model="selectedLanguageCode"
-              />
+      <div class="row">
+        <div class="col-md-3">
+          <img
+            v-if="channelData && channelData.thumbnail"
+            :src="channelData.thumbnail"
+            alt="Image"
+            class="img-thumbnail"
+          />
+        </div>
+        <div class="col-md-6">
+          <h2>言語更新</h2>
+          <form @submit.prevent="updateTranslationLanguage">
+            <div class="row g-3">
+              <div class="col">
+                <label for="languageCodeDropdown" class="form-label"
+                  >デフォルト言語</label
+                >
+                <DropdownSelect
+                  :options="languageCode"
+                  v-model="selectedLanguageCode"
+                />
+              </div>
+              <div class="col">
+                <label for="languageCodeDropdown" class="form-label"
+                  >学習言語</label
+                >
+                <DropdownMultiSelect
+                  :options="languageCode"
+                  v-model="selectedLanguageCodeList"
+                />
+              </div>
             </div>
-            <div class="col-md-3">
-              <label for="languageCodeDropdown" class="form-label"
-                >学習言語</label
-              >
-              <DropdownMultiSelect
-                :options="languageCode"
-                v-model="selectedLanguageCodeList"
-              />
-            </div>
-          </div>
-          <button type="submit" class="btn btn-danger m-2">
-            <i class="bi bi-exclamation-triangle"></i> 言語更新
+            <button type="submit" class="btn btn-danger m-2">
+              <i class="bi bi-exclamation-triangle"></i> 言語更新
+            </button>
+          </form>
+        </div>
+        <div class="col-md-3">
+          <h2>字幕データ更新</h2>
+          <button @click="downloadChannelSubtitles" class="btn btn-danger m-2">
+            <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
           </button>
-        </form>
+        </div>
       </div>
-      <div class="m-2">
-        <h2>字幕データ更新</h2>
-        <button @click="downloadChannelSubtitles" class="btn btn-danger m-2">
-          <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
-        </button>
-      </div>
+      <JsonTable :data="channelData" />
       <!-- 検索フォームの追加 -->
       <div class="m-2">
         <form @submit.prevent="search">
