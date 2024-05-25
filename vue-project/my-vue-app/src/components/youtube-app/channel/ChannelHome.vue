@@ -110,7 +110,9 @@
                   />
                 </div>
                 <div class="col-md-8">
-                  <JsonTable :data="video" />
+                  <div class="m-3">
+                    <JsonTable :data="video" />
+                  </div>
                 </div>
               </div>
             </RangeSelector>
