@@ -4,7 +4,7 @@
       <div>
         <Sidebar />
       </div>
-      <div class="col-md-9">
+      <div class="col-md-9 mt-3 mb-3">
         <router-view />
       </div>
     </div>
@@ -21,8 +21,4 @@ export default {
 }
 </script>
 
-<style>
-html body {
-  background-color: #5d6e73; /* カスタム背景色を適用 */
-}
-</style>
+<style></style>
