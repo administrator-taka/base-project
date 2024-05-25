@@ -1,11 +1,5 @@
 <template>
-  <table class="table table-primary mt-3 mb-3">
-    <thead>
-      <tr>
-        <th scope="col">Key</th>
-        <th scope="col">Value</th>
-      </tr>
-    </thead>
+  <table class="table mt-3 mb-3">
     <tbody>
       <tr v-for="(value, key) in data" :key="key">
         <td>{{ key }}</td>
@@ -53,19 +47,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.table-primary {
-  background-color: #d1ecf1;
-  color: #0c5460;
-}
-
-.table-primary th,
-.table-primary td {
-  border-color: #bee5eb;
-}
-
-.table-primary thead th {
-  background-color: #0c5460;
-  color: white;
-}
-</style>
+<style scoped></style>
