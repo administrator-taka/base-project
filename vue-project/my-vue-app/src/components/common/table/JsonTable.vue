@@ -1,5 +1,5 @@
 <template>
-  <table class="table table-primary">
+  <table class="table table-primary mt-3 mb-3">
     <thead>
       <tr>
         <th scope="col">Key</th>
