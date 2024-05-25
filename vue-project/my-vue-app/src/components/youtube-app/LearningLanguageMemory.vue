@@ -5,7 +5,9 @@
       <h1>言語学習記録確認画面</h1>
       <div class="row g-3">
         <div class="col-md-3">
-          <label for="languageCodeDropdown" class="form-label">学習言語</label>
+          <label for="languageCodeDropdown" class="form-label"
+            ><i class="bi bi-globe"></i> 学習言語</label
+          >
           <DropdownSelect
             :options="languageCode"
             v-model="selectedLanguageCode"
@@ -13,7 +15,7 @@
         </div>
         <div class="col-md-3">
           <label for="learningStatusDropdown" class="form-label"
-            >学習ステータス</label
+            ><i class="bi bi-pencil"></i> 学習ステータス</label
           >
           <DropdownSelect
             :options="learningStatus"
