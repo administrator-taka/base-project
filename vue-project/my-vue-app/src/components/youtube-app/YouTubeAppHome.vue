@@ -69,7 +69,9 @@ export default {
       // Petra Gurin
       'UCgA2jKRkqpY_8eysPUs8sjw',
       // 	hololive English
-      'UCotXwY6s8pWmuWd_snKYjhg'
+      'UCotXwY6s8pWmuWd_snKYjhg',
+      // hololive Indonesia
+      'UCfrWoRGlawPQDQxxeIDRP0Q'
     ])
     const router = useRouter()
 
