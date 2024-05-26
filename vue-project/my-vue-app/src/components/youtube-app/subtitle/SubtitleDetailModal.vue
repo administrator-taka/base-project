@@ -14,7 +14,7 @@
           v-model="selectedLearningStatus"
         />
       </div>
-      <JsonTable :data="subtitleTextData" />
+      <JsonTable v-if="subtitleTextData" :data="subtitleTextData" />
       <div v-if="subtitleTextData">
         <label for="aaa" class="form-label">タイムスタンプ付き動画リンク</label>
         <div>

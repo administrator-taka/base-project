@@ -65,10 +65,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.page-item.active .page-link {
-  background-color: #007bff;
-  border-color: #007bff;
-  color: white;
-}
-</style>
+<style scoped></style>
