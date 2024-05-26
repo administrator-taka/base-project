@@ -15,6 +15,7 @@
 │       ├─.gitignore
 │       ├─README.md
 │       ├─manage.py
+│       ├─memo.txt
 │       ├─myapp
 │       │   ├─__init__.py
 │       │   ├─admin.py
@@ -23,6 +24,7 @@
 │       │   │   │   ├─__init__.py
 │       │   │   │   └─service
 │       │   │   │       ├─__init__.py
+│       │   │   │       ├─learning_language_service.py
 │       │   │   │       └─youtube_download_service.py
 │       │   │   ├─domain
 │       │   │   │   ├─__init__.py
@@ -45,12 +47,14 @@
 │       │   │       │   ├─__init__.py
 │       │   │       │   ├─character_code.py
 │       │   │       │   ├─deepl_language.py
+│       │   │       │   ├─learning_status.py
 │       │   │       │   ├─subtitle_status.py
 │       │   │       │   ├─subtitle_type.py
 │       │   │       │   ├─time_zone.py
 │       │   │       │   └─youtube_language.py
 │       │   │       ├─encryption.py
 │       │   │       ├─file_handler.py
+│       │   │       ├─pagination_info.py
 │       │   │       ├─timestamp_converter.py
 │       │   │       ├─util_convert.py
 │       │   │       └─util_generate.py
@@ -80,6 +84,13 @@
 │       │   │   ├─0022_videodetail_initial_flag_and_more.py
 │       │   │   ├─0023_alter_channellocalized_channel_id_and_more.py
 │       │   │   ├─0024_rename_subtitle_transration_text_subtitletranslation_subtitle_translation_text_and_more.py
+│       │   │   ├─0025_remove_subtitletranslation_id_and_more.py
+│       │   │   ├─0026_alter_subtitletranslation_unique_together.py
+│       │   │   ├─0027_alter_channeldetail_country.py
+│       │   │   ├─0028_subtitletranslation_subtitle_literal_translation_text.py
+│       │   │   ├─0029_subtitlelearningmemory.py
+│       │   │   ├─0030_alter_subtitlelearningmemory_unique_together.py
+│       │   │   ├─0031_remove_subtitlelearningmemory_id_and_more.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
@@ -93,6 +104,7 @@
 │       │       ├─__init__.py
 │       │       ├─channel_view.py
 │       │       ├─health_check_view.py
+│       │       ├─learning_language.py
 │       │       ├─subtitle_text_view.py
 │       │       ├─test_views.py
 │       │       └─video_view.py
@@ -219,14 +231,17 @@
         ├─src
         │   ├─App.vue
         │   ├─api
-        │   │   ├─interface
-        │   │   │   ├─request
-        │   │   │   │   └─testRequest.ts
-        │   │   │   └─response
-        │   │   │       └─testResponse.ts
-        │   │   └─sampleName
-        │   │       ├─index.ts
-        │   │       └─testRepository.ts
+        │   │   ├─repository
+        │   │   │   ├─channelRepository.ts
+        │   │   │   ├─index.ts
+        │   │   │   ├─learningLanguageMemoryRepository.ts
+        │   │   │   ├─subtitleRepository.ts
+        │   │   │   ├─testRepository.ts
+        │   │   │   └─videoRepository.ts
+        │   │   ├─request
+        │   │   │   └─testRequest.ts
+        │   │   └─response
+        │   │       └─testResponse.ts
         │   ├─assets
         │   │   ├─logo.png
         │   │   └─main.scss
@@ -234,17 +249,43 @@
         │   │   ├─HelloWorld.vue
         │   │   ├─SidebarComponent.vue
         │   │   ├─TopComponent.vue
+        │   │   ├─common
+        │   │   │   ├─button
+        │   │   │   │   └─RangeSelector.vue
+        │   │   │   ├─dropdown
+        │   │   │   │   ├─DropdownMultiSelect.vue
+        │   │   │   │   └─DropdownSelect.vue
+        │   │   │   ├─modal
+        │   │   │   │   └─BaseModal.vue
+        │   │   │   ├─pagination
+        │   │   │   │   └─PaginationComponent.vue
+        │   │   │   └─table
+        │   │   │       └─JsonTable.vue
         │   │   ├─test-service
         │   │   │   └─TestHome.vue
         │   │   └─youtube-app
-        │   │       └─YouTubeAppHome.vue
+        │   │       ├─LearningLanguageMemory.vue
+        │   │       ├─YouTubeAppHome.vue
+        │   │       ├─channel
+        │   │       │   └─ChannelHome.vue
+        │   │       ├─subtitle
+        │   │       │   ├─SubtitleDetailModal.vue
+        │   │       │   └─SubtitleHome.vue
+        │   │       └─video
+        │   │           └─VideoHome.vue
+        │   ├─enums
+        │   │   ├─learning-status.ts
+        │   │   └─youtube-language.ts
         │   ├─main.ts
         │   ├─router
         │   │   └─index.ts
         │   ├─shims-vue.d.ts
         │   ├─store
+        │   │   ├─counter.ts
         │   │   ├─index.ts
         │   │   └─test.ts
+        │   ├─utils
+        │   │   └─to_camel_case.ts
         │   └─views
         │       ├─AboutView.vue
         │       └─HomeView.vue
