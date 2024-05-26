@@ -46,7 +46,7 @@
           </button>
         </div>
       </div>
-      <JsonTable :data="channelData" />
+      <JsonTable v-if="channelData" :data="channelData" />
       <!-- 検索フォームの追加 -->
       <div class="m-2">
         <form @submit.prevent="search">
