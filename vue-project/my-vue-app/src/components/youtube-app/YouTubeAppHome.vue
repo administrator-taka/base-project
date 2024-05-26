@@ -67,7 +67,9 @@ export default {
       // Shu Yamino
       'UCG0rzBZV_QMP4MtWg6IjhEA',
       // Petra Gurin
-      'UCgA2jKRkqpY_8eysPUs8sjw'
+      'UCgA2jKRkqpY_8eysPUs8sjw',
+      // 	hololive English
+      'UCotXwY6s8pWmuWd_snKYjhg'
     ])
     const router = useRouter()
 
