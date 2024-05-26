@@ -106,7 +106,7 @@
                   <img
                     :src="video.thumbnail"
                     alt="Image"
-                    class="img-thumbnail m-2"
+                    class="img-thumbnail m-3"
                   />
                 </div>
                 <div class="col-md-8">

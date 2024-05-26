@@ -10,6 +10,7 @@ from django.db.models import Q, Prefetch
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
+from myapp.applications.util.code.learning_status import LearningStatus
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
@@ -79,8 +80,8 @@ class YoutubeDownloadService:
             'subtitle_literal_translation_text': subtitle_translation.subtitle_literal_translation_text,
             'subtitle_translation_text_detail': subtitle_translation.subtitle_translation_text_detail,
             'language_code': subtitle_translation.language_code,
-            'last_updated': learning_memory.last_updated,
-            'learning_status': learning_memory.learning_status if learning_memory else 0,
+            'last_updated': learning_memory.last_updated if learning_memory else None,
+            'learning_status': learning_memory.learning_status if learning_memory else LearningStatus.NOT_CHECKED.value,
         }
         return subtitle_text_data
 

@@ -12,15 +12,12 @@
         alt="Image"
       /> -->
       <div v-if="videoData && videoData.videoId">
-        <div>
+        <div class="ratio ratio-16x9">
           <iframe
             loading="lazy"
-            width="800"
-            height="450"
             :src="'https://www.youtube.com/embed/' + videoData.videoId"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            :allowfullscreen="true"
           ></iframe>
         </div>
         <a :href="'https://youtu.be/' + videoData.videoId" target="_blank">
