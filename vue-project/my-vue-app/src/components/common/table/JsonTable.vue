@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col">
       <div class="table-responsive">
-        <table class="table">
+        <table v-if="data" class="table">
           <tbody>
             <tr v-for="(value, key) in data" :key="key">
               <td>{{ key }}</td>

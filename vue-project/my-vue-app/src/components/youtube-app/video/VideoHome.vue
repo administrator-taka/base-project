@@ -24,7 +24,7 @@
           {{ 'https://youtu.be/' + videoData.videoId }}
         </a>
       </div>
-      <JsonTable :data="videoData" />
+      <JsonTable v-if="videoData" :data="videoData" />
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>
         <div v-for="(subtitle, index) in subtitleList" :key="index">
