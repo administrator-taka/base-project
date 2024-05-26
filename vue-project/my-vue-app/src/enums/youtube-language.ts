@@ -4,6 +4,7 @@ enum YouTubeLanguage {
     KOREAN = "ko",    // 韓国語
     CHINESE = "zh",   // 中国語
     INDONESIAN = "id",  // インドネシア語
+    NEPALI = "ne",  // ネパール語
     // 以下、未確認の言語
     AFRIKAANS = "af",
     AMHARIC = "am",
@@ -18,6 +19,7 @@ const YouTubeLanguageLabel: { name: string; value: string }[] = [
     { name: '韓国語', value: YouTubeLanguage.KOREAN },
     { name: '中国語', value: YouTubeLanguage.CHINESE },
     { name: 'インドネシア語', value: YouTubeLanguage.INDONESIAN },
+    { name: 'ネパール語', value: YouTubeLanguage.NEPALI },
     // 以下、未確認の言語
     { name: 'アフリカーンス語', value: YouTubeLanguage.AFRIKAANS },
     { name: 'アムハラ語', value: YouTubeLanguage.AMHARIC },
