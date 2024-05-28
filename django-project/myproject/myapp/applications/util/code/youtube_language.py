@@ -84,7 +84,7 @@ class YouTubeLanguage(Enum):
     URDU = "ur"
     UZBEK = "uz"
     VIETNAMESE = "vi"
-    CHINESE_SIMPLIFIED = "zh-CN"
+    CHINESE_SIMPLIFIED = "zh-Hans"
     CHINESE_HONGKONG = "zh-HK"
     CHINESE_TRADITIONAL = "zh-TW"
     ZULU = "zu"
