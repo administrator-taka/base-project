@@ -434,7 +434,9 @@ class YoutubeDownloadService:
             video_detail.title = title
             video_detail.published_at = published_at
             video_detail.description = description
-            video_detail.thumbnail = thumbnail
+            # サムネイルが"maxres"から始まらない場合に更新
+            if not video_detail.thumbnail.startswith('maxres'):
+                video_detail.thumbnail = thumbnail
             video_detail.channel_id = ChannelDetail.objects.get(channel_id=channel_id)
             video_detail.e_tag = e_tag
             video_detail.save()

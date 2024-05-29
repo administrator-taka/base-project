@@ -71,7 +71,19 @@ export default {
       // 	hololive English
       'UCotXwY6s8pWmuWd_snKYjhg',
       // hololive Indonesia
-      'UCfrWoRGlawPQDQxxeIDRP0Q'
+      'UCfrWoRGlawPQDQxxeIDRP0Q',
+      // tppo
+      'UC2PqMuVxs-y6zBJjNEyZa5A',
+      // 	Smashing English! Free and Fun English Lessons!
+      'UCP68LAhxzwC2WMO33bGRtFQ',
+      // 	PLAVE 플레이브
+      'UCPZIPuQPrfrUG9Xe_okEmQA',
+      // aaa
+      'aaa',
+      // aaa
+      'aaa',
+      // aaa
+      'aaa'
     ])
     const router = useRouter()
 
