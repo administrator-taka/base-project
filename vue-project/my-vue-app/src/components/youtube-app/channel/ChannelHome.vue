@@ -92,7 +92,7 @@
         v-model="subtitleListLanguages"
       />
       <PaginationComponent
-        :currentPage="currentPage"
+        :currentPage="channelStore.page"
         :totalPages="totalPages"
         @page-changed="handlePageChange"
       />
@@ -132,6 +132,7 @@ import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { YouTubeLanguageLabel } from '@/enums/youtube-language'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
+import { useChannelStore } from '@/store/useChannelStore'
 
 export default {
   components: {
@@ -142,11 +143,12 @@ export default {
     RangeSelector
   },
   setup() {
+    const channelStore = useChannelStore()
+
     const route = useRoute()
     const router = useRouter()
-    const channelId = ref<string>(
+    channelStore.channelId =
       typeof route.params.channelId === 'string' ? route.params.channelId : ''
-    )
 
     const channelData = ref()
     const videoList = ref()
@@ -156,7 +158,7 @@ export default {
 
     const getChannelData = async () => {
       channelRepository
-        .getChannelData(channelId.value)
+        .getChannelData(channelStore.channelId)
         .then((response) => {
           channelData.value = response.channelData
           selectedLanguageCode.value = response.channelData.defaultAudioLanguage
@@ -169,24 +171,22 @@ export default {
         })
     }
 
-    const currentPage = ref(1)
     const totalPages = ref(1)
-    const pageSize = 30 // 1ページあたりのアイテム数
     const total = ref(0)
     const getChannelVideoList = async () => {
       channelRepository
         .getChannelVideoList(
-          channelId.value,
-          currentPage.value,
-          pageSize,
-          subtitleListLanguages.value
+          channelStore.channelId,
+          channelStore.page,
+          channelStore.pageSize,
+          channelStore.languages
         )
         .then((response) => {
           console.log(response)
           totalPages.value = parseInt(
             response.results.paginationInfo.totalPages
           )
-          currentPage.value = parseInt(response.results.paginationInfo.page)
+          channelStore.page = parseInt(response.results.paginationInfo.page)
           total.value = parseInt(response.results.paginationInfo.total)
           videoList.value = response.results.videoList
         })
@@ -196,13 +196,13 @@ export default {
     }
 
     const handlePageChange = (page: number) => {
-      currentPage.value = page
+      channelStore.page = page
       getChannelVideoList()
     }
 
     const search = async () => {
       channelRepository
-        .searchWord(channelId.value, searchWord.value)
+        .searchWord(channelStore.channelId, searchWord.value)
         .then((response) => {
           searchResults.value = response.searchResults
           console.log(response)
@@ -214,7 +214,7 @@ export default {
 
     const downloadChannelSubtitles = async () => {
       channelRepository
-        .downloadChannelSubtitles(channelId.value)
+        .downloadChannelSubtitles(channelStore.channelId)
         .then((response) => {
           console.log(response)
           getChannelData()
@@ -228,7 +228,7 @@ export default {
     const updateTranslationLanguage = async () => {
       channelRepository
         .updateTranslationLanguage(
-          channelId.value,
+          channelStore.channelId,
           selectedLanguageCode.value,
           selectedLanguageCodeList.value
         )
@@ -249,14 +249,15 @@ export default {
     const selectedLanguageCode = ref()
     const selectedLanguageCodeList = ref([])
 
-    const subtitleListLanguages = ref([])
-
     onMounted(() => {
       getChannelData()
       getChannelVideoList()
     })
-    // subtitleListLanguagesが変更された場合にgetChannelVideoListを実行
+    const subtitleListLanguages = ref(channelStore.languages)
     watch(subtitleListLanguages, () => {
+      channelStore.languages = subtitleListLanguages.value
+      channelStore.setPage(1) // ページをリセット
+      channelStore.setPageSize(10) // ページサイズをリセット
       getChannelVideoList()
     })
 
@@ -268,7 +269,6 @@ export default {
       searchResults,
       searchWord,
       downloadChannelSubtitles,
-      currentPage,
       totalPages,
       handlePageChange,
       updateTranslationLanguage,
@@ -276,6 +276,7 @@ export default {
       languageCode,
       selectedLanguageCodeList,
       selectedLanguageCode,
+      channelStore,
       subtitleListLanguages
     }
   }
