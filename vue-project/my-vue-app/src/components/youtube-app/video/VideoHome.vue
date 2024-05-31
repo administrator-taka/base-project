@@ -23,6 +23,12 @@
         <a :href="'https://youtu.be/' + videoData.videoId" target="_blank">
           {{ 'https://youtu.be/' + videoData.videoId }}
         </a>
+        <div class="col-md-3">
+          <h2>字幕データ更新</h2>
+          <button @click="downloadVideoSubtitle" class="btn btn-danger m-2">
+            <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
+          </button>
+        </div>
       </div>
       <JsonTable v-if="videoData" :data="videoData" />
       <div v-if="subtitleList">
@@ -78,6 +84,18 @@ export default {
     const selectedSubtitleTextId = ref<string>('')
     const selectedLanguageCode = ref<string>('')
 
+    const downloadVideoSubtitle = async () => {
+      videoRepository
+        .downloadVideoSubtitle(videoId.value)
+        .then((response) => {
+          console.log(response)
+          getVideoData()
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
     const getVideoData = async () => {
       videoRepository
         .getVideoData(videoId.value)
@@ -104,7 +122,8 @@ export default {
       subtitleList,
       selectedSubtitleTextId,
       selectedLanguageCode,
-      openModal
+      openModal,
+      downloadVideoSubtitle
     }
   }
 }

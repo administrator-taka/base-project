@@ -19,3 +19,16 @@ def get_video_data(request, video_id):
     }
 
     return JsonResponse(data=data, status=200)
+
+
+@api_view(['GET'])
+def download_video_subtitle(request, video_id):
+    youtube_download_service = YoutubeDownloadService()
+
+    youtube_download_service.single_download_video_subtitle(video_id)
+    # JSONレスポンスを作成
+    data = {
+        "status": 0,
+    }
+
+    return JsonResponse(data=data, status=200)

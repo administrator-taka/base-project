@@ -7,7 +7,7 @@ from myapp.views.learning_language import get_learning_subtitle_text_list
 from myapp.views.subtitle_text_view import get_subtitle_text_data, update_subtitle_translation, \
     insert_or_update_subtitle_learning_memory
 from myapp.views.test_views import TestViewSet
-from myapp.views.video_view import get_video_data
+from myapp.views.video_view import get_video_data, download_video_subtitle
 
 # デフォルトのルーターを作成
 router = DefaultRouter()
@@ -27,6 +27,7 @@ urlpatterns = [
     path("channel/<str:channel_id>/update_translation_language", update_translation_language,
          name="update_translation_language"),
     path("video/<str:video_id>", get_video_data, name="get_video_data"),
+    path("video/<str:video_id>/download_video_subtitle", download_video_subtitle, name="download_video_subtitle"),
     path("subtitle/<str:subtitle_text_id>", get_subtitle_text_data, name="get_subtitle_text_data"),
     path("subtitle/<str:subtitle_text_id>/update_subtitle_translation", update_subtitle_translation,
          name="update_subtitle_translation"),

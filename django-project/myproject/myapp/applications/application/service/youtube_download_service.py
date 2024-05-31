@@ -618,14 +618,10 @@ class YoutubeDownloadService:
 
         for video in playlist_videos:
             video_id = video.video_id
-            # 字幕IDが存在するかのチェックを行うデータ準備
-            subtitle_ids = [generate_subtitle_id(video_id, SubtitleType.MANUAL, default_audio_language),
-                            generate_subtitle_id(video_id, SubtitleType.AUTOMATIC, default_audio_language)]
-            for language in translation_languages:
-                subtitle_ids.append(generate_subtitle_id(video_id, SubtitleType.MANUAL, language))
+
             # TODO:自動字幕と手動字幕で登録するかしないかを分けるべき
             # 既に登録されているかのチェック
-            existing_subtitle_info = self.check_subtitle_existence(video_id, subtitle_ids)
+            existing_subtitle_info = self.check_subtitle_existence(video_id, default_audio_language, translation_languages)
 
             # 既に処理を行っている場合実行しない
             if not existing_subtitle_info:
@@ -638,7 +634,17 @@ class YoutubeDownloadService:
             # 経過率をデバッグに出力
             logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
 
-    def check_subtitle_existence(self, video_id, subtitle_ids):
+    def single_download_video_subtitle(self,video_id):
+        video_detail = VideoDetail.objects.get(video_id=video_id)
+        default_audio_language, translation_languages = self.get_translation_info(video_detail.channel_id)
+        self.download_video_subtitle(video_id, default_audio_language, translation_languages)
+
+    def check_subtitle_existence(self, video_id, default_audio_language, translation_languages):
+        # 字幕IDが存在するかのチェックを行うデータ準備
+        subtitle_ids = [generate_subtitle_id(video_id, SubtitleType.MANUAL, default_audio_language),
+                        generate_subtitle_id(video_id, SubtitleType.AUTOMATIC, default_audio_language)]
+        for language in translation_languages:
+            subtitle_ids.append(generate_subtitle_id(video_id, SubtitleType.MANUAL, language))
         # ビデオIDに基づいて指定されたsubtitle_idsを持つサブタイトル情報を取得します
         existing_subtitle_info = VideoSubtitleInfo.objects.filter(
             video_id=video_id,

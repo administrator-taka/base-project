@@ -56,6 +56,12 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.get(url)
         FileHandler.format_json_print(response.json())
 
+    def test_download_video_subtitle(self):
+        video_id = TEST_YOUTUBE_VIDEO_ID
+        url = f"{self.base_url}video/{video_id}/download_video_subtitle"
+        response = requests.get(url)
+        FileHandler.format_json_print(response.json())
+
     def test_get_subtitle_text_data(self):
         subtitle_text_id = "29C698E5E667466F9BE70E47A721929E"
         url = f"{self.base_url}subtitle/{subtitle_text_id}"

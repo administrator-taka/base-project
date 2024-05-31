@@ -214,6 +214,8 @@ export default {
         .downloadChannelSubtitles(channelId.value)
         .then((response) => {
           console.log(response)
+          getChannelData()
+          getChannelVideoList()
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
@@ -274,6 +276,8 @@ export default {
         )
         .then((response) => {
           console.log(response)
+          getChannelData()
+          getChannelVideoList()
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
