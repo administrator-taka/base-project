@@ -127,7 +127,8 @@ class YoutubeDownloadService:
             logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
 
     def update_video_caption(self, video_id, default_audio_language, translation_languages):
-        video_captions = self.youtube_api_logic.get_subtitle_info(video_id,default_audio_language, translation_languages)
+        video_captions = self.youtube_api_logic.get_subtitle_info(video_id, default_audio_language,
+                                                                  translation_languages)
         for video_caption in video_captions:
             self.insert_or_update_video_subtitle_info(video_id,
                                                       video_caption.get('subtitle_type'),
@@ -621,7 +622,8 @@ class YoutubeDownloadService:
 
             # TODO:自動字幕と手動字幕で登録するかしないかを分けるべき
             # 既に登録されているかのチェック
-            existing_subtitle_info = self.check_subtitle_existence(video_id, default_audio_language, translation_languages)
+            existing_subtitle_info = self.check_subtitle_existence(video_id, default_audio_language,
+                                                                   translation_languages)
 
             # 既に処理を行っている場合実行しない
             if not existing_subtitle_info:
@@ -634,7 +636,7 @@ class YoutubeDownloadService:
             # 経過率をデバッグに出力
             logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
 
-    def single_download_video_subtitle(self,video_id):
+    def single_download_video_subtitle(self, video_id):
         video_detail = VideoDetail.objects.get(video_id=video_id)
         default_audio_language, translation_languages = self.get_translation_info(video_detail.channel_id)
         self.download_video_subtitle(video_id, default_audio_language, translation_languages)
@@ -736,6 +738,9 @@ class YoutubeDownloadService:
                 t_offset_ms=data['t_offset_ms'],
                 subtitle_text=data['subtitle_text']
             )
+
+    def delete_channel_data(self, channel_id):
+        ChannelDetail.objects.filter(channel_id=channel_id).delete()
 
 
 class TestYoutubeDownloadService(unittest.TestCase):
