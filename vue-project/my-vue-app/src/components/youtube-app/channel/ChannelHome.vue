@@ -86,7 +86,11 @@
           </a>
         </div>
       </div>
-
+      <h2>絞り込み</h2>
+      <DropdownMultiSelect
+        :options="languageCode"
+        v-model="subtitleListLanguages"
+      />
       <PaginationComponent
         :currentPage="currentPage"
         :totalPages="totalPages"
@@ -95,28 +99,23 @@
 
       <div v-if="videoList">
         <h2>動画一覧(全{{ total }}件)</h2>
-        <button @click="toggleSubtitleFilter" class="btn btn-secondary m-2">
-          字幕フィルターを切り替える
-        </button>
         <div v-for="(video, index) in videoList" :key="index" class="m-2">
-          <div v-if="shouldDisplayVideo(video)">
-            <RangeSelector @range-selected="goToVideoPage(video.videoId)">
-              <div class="row">
-                <div class="col-md-4">
-                  <img
-                    :src="video.thumbnail"
-                    alt="Image"
-                    class="img-thumbnail m-3"
-                  />
-                </div>
-                <div class="col-md-8">
-                  <div class="m-3">
-                    <JsonTable :data="video" />
-                  </div>
+          <RangeSelector @range-selected="goToVideoPage(video.videoId)">
+            <div class="row">
+              <div class="col-md-4">
+                <img
+                  :src="video.thumbnail"
+                  alt="Image"
+                  class="img-thumbnail m-3"
+                />
+              </div>
+              <div class="col-md-8">
+                <div class="m-3">
+                  <JsonTable :data="video" />
                 </div>
               </div>
-            </RangeSelector>
-          </div>
+            </div>
+          </RangeSelector>
         </div>
       </div>
     </main>
@@ -125,7 +124,7 @@
 
 <script lang="ts">
 import channelRepository from '@/api/repository/channelRepository'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PaginationComponent from '@/components/common/pagination/PaginationComponent.vue'
 import DropdownMultiSelect from '@/components/common/dropdown/DropdownMultiSelect.vue'
@@ -151,7 +150,6 @@ export default {
 
     const channelData = ref()
     const videoList = ref()
-    const showSubtitles = ref(true) // 初期値はtrue
 
     const searchWord = ref('')
     const searchResults = ref()
@@ -177,10 +175,12 @@ export default {
     const total = ref(0)
     const getChannelVideoList = async () => {
       channelRepository
-        .getChannelVideoList(channelId.value, currentPage.value, pageSize, [
-          'ja',
-          'ko'
-        ])
+        .getChannelVideoList(
+          channelId.value,
+          currentPage.value,
+          pageSize,
+          subtitleListLanguages.value
+        )
         .then((response) => {
           console.log(response)
           totalPages.value = parseInt(
@@ -225,51 +225,6 @@ export default {
         })
     }
 
-    // ボタン押下で字幕フィルターの状態を切り替える関数
-    const toggleSubtitleFilter = () => {
-      showSubtitles.value = !showSubtitles.value
-    }
-
-    // videoが表示されるべきかどうかを判定する関数
-    const shouldDisplayVideo = (video: {
-      infos: {
-        languageCode: string
-        subtitleType: number
-        subtitleStatus: number
-      }[]
-    }) => {
-      if (!video.infos) return false
-
-      // 字幕フィルターが有効の場合
-      if (showSubtitles.value) {
-        return (
-          video.infos.some(
-            (info: {
-              languageCode: string
-              subtitleType: number
-              subtitleStatus: number
-            }) =>
-              info.languageCode === selectedLanguageCode.value &&
-              info.subtitleStatus === 1 &&
-              info.subtitleType === 1
-          ) &&
-          video.infos.some(
-            (info: {
-              languageCode: string
-              subtitleType: number
-              subtitleStatus: number
-            }) =>
-              info.languageCode === 'ja' &&
-              info.subtitleStatus === 1 &&
-              info.subtitleType === 1
-          )
-        )
-      } else {
-        // 字幕フィルターが無効の場合は常にtrueを返す
-        return true
-      }
-    }
-
     const updateTranslationLanguage = async () => {
       channelRepository
         .updateTranslationLanguage(
@@ -294,17 +249,21 @@ export default {
     const selectedLanguageCode = ref()
     const selectedLanguageCodeList = ref([])
 
+    const subtitleListLanguages = ref([])
+
     onMounted(() => {
       getChannelData()
       getChannelVideoList()
     })
+    // subtitleListLanguagesが変更された場合にgetChannelVideoListを実行
+    watch(subtitleListLanguages, () => {
+      getChannelVideoList()
+    })
 
     return {
-      toggleSubtitleFilter,
       channelData,
       videoList,
       goToVideoPage,
-      shouldDisplayVideo,
       search,
       searchResults,
       searchWord,
@@ -316,7 +275,8 @@ export default {
       total,
       languageCode,
       selectedLanguageCodeList,
-      selectedLanguageCode
+      selectedLanguageCode,
+      subtitleListLanguages
     }
   }
 }
