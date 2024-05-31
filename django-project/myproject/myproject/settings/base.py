@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'middleware.common_middleware.CommonMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # リクエストを許可するオリジンを追加してください
