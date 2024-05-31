@@ -2,6 +2,7 @@
 import functools
 import logging
 import unittest
+from datetime import datetime
 
 import googleapiclient.discovery
 from django.conf import settings
@@ -11,7 +12,7 @@ from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST_YOUTUBE_CHANNEL_ID, \
-    TEST_YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY_1, YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3, YOUTUBE_API_KEY_4
+    TEST_YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY_1, YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3, YOUTUBE_API_KEY_4, TEST_DIR
 
 
 # YouTubeのAPIを操作するクラス
@@ -227,7 +228,7 @@ class YouTubeApiLogic:
 
         return videos
 
-    def get_thumbnail_url(self,item):
+    def get_thumbnail_url(self, item):
         snippet = item.get("snippet", {})
         thumbnails = snippet.get("thumbnails", {})
 
@@ -267,24 +268,38 @@ class YouTubeApiLogic:
         return response
 
     # 動画の字幕情報を取得するメソッド
-    def get_subtitle_info(self, video_id):
+    def get_subtitle_info(self, video_id, default_audio_language, translation_languages):
         response = self.get_video_captions(video_id)
         subtitle_info_list = []
 
         if response.get('items'):
             for item in response.get('items'):
                 subtitle_info = {}
-                # 動画ID
-                subtitle_info['video_id'] = item.get('snippet', {}).get('videoId')
-                # 最終更新日
-                subtitle_info['last_updated'] = item.get('snippet', {}).get('lastUpdated')
-                # 字幕種別
-                track_kind = item.get('snippet', {}).get('trackKind')
-                subtitle_info['subtitle_type'] = SubtitleType.AUTOMATIC if track_kind == 'asr' else SubtitleType.MANUAL
-                # 字幕言語
-                subtitle_info['language'] = YouTubeLanguage(item.get('snippet', {}).get('language'))
-                subtitle_info_list.append(subtitle_info)
+                language = item.get('snippet', {}).get('language')
+                # 字幕の言語が default_audio_language または translation_languages に含まれている場合のみ
+                if language == default_audio_language.value or language in [lang.value for lang in
+                                                                            translation_languages]:
+                    # 動画ID
+                    subtitle_info['video_id'] = item.get('snippet', {}).get('videoId')
+                    # 最終更新日
+                    subtitle_info['last_updated'] = item.get('snippet', {}).get('lastUpdated')
+                    # 字幕種別
+                    track_kind = item.get('snippet', {}).get('trackKind')
+                    subtitle_info[
+                        'subtitle_type'] = SubtitleType.AUTOMATIC if track_kind == 'asr' else SubtitleType.MANUAL
+                    # 字幕言語
+                    subtitle_info['language'] = YouTubeLanguage(language)
+                    subtitle_info_list.append(subtitle_info)
 
+                else:
+                    try:
+                        YouTubeLanguage(language)
+                    except ValueError:
+                        # ログファイルに記録を残す
+                        # エラーを特定のファイルに記録
+                        error_message = f"{datetime.now()} - Enumに当てはまらない文字列: {language}"
+                        FileHandler.append_to_file(error_message, TEST_DIR, "error_enum.txt")
+                        logging.error(f"Enumに当てはまらない文字列: {language}")
         return subtitle_info_list
 
     # 動画のカテゴリ情報を取得する

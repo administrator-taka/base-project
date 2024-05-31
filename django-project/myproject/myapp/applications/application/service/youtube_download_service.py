@@ -127,7 +127,7 @@ class YoutubeDownloadService:
             logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
 
     def update_video_caption(self, video_id, default_audio_language, translation_languages):
-        video_captions = self.youtube_api_logic.get_subtitle_info(video_id)
+        video_captions = self.youtube_api_logic.get_subtitle_info(video_id,default_audio_language, translation_languages)
         for video_caption in video_captions:
             self.insert_or_update_video_subtitle_info(video_id,
                                                       video_caption.get('subtitle_type'),

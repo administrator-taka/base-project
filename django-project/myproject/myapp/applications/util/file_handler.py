@@ -141,6 +141,30 @@ class FileHandler:
             # その他のエラーが発生した場合はエラーメッセージを返す
             return {"error": str(e)}
 
+    @staticmethod
+    def append_to_file(data, directory, file_name, encoding='utf-8'):
+        """
+        指定されたデータをテキストファイルに追記する。
+
+        Args:
+            data: 追記するデータ（文字列）
+            directory (str): ファイルを保存するディレクトリのパス
+            file_name (str): 保存するファイルの名前
+            encoding (str): ファイルのエンコーディング（デフォルトは utf-8）
+        """
+        if not file_name.endswith('.txt'):
+            file_name += '.txt'
+        # ディレクトリが存在しない場合は作成する
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # ファイルパスを作成
+        file_path = os.path.join(directory, file_name)
+
+        # テキストファイルにデータを追記する
+        with open(file_path, 'a', encoding=encoding) as txt_file:
+            txt_file.write(data + '\n')
+
 
 class TestFileHandler(unittest.TestCase):
     def setUp(self):
