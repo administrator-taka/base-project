@@ -18,7 +18,7 @@ const handleRangeClick = () => {
 <style scoped>
 .hoverable:hover {
   /* ホバー時のスタイルをここに指定 */
-  background-color: lightgray;
+  background-color: rgb(188, 216, 209);
   cursor: pointer;
 }
 </style>
