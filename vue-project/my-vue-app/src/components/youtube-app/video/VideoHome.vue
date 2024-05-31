@@ -54,6 +54,8 @@
             data-bs-target="#exampleModal"
           >
             <div class="m-3">
+              <!-- TODO:モーダル修正後に削除 -->
+              <div style="height: 1rem"></div>
               <JsonTable :data="subtitle" />
             </div>
           </RangeSelector>
