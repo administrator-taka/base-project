@@ -5,13 +5,21 @@
       <!-- <img
         v-if="videoData && videoData.thumbnail"
         :src="
-          'https://img.youtube.com/vi/' +
-          videoData.videoId +
-          '/maxresdefault.jpg'
+        'https://img.youtube.com/vi/' +
+        videoData.videoId +
+        '/maxresdefault.jpg'
         "
         alt="Image"
-      /> -->
+        /> -->
       <div v-if="videoData && videoData.videoId">
+        <div class="col-md-3">
+          <button
+            @click="goToChannelPage(videoData.channelId)"
+            class="btn btn-secondary m-2"
+          >
+            <i class="bi bi-arrow-90deg-down"></i> チャンネルページへ
+          </button>
+        </div>
         <div class="ratio ratio-16x9">
           <iframe
             loading="lazy"
@@ -67,7 +75,7 @@ import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetai
 import JsonTable from '@/components/common/table/JsonTable.vue'
 
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   components: {
@@ -83,6 +91,7 @@ export default {
     const subtitleList = ref()
     const selectedSubtitleTextId = ref<string>('')
     const selectedLanguageCode = ref<string>('')
+    const router = useRouter()
 
     const downloadVideoSubtitle = async () => {
       videoRepository
@@ -113,7 +122,9 @@ export default {
       selectedSubtitleTextId.value = subtitleTextId
       selectedLanguageCode.value = languageCode
     }
-
+    const goToChannelPage = (channelId: string) => {
+      router.push(`/channel/${channelId}`)
+    }
     onMounted(() => {
       getVideoData()
     })
@@ -123,7 +134,8 @@ export default {
       selectedSubtitleTextId,
       selectedLanguageCode,
       openModal,
-      downloadVideoSubtitle
+      downloadVideoSubtitle,
+      goToChannelPage
     }
   }
 }
