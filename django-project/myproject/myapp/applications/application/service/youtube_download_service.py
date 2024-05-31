@@ -326,7 +326,9 @@ class YoutubeDownloadService:
             video_detail.title = title
             video_detail.published_at = published_at
             video_detail.description = description
-            video_detail.thumbnail = thumbnail
+            # サムネイルが"maxres"から始まらない場合に更新
+            if not video_detail.thumbnail.startswith('maxres'):
+                video_detail.thumbnail = thumbnail
             video_detail.default_language = default_language
             video_detail.default_audio_language = default_audio_language
             video_detail.actual_start_time = actual_start_time
@@ -488,16 +490,19 @@ class YoutubeDownloadService:
         video_list = []
         for video_detail in video_details_page.object_list:
             subtitle_infos = video_detail.videosubtitleinfo_set.all()
+            subtitle_info_list = []
+            for info in subtitle_infos:
+                subtitle_info_list.append({
+                    'language_code': info.language_code,
+                    'subtitle_type': info.subtitle_type,
+                    'subtitle_status': info.subtitle_status,
+                })
             video_info = {
                 'title': video_detail.title,
                 'video_id': video_detail.video_id,
                 'published_at': video_detail.published_at,
                 'thumbnail': video_detail.thumbnail,
-                'infos': [{'language_code': info.language_code,
-                           'subtitle_type': info.subtitle_type,
-                           'subtitle_status': info.subtitle_status,
-                           }
-                          for info in subtitle_infos]
+                'infos': subtitle_info_list
             }
             video_list.append(video_info)
 
@@ -583,11 +588,13 @@ class YoutubeDownloadService:
             subtitle_id__video_id=video_id
         ).select_related('subtitle_id').order_by('t_start_ms')
 
-        # PrefetchでSubtitleTranslationをLEFT JOIN
+        # PrefetchでSubtitleTranslationとSubtitleLearningMemoryを取得
         queryset = queryset.prefetch_related(
-            Prefetch('subtitletranslation_set', queryset=SubtitleTranslation.objects.all())
+            Prefetch('subtitletranslation_set',
+                     queryset=SubtitleTranslation.objects.all().prefetch_related(
+                         Prefetch('subtitlelearningmemory_set', queryset=SubtitleLearningMemory.objects.all())
+                     ))
         )
-
         # 辞書のリストを初期化
         video_subtitle_data = []
 
@@ -604,12 +611,19 @@ class YoutubeDownloadService:
 
             # 翻訳データを取得して辞書に追加
             for translation in subtitle.subtitletranslation_set.all():
-                base_subtitle_dict['translations'].append({
+                translation_dict = {
                     'language_code': translation.language_code,
                     'subtitle_translation_text': translation.subtitle_translation_text,
                     'subtitle_literal_translation_text': translation.subtitle_literal_translation_text,
-                    'subtitle_translation_text_detail': translation.subtitle_translation_text_detail
-                })
+                    'subtitle_translation_text_detail': translation.subtitle_translation_text_detail,
+                    'learning_status': None  # 学習ステータスのデフォルト値
+                }
+
+                # SubtitleLearningMemoryから学習ステータスを取得
+                for memory in translation.subtitlelearningmemory_set.all():
+                    translation_dict['learning_status'] = memory.learning_status
+
+                base_subtitle_dict['translations'].append(translation_dict)
 
             # ベース字幕と翻訳の辞書をリストに追加
             video_subtitle_data.append(base_subtitle_dict)
