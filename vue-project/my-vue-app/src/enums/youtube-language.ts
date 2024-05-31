@@ -28,4 +28,11 @@ const YouTubeLanguageLabel: { name: string; value: string }[] = [
     { name: 'ズールー語', value: YouTubeLanguage.ZULU }
 ];
 
-export { YouTubeLanguage, YouTubeLanguageLabel };
+const getYouTubeLanguagesFromCodes = (codes: string[]): { name: string; value: string }[] =>
+    codes.map(code => {
+        const language = YouTubeLanguageLabel.find(lang => lang.value === code);
+        return language ? language : { name: '', value: '' };
+    });
+
+
+    export { YouTubeLanguage, YouTubeLanguageLabel, getYouTubeLanguagesFromCodes };

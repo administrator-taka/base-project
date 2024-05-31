@@ -37,31 +37,26 @@
           <button @click="downloadVideoSubtitle" class="btn btn-danger m-2">
             <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
           </button>
+          <h2>字幕言語指定</h2>
+          <DropdownSelect
+            :options="languageCode"
+            v-model="selectedLanguageCode"
+          />
         </div>
       </div>
       <JsonTable v-if="videoData" :data="videoData" />
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>
-        <div class="overflow-auto" style="height: 1000px">
-          <div v-for="(subtitle, index) in subtitleList" :key="index">
-            <JsonTable :data="subtitle" />
-            <div
-              v-for="(subtitleText, index) in subtitle.translations"
-              :key="index"
-            >
-              <button
-                type="button"
-                class="btn btn-primary m-2"
-                @click="
-                  openModal(subtitle.subtitleTextId, subtitleText.languageCode)
-                "
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-              >
-                字幕詳細
-              </button>
+        <div v-for="(subtitle, index) in subtitleList" :key="index">
+          <RangeSelector
+            @range-selected="openModal(subtitle.subtitleTextId)"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            <div class="m-3">
+              <JsonTable :data="subtitle" />
             </div>
-          </div>
+          </RangeSelector>
         </div>
       </div>
       <SubtitleDetailModal
@@ -79,11 +74,16 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getYouTubeLanguagesFromCodes } from '@/enums/youtube-language' // ここで関数をインポート
+import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
+import RangeSelector from '@/components/common/button/RangeSelector.vue'
 
 export default {
   components: {
     SubtitleDetailModal,
-    JsonTable
+    JsonTable,
+    DropdownSelect,
+    RangeSelector
   },
   setup() {
     const route = useRoute()
@@ -95,6 +95,7 @@ export default {
     const selectedSubtitleTextId = ref<string>('')
     const selectedLanguageCode = ref<string>('')
     const router = useRouter()
+    const languageCode = ref()
 
     const downloadVideoSubtitle = async () => {
       videoRepository
@@ -113,6 +114,12 @@ export default {
         .getVideoData(videoId.value)
         .then((response) => {
           videoData.value = response.videoData
+          languageCode.value = getYouTubeLanguagesFromCodes(
+            response.videoData.translationLanguages
+          )
+          selectedLanguageCode.value =
+            response.videoData.translationLanguages[0]
+          console.log(languageCode.value)
           subtitleList.value = response.subtitleList
           console.log(response)
         })
@@ -121,9 +128,8 @@ export default {
         })
     }
 
-    const openModal = (subtitleTextId: string, languageCode: string) => {
+    const openModal = (subtitleTextId: string) => {
       selectedSubtitleTextId.value = subtitleTextId
-      selectedLanguageCode.value = languageCode
     }
     const goToChannelPage = (channelId: string) => {
       router.push(`/channel/${channelId}`)
@@ -138,7 +144,8 @@ export default {
       selectedLanguageCode,
       openModal,
       downloadVideoSubtitle,
-      goToChannelPage
+      goToChannelPage,
+      languageCode
     }
   }
 }

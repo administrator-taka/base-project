@@ -225,6 +225,7 @@ class YoutubeDownloadService:
         video_detail_dict = {}
         try:
             video_detail = VideoDetail.objects.get(video_id=video_id)
+            channel_translation_info = ChannelTranslationInfo.objects.filter(channel_id=video_detail.channel_id).first()
             if video_detail.initial_flag:
                 video_detail_dict = {
                     'title': video_detail.title,
@@ -233,11 +234,13 @@ class YoutubeDownloadService:
                     'published_at': video_detail.published_at,
                     'channel_id': video_detail.channel_id.channel_id,
                     'default_language': video_detail.default_language,
-                    'default_audio_language': video_detail.default_audio_language,
+                    'default_video_audio_language': video_detail.default_audio_language,
                     'actual_start_time': video_detail.actual_start_time,
                     'actual_end_time': video_detail.actual_end_time,
                     'scheduled_start_time': video_detail.scheduled_start_time,
                     'thumbnail': video_detail.thumbnail,
+                    'default_audio_language': channel_translation_info.default_audio_language if channel_translation_info else None,
+                    'translation_languages': channel_translation_info.translation_languages if channel_translation_info else None,
                 }
                 logging.debug("動画最新")
             else:
@@ -250,11 +253,13 @@ class YoutubeDownloadService:
                     'published_at': video_detail.published_at,
                     'channel_id': video_detail.channel_id.channel_id,
                     'default_language': video_detail.default_language,
-                    'default_audio_language': video_detail.default_audio_language,
+                    'default_video_audio_language': video_detail.default_audio_language,
                     'actual_start_time': video_detail.actual_start_time,
                     'actual_end_time': video_detail.actual_end_time,
                     'scheduled_start_time': video_detail.scheduled_start_time,
                     'thumbnail': video_detail.thumbnail,
+                    'default_audio_language': channel_translation_info.default_audio_language if channel_translation_info else None,
+                    'translation_languages': channel_translation_info.translation_languages if channel_translation_info else None,
                 }
                 logging.debug("動画更新")
         except VideoDetail.DoesNotExist:
@@ -267,11 +272,13 @@ class YoutubeDownloadService:
                     'published_at': video_data['published_at'],
                     'channel_id': video_data['channel_id'],
                     'default_language': video_data['default_language'],
-                    'default_audio_language': video_data['default_audio_language'],
+                    'default_video_audio_language': video_data['default_audio_language'],
                     'actual_start_time': video_data['actual_start_time'],
                     'actual_end_time': video_data['actual_end_time'],
                     'scheduled_start_time': video_data['scheduled_start_time'],
                     'thumbnail': video_data['thumbnail'],
+                    'default_audio_language': None,
+                    'translation_languages': None,
                 }
             logging.debug("動画なし")
 
