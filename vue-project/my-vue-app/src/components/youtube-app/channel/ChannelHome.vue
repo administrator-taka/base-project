@@ -73,17 +73,23 @@
       <!-- 検索結果の表示 -->
       <div v-if="searchResults" class="m-2">
         <h2>検索結果</h2>
-        <div v-for="(result, index) in searchResults" :key="index" class="mb-2">
-          <JsonTable :data="result" />
-          <button
-            @click="goToVideoPage(result.videoId)"
-            class="btn btn-info m-2"
+        <div class="overflow-auto" style="height: 1000px">
+          <div
+            v-for="(result, index) in searchResults"
+            :key="index"
+            class="mb-2"
           >
-            動画詳細
-          </button>
-          <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
-            <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
-          </a>
+            <JsonTable :data="result" />
+            <button
+              @click="goToVideoPage(result.videoId)"
+              class="btn btn-info m-2"
+            >
+              動画詳細
+            </button>
+            <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
+              <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
+            </a>
+          </div>
         </div>
       </div>
       <h2>絞り込み</h2>
@@ -99,23 +105,25 @@
 
       <div v-if="videoList">
         <h2>動画一覧(全{{ total }}件)</h2>
-        <div v-for="(video, index) in videoList" :key="index" class="m-2">
-          <RangeSelector @range-selected="goToVideoPage(video.videoId)">
-            <div class="row">
-              <div class="col-md-4">
-                <img
-                  :src="video.thumbnail"
-                  alt="Image"
-                  class="img-thumbnail m-3"
-                />
-              </div>
-              <div class="col-md-8">
-                <div class="m-3">
-                  <JsonTable :data="video" />
+        <div class="overflow-auto" style="height: 1000px">
+          <div v-for="(video, index) in videoList" :key="index" class="m-2">
+            <RangeSelector @range-selected="goToVideoPage(video.videoId)">
+              <div class="row">
+                <div class="col-md-4">
+                  <img
+                    :src="video.thumbnail"
+                    alt="Image"
+                    class="img-thumbnail m-3"
+                  />
+                </div>
+                <div class="col-md-8">
+                  <div class="m-3">
+                    <JsonTable :data="video" />
+                  </div>
                 </div>
               </div>
-            </div>
-          </RangeSelector>
+            </RangeSelector>
+          </div>
         </div>
       </div>
     </main>

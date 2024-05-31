@@ -17,7 +17,8 @@
             @click="goToChannelPage(videoData.channelId)"
             class="btn btn-secondary m-2"
           >
-            <i class="bi bi-arrow-90deg-down"></i> チャンネルページへ
+            <i class="bi bi-arrow-90deg-down"></i>
+            チャンネルページへ
           </button>
         </div>
         <div class="ratio ratio-16x9">
@@ -41,23 +42,25 @@
       <JsonTable v-if="videoData" :data="videoData" />
       <div v-if="subtitleList">
         <h2>字幕一覧</h2>
-        <div v-for="(subtitle, index) in subtitleList" :key="index">
-          <JsonTable :data="subtitle" />
-          <div
-            v-for="(subtitleText, index) in subtitle.translations"
-            :key="index"
-          >
-            <button
-              type="button"
-              class="btn btn-primary m-2"
-              @click="
-                openModal(subtitle.subtitleTextId, subtitleText.languageCode)
-              "
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
+        <div class="overflow-auto" style="height: 1000px">
+          <div v-for="(subtitle, index) in subtitleList" :key="index">
+            <JsonTable :data="subtitle" />
+            <div
+              v-for="(subtitleText, index) in subtitle.translations"
+              :key="index"
             >
-              字幕詳細
-            </button>
+              <button
+                type="button"
+                class="btn btn-primary m-2"
+                @click="
+                  openModal(subtitle.subtitleTextId, subtitleText.languageCode)
+                "
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                字幕詳細
+              </button>
+            </div>
           </div>
         </div>
       </div>
