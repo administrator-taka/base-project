@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import List
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Q, Prefetch
+from django.db.models import Q, Prefetch, OuterRef, Exists
 
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
@@ -446,32 +446,46 @@ class YoutubeDownloadService:
             logging.debug("動画情報は既に最新です。")
 
     # 字幕のステータスの一覧を取得
-    def get_channel_subtitle_list(self, channel_id, page=1, page_size=10):
-        # ビデオごとの字幕情報をクエリ
-        video_ids = VideoDetail.objects.filter(
-            channel_id=channel_id
-        ).distinct().order_by('-published_at')
+    def get_channel_subtitle_list(self, channel_id, languages, page=1, page_size=10):
+        # サブクエリのリストを生成
+        subqueries = [
+            # 各言語ごとの字幕情報をフィルタするサブクエリを生成
+            VideoSubtitleInfo.objects.filter(
+                video_id=OuterRef('pk'),  # 外部キー結合によって VideoDetail の主キーと結合
+                language_code=language.value,  # 指定された言語の字幕情報を抽出
+                subtitle_status=SubtitleStatus.REGISTERED.value,  # 登録済みの字幕を抽出
+                subtitle_type=SubtitleType.MANUAL.value  # 手動で作成された字幕を抽出
+            )
+            for language in languages  # 言語リストの各言語に対してサブクエリを生成
+        ]
+
+        # 動的にフィルタ条件を生成
+        filters = Q(channel_id=channel_id)  # チャンネルIDでフィルタリングする基本条件を設定
+        for subquery in subqueries:  # 各言語のサブクエリを用いて動的にフィルタ条件を追加
+            filters &= Exists(subquery)
+
+        # フィルタ条件に合致する VideoDetail を取得
+        video_details = VideoDetail.objects.filter(filters).distinct().order_by('-published_at')
 
         # ページごとのビデオ ID を取得
-        paginator = Paginator(video_ids, page_size)
+        paginator = Paginator(video_details, page_size)
 
         try:
-            video_ids_page = paginator.page(page)
+            video_details_page = paginator.page(page)
         except PageNotAnInteger:
-            video_ids_page = paginator.page(1)
+            video_details_page = paginator.page(1)
         except EmptyPage:
-            video_ids_page = paginator.page(paginator.num_pages)
+            video_details_page = paginator.page(paginator.num_pages)
 
         # ページごとのビデオごとの情報を取得してリストに追加
         video_list = []
-        for video_id in video_ids_page.object_list:
-            # ビデオごとの情報をクエリ
-            subtitle_infos = VideoSubtitleInfo.objects.filter(video_id=video_id.video_id)
+        for video_detail in video_details_page.object_list:
+            subtitle_infos = video_detail.videosubtitleinfo_set.all()
             video_info = {
-                'title': video_id.title,
-                'video_id': video_id.video_id,
-                'published_at': video_id.published_at,
-                'thumbnail': video_id.thumbnail,
+                'title': video_detail.title,
+                'video_id': video_detail.video_id,
+                'published_at': video_detail.published_at,
+                'thumbnail': video_detail.thumbnail,
                 'infos': [{'language_code': info.language_code,
                            'subtitle_type': info.subtitle_type,
                            'subtitle_status': info.subtitle_status,

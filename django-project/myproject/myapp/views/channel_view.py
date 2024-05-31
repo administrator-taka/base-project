@@ -35,12 +35,14 @@ def get_channel_data(request, channel_id):
     return JsonResponse(data=data, status=200)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_channel_video_list(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
-    page = request.GET.get('page', 1)
-    page_size = request.GET.get('page_size', 10)
-    results = youtube_download_service.get_channel_subtitle_list(channel_id, page, page_size)
+    languages = [YouTubeLanguage(language) for language in request.data.get('languages', [])]
+
+    page = request.data.get('page', 1)
+    page_size = request.data.get('page_size', 10)
+    results = youtube_download_service.get_channel_subtitle_list(channel_id, languages, page, page_size)
 
     # JSONレスポンスを作成
     data = {
@@ -48,6 +50,7 @@ def get_channel_video_list(request, channel_id):
     }
 
     return JsonResponse(data=data, status=200)
+
 
 
 @api_view(['GET'])

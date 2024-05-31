@@ -2,6 +2,7 @@ import unittest
 
 import requests
 
+from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import TEST_YOUTUBE_CHANNEL_ID, TEST_YOUTUBE_VIDEO_ID
 
@@ -24,7 +25,12 @@ class TestAPIEndpoints(unittest.TestCase):
     def test_get_channel_video_list(self):
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         url = f"{self.base_url}channel/{channel_id}/get_channel_video_list"
-        response = requests.get(url, params={'page': 1, 'page_size': 10})  # ページ番号とページサイズを指定します
+        data = {
+            'page': 1,
+            'page_size': 10,
+            'languages': ["ja"]
+        }
+        response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
     def test_download_channel_subtitles(self):

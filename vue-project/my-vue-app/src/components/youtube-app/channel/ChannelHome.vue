@@ -177,7 +177,10 @@ export default {
     const total = ref(0)
     const getChannelVideoList = async () => {
       channelRepository
-        .getChannelVideoList(channelId.value, currentPage.value, pageSize)
+        .getChannelVideoList(channelId.value, currentPage.value, pageSize, [
+          'ja',
+          'ko'
+        ])
         .then((response) => {
           console.log(response)
           totalPages.value = parseInt(

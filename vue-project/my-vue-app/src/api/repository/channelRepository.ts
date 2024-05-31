@@ -21,14 +21,14 @@ export default {
         throw error
       })
   },
-  async getChannelVideoList(channelId: string, page: number, pageSize: number) {
-    const params = {
+  async getChannelVideoList(channelId: string, page: number, pageSize: number,languages:string[]) {
+    const data = {
       page: page.toString(),
-      page_size: pageSize.toString()
+      page_size: pageSize.toString(),
+      languages: languages
     };
   
-    return youtubeAppApiClient
-      .get(`/channel/${channelId}/get_channel_video_list`, { params })
+    return youtubeAppApiClient.post(`/channel/${channelId}/get_channel_video_list`, data)
       .then((response: AxiosResponse) => toCamelCase(response.data))
       .catch((error: string) => {
         console.error('API実行結果エラー:', error)
