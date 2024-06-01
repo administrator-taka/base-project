@@ -326,17 +326,30 @@ class YoutubeDownloadService:
                 info_words = []  # 各infoの単語を一時的に収集するリストを初期化
                 current_subtitle_text = None
                 count = 0
+                continuous_count = 2
+                all_subtitle_list = [subtitle.subtitle_text for subtitle in subtitles]
+                duplicate_check_list = collections.Counter(all_subtitle_list)
+                duplicate_ratio=len(duplicate_check_list)/len(all_subtitle_list)
+                logging.debug(f"{len(duplicate_check_list)}/{len(all_subtitle_list)}={duplicate_ratio}")
+                if duplicate_ratio < 0.5:
+                    continue
                 for subtitle in subtitles:
                     if current_subtitle_text and subtitle.subtitle_text.startswith(current_subtitle_text):
                         logging.debug(f"{current_subtitle_text}/{subtitle.subtitle_text}")
                         count += 1
+                        continuous_count = 0
+                    else:
+                        if continuous_count < 1:
+                            count += 1
+                        continuous_count += 1
+
                     current_subtitle_text = subtitle.subtitle_text
                     # 各字幕テキストを単語に分割し、リストに追加
                     words = subtitle.subtitle_text.split()
                     info_words.extend(words)
                 ratio = count / len(subtitles)
                 logging.debug(f"{count}/{len(subtitles)}={ratio}")
-                if ratio < 0.1:
+                if ratio < 0.5:
                     logging.debug(f"追加{video.video_id}")
                     all_words.extend(info_words)  # 各infoの単語を全単語リストに追加
                 else:
