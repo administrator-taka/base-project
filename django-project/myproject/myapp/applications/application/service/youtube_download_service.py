@@ -392,7 +392,19 @@ class YoutubeDownloadService:
         # 上位top_nまでに絞り込む
         top_words = word_counter.most_common(top_n)
 
-        return top_words
+        # 同率の場合も考慮して辞書型リストに詰める
+        top_words_list = []
+        rank = 1
+        prev_count = None
+        prev_rank = 1
+        for word, count in top_words:
+            if count != prev_count:
+                prev_rank = rank
+            rank += 1
+            top_words_list.append({"rank": prev_rank, "word": word, "count": count})
+            prev_count = count
+
+        return top_words_list
 
     def get_video_data(self, video_id):
         video_detail_dict = {}
