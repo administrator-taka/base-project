@@ -321,12 +321,26 @@ class YoutubeDownloadService:
             # 翻訳データを取得して辞書に追加
             for info in video.videosubtitleinfo_set.all():
                 subtitles = info.videosubtitle_set.all()
+                if not subtitles:  # subtitlesが空でないことを確認
+                    continue
                 info_words = []  # 各infoの単語を一時的に収集するリストを初期化
+                current_subtitle_text = None
+                count = 0
                 for subtitle in subtitles:
+                    if current_subtitle_text and subtitle.subtitle_text.startswith(current_subtitle_text):
+                        logging.debug(f"{current_subtitle_text}/{subtitle.subtitle_text}")
+                        count += 1
+                    current_subtitle_text = subtitle.subtitle_text
                     # 各字幕テキストを単語に分割し、リストに追加
                     words = subtitle.subtitle_text.split()
                     info_words.extend(words)
-                all_words.extend(info_words)  # 各infoの単語を全単語リストに追加
+                ratio = count / len(subtitles)
+                logging.debug(f"{count}/{len(subtitles)}={ratio}")
+                if ratio < 0.1:
+                    logging.debug(f"追加{video.video_id}")
+                    all_words.extend(info_words)  # 各infoの単語を全単語リストに追加
+                else:
+                    logging.debug(f"追加しない{video.video_id}")
 
         # 単語の頻度を計測
         word_counter = collections.Counter(all_words)
