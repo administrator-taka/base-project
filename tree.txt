@@ -8,6 +8,7 @@
 │   ├─docker_restart.bat
 │   ├─docker_start.bat
 │   ├─env__sample_update.bat
+│   ├─format_vue_project.bat
 │   ├─start_vue_local_server.bat
 │   └─tree_update.bat
 ├─django-project
