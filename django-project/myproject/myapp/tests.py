@@ -21,6 +21,17 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.get(url)
         FileHandler.format_json_print(response.json())
 
+    def test_calculate_channel_word(self):
+        channel_id = TEST_YOUTUBE_CHANNEL_ID
+        url = f"{self.base_url}channel/{channel_id}/calculate_channel_word"
+        data = {
+            'min_word': 3,
+            'min_word_length': 2,
+            'top_n': 100
+        }
+        response = requests.post(url, json=data)
+        FileHandler.format_json_print(response.json())
+
     def test_get_channel_video_list(self):
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         url = f"{self.base_url}channel/{channel_id}/get_channel_video_list"

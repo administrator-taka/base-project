@@ -27,10 +27,23 @@ def get_channel_list(request):
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
     channel_data = youtube_download_service.get_channel_data(channel_id)
-    calculate_word = youtube_download_service.calculate_word(channel_id, 3, 3, 100)
     # JSONレスポンスを作成
     data = {
         "channel_data": channel_data,
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['POST'])
+def calculate_channel_word(request, channel_id):
+    youtube_download_service = YoutubeDownloadService()
+    min_word = request.data.get('min_word', 1)
+    min_word_length = request.data.get('min_word_length', 1)
+    top_n = request.data.get('top_n', 100)
+    calculate_word = youtube_download_service.calculate_word(channel_id, min_word, min_word_length, top_n)
+    # JSONレスポンスを作成
+    data = {
         "calculate_word": calculate_word,
     }
 
