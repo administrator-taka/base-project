@@ -131,48 +131,61 @@
         <h2>チャンネル単語の計算</h2>
         <form @submit.prevent="calculateChannelWord">
           <div class="row g-3">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="minWordInput" class="form-label">最小単語数</label>
               <input
                 v-model.number="minWord"
                 type="number"
-                class="form-control"
+                class="form-control m-2"
                 id="minWordInput"
                 placeholder="最小単語数"
                 required
               />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="minWordLengthInput" class="form-label"
                 >最小単語の長さ</label
               >
               <input
                 v-model.number="minWordLength"
                 type="number"
-                class="form-control"
+                class="form-control m-2"
                 id="minWordLengthInput"
                 placeholder="最小単語の長さ"
                 required
               />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="topNInput" class="form-label">上位N件</label>
               <input
                 v-model.number="topN"
                 type="number"
-                class="form-control"
+                class="form-control m-2"
                 id="topNInput"
                 placeholder="上位N件"
                 required
+              />
+            </div>
+            <div class="col-md-3">
+              <label for="subtitleTypeCodeDropdown" class="form-label"
+                >字幕種類</label
+              >
+              <DropdownSelect
+                :options="subtitleTypeCode"
+                v-model="subtitleType"
               />
             </div>
           </div>
           <button type="submit" class="btn btn-primary mt-3">計算</button>
         </form>
 
-        <div v-if="calculateWord">
+        <div v-if="calculateWord" class="m-2">
           <h2>集計結果</h2>
-          <div class="overflow-auto" style="height: 1000px">
+          <div
+            v-if="calculateWord.length > 0"
+            class="overflow-auto"
+            style="height: 1000px"
+          >
             <div
               v-for="(word, index) in calculateWord"
               :key="index"
@@ -187,6 +200,7 @@
               </div>
             </div>
           </div>
+          <div v-else-if="calculateWord.length == 0">結果がありません</div>
         </div>
       </div>
 
@@ -239,6 +253,7 @@ import { YouTubeLanguageLabel } from '@/enums/youtube-language'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
 import { useChannelStore } from '@/store/useChannelStore'
+import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
 
 export default {
   components: {
@@ -281,6 +296,8 @@ export default {
     const minWord = ref(1)
     const minWordLength = ref(2)
     const topN = ref(100)
+    const subtitleTypeCode = SubtitleTypeLabel
+    const subtitleType = ref<number>(SubtitleType.MANUAL)
     const calculateWord = ref()
     const calculateChannelWord = async () => {
       channelRepository
@@ -288,7 +305,8 @@ export default {
           channelStore.channelId,
           minWord.value,
           minWordLength.value,
-          topN.value
+          topN.value,
+          subtitleType.value
         )
         .then((response) => {
           calculateWord.value = response.calculateWord
@@ -419,6 +437,8 @@ export default {
       minWord,
       minWordLength,
       topN,
+      subtitleTypeCode,
+      subtitleType,
       calculateWord
     }
   }
