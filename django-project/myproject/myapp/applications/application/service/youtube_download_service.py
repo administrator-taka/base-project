@@ -318,24 +318,34 @@ class YoutubeDownloadService:
 
         for video in queryset:
             logging.debug("★★★ Processing video ID: %s", video.video_id)
-            # 翻訳データを取得して辞書に追加
+
             for info in video.videosubtitleinfo_set.all():
                 subtitles = info.videosubtitle_set.all()
                 if not subtitles:  # subtitlesが空でないことを確認
                     continue
+
+                all_subtitle_texts = [subtitle.subtitle_text for subtitle in subtitles]
+
+                # 重複率の計算
+                duplicate_check_list = collections.Counter(all_subtitle_texts)
+                duplicate_ratio = len(duplicate_check_list) / len(all_subtitle_texts)
+                logging.debug(f"{len(duplicate_check_list)}/{len(all_subtitle_texts)}={duplicate_ratio}")
+
+                if duplicate_ratio < 0.5:
+                    logging.debug(f"追加しない(重複チェック): {video.video_id}")
+                    continue
+
                 info_words = []  # 各infoの単語を一時的に収集するリストを初期化
                 current_subtitle_text = None
                 count = 0
                 continuous_count = 2
-                all_subtitle_list = [subtitle.subtitle_text for subtitle in subtitles]
-                duplicate_check_list = collections.Counter(all_subtitle_list)
-                duplicate_ratio=len(duplicate_check_list)/len(all_subtitle_list)
-                logging.debug(f"{len(duplicate_check_list)}/{len(all_subtitle_list)}={duplicate_ratio}")
-                if duplicate_ratio < 0.5:
-                    continue
+
                 for subtitle in subtitles:
-                    if current_subtitle_text and subtitle.subtitle_text.startswith(current_subtitle_text):
-                        logging.debug(f"{current_subtitle_text}/{subtitle.subtitle_text}")
+                    subtitle_text = subtitle.subtitle_text
+
+                    # 階段状のチェック
+                    if current_subtitle_text and subtitle_text.startswith(current_subtitle_text):
+                        logging.debug(f"{current_subtitle_text}/{subtitle_text}")
                         count += 1
                         continuous_count = 0
                     else:
@@ -343,17 +353,20 @@ class YoutubeDownloadService:
                             count += 1
                         continuous_count += 1
 
-                    current_subtitle_text = subtitle.subtitle_text
+                    current_subtitle_text = subtitle_text
+
                     # 各字幕テキストを単語に分割し、リストに追加
-                    words = subtitle.subtitle_text.split()
+                    words = subtitle_text.split()
                     info_words.extend(words)
+
                 ratio = count / len(subtitles)
                 logging.debug(f"{count}/{len(subtitles)}={ratio}")
+
                 if ratio < 0.5:
-                    logging.debug(f"追加{video.video_id}")
+                    logging.debug(f"追加 {video.video_id}")
                     all_words.extend(info_words)  # 各infoの単語を全単語リストに追加
                 else:
-                    logging.debug(f"追加しない{video.video_id}")
+                    logging.debug(f"追加しない(階段チェック): {video.video_id}")
 
         # 単語の頻度を計測
         word_counter = collections.Counter(all_words)
@@ -361,7 +374,6 @@ class YoutubeDownloadService:
         top_100_words = word_counter.most_common(100)
 
         return top_100_words
-
     def get_video_data(self, video_id):
         video_detail_dict = {}
         try:
