@@ -127,57 +127,62 @@
           結果がありません
         </div>
       </div>
-
-      <h2>チャンネル単語の計算</h2>
-      <form @submit.prevent="calculateChannelWord">
-        <div class="row g-3">
-          <div class="col-md-4">
-            <label for="minWordInput" class="form-label">最小単語数</label>
-            <input
-              v-model.number="minWord"
-              type="number"
-              class="form-control"
-              id="minWordInput"
-              placeholder="最小単語数"
-              required
-            />
+      <div class="m-2">
+        <h2>チャンネル単語の計算</h2>
+        <form @submit.prevent="calculateChannelWord">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="minWordInput" class="form-label">最小単語数</label>
+              <input
+                v-model.number="minWord"
+                type="number"
+                class="form-control"
+                id="minWordInput"
+                placeholder="最小単語数"
+                required
+              />
+            </div>
+            <div class="col-md-4">
+              <label for="minWordLengthInput" class="form-label"
+                >最小単語の長さ</label
+              >
+              <input
+                v-model.number="minWordLength"
+                type="number"
+                class="form-control"
+                id="minWordLengthInput"
+                placeholder="最小単語の長さ"
+                required
+              />
+            </div>
+            <div class="col-md-4">
+              <label for="topNInput" class="form-label">上位N件</label>
+              <input
+                v-model.number="topN"
+                type="number"
+                class="form-control"
+                id="topNInput"
+                placeholder="上位N件"
+                required
+              />
+            </div>
           </div>
-          <div class="col-md-4">
-            <label for="minWordLengthInput" class="form-label"
-              >最小単語の長さ</label
+          <button type="submit" class="btn btn-primary mt-3">計算</button>
+        </form>
+
+        <div v-if="calculateWord">
+          <h2>集計結果</h2>
+          <div class="overflow-auto" style="height: 1000px">
+            <div
+              v-for="(word, index) in calculateWord"
+              :key="index"
+              class="m-2"
             >
-            <input
-              v-model.number="minWordLength"
-              type="number"
-              class="form-control"
-              id="minWordLengthInput"
-              placeholder="最小単語の長さ"
-              required
-            />
-          </div>
-          <div class="col-md-4">
-            <label for="topNInput" class="form-label">上位N件</label>
-            <input
-              v-model.number="topN"
-              type="number"
-              class="form-control"
-              id="topNInput"
-              placeholder="上位N件"
-              required
-            />
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">計算</button>
-      </form>
-
-      <div v-if="calculateWord">
-        <h2>集計結果</h2>
-        <div class="overflow-auto" style="height: 1000px">
-          <div v-for="(word, index) in calculateWord" :key="index" class="m-2">
-            <div class="row">
-              <div class="col-md-8">
-                <div class="m-3">
-                  <JsonTable :data="word" />
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="m-3">
+                    <JsonTable :data="word" />
+                  </div>
                 </div>
               </div>
             </div>
