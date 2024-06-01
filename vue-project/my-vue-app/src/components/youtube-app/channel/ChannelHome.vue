@@ -128,7 +128,7 @@
         </div>
       </div>
       <div class="m-2">
-        <h2>チャンネル単語の計算</h2>
+        <h2>頻出単語集計</h2>
         <form @submit.prevent="calculateChannelWord">
           <div class="row g-3">
             <div class="col-md-3">
