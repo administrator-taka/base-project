@@ -16,6 +16,9 @@
 │       ├─README.md
 │       ├─manage.py
 │       ├─memo.txt
+│       ├─middleware
+│       │   ├─__init__.py
+│       │   └─common_middleware.py
 │       ├─myapp
 │       │   ├─__init__.py
 │       │   ├─admin.py
@@ -91,6 +94,7 @@
 │       │   │   ├─0029_subtitlelearningmemory.py
 │       │   │   ├─0030_alter_subtitlelearningmemory_unique_together.py
 │       │   │   ├─0031_remove_subtitlelearningmemory_id_and_more.py
+│       │   │   ├─0032_alter_channeltranslationinfo_default_audio_language_and_more.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
@@ -226,8 +230,8 @@
         ├─package-lock.json
         ├─package.json
         ├─public
-        │   ├─favicon.ico
-        │   └─index.html
+        │   ├─index.html
+        │   └─onigiri.png
         ├─src
         │   ├─App.vue
         │   ├─api
@@ -283,7 +287,8 @@
         │   ├─store
         │   │   ├─counter.ts
         │   │   ├─index.ts
-        │   │   └─test.ts
+        │   │   ├─test.ts
+        │   │   └─useChannelStore.ts
         │   ├─utils
         │   │   └─to_camel_case.ts
         │   └─views
