@@ -381,8 +381,8 @@ class YoutubeDownloadService:
         def is_valid_word(word, min_word_length):
             is_longer_than_min_length = len(word) >= min_word_length  # 単語の長さがmin_word_length文字以上
             is_not_symbol_only = not re.match(r'^[^\w\s]+$', word)  # 単語が記号のみで構成されていない
-            is_not_enclosed_in_brackets = not re.match(r'^\[.*\]$', word)  # 単語が鍵かっこで囲まれていない
-            return is_longer_than_min_length and is_not_symbol_only and is_not_enclosed_in_brackets
+            is_not_enclosed_in_symbols = not re.match(r'^\W.*\W$', word)  # 単語が記号で囲まれていない
+            return is_longer_than_min_length and is_not_symbol_only and is_not_enclosed_in_symbols
 
         # 単語のフィルター処理
         filtered_words = [word for word in all_words if is_valid_word(word, min_word_length)]
