@@ -3,10 +3,7 @@ import { AxiosResponse } from 'axios'
 import toCamelCase from '@/utils/to_camel_case'
 
 export default {
-  async getLearningSubtitleList(
-    languageCode: string,
-    learningStatus: number
-  ) {
+  async getLearningSubtitleList(languageCode: string, learningStatus: number) {
     const data = {
       language_code: languageCode,
       learning_status: learningStatus

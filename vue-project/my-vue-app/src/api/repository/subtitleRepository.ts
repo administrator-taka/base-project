@@ -44,7 +44,10 @@ export default {
       learning_status: learningStatus
     }
     return youtubeAppApiClient
-      .post(`/subtitle/${subtitleTextId}/insert_or_update_subtitle_learning_memory`, data)
+      .post(
+        `/subtitle/${subtitleTextId}/insert_or_update_subtitle_learning_memory`,
+        data
+      )
       .then((response: AxiosResponse) => toCamelCase(response.data))
       .catch((error: string) => {
         console.error('API実行結果エラー:', error)
