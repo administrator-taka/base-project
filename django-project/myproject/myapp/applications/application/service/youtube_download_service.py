@@ -294,7 +294,7 @@ class YoutubeDownloadService:
         return search_results
 
     # 単語集計
-    def calculate_word(self, channel_id, min_word_length, top_n):
+    def calculate_word(self, channel_id, min_word, min_word_length, top_n):
         default_audio_language, translation_languages = self.get_translation_info(channel_id)
 
         # VideoDetailをベースにクエリを構築
@@ -356,9 +356,17 @@ class YoutubeDownloadService:
 
                     current_subtitle_text = subtitle_text
 
+                    def get_combinations(words, min_word):
+                        combinations = []
+                        for i in range(len(words) - min_word + 1):
+                            combination = ' '.join(words[i:i + min_word])
+                            combinations.append(combination)
+                        return combinations
+
                     # 各字幕テキストを単語に分割し、リストに追加
                     words = subtitle_text.split()
-                    info_words.extend(words)
+                    join_words = get_combinations(words, min_word)  # min_wordごとの組み合わせで結合
+                    info_words.extend(join_words)
 
                 ratio = count / len(subtitles)
                 logging.debug(f"{count}/{len(subtitles)}={ratio}")

@@ -27,7 +27,7 @@ def get_channel_list(request):
 def get_channel_data(request, channel_id):
     youtube_download_service = YoutubeDownloadService()
     channel_data = youtube_download_service.get_channel_data(channel_id)
-    calculate_word = youtube_download_service.calculate_word(channel_id, 3, 200)
+    calculate_word = youtube_download_service.calculate_word(channel_id, 3, 3, 100)
     # JSONレスポンスを作成
     data = {
         "channel_data": channel_data,
