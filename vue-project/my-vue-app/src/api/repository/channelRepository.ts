@@ -21,6 +21,26 @@ export default {
         throw error
       })
   },
+  async calculateChannelWord(
+    channelId: string,
+    min_word: number,
+    min_word_length: number,
+    top_n: number,
+  ) {
+    const data = {
+      min_word: min_word,
+      min_word_length: min_word_length,
+      top_n: top_n,
+    }
+
+    return youtubeAppApiClient
+      .post(`/channel/${channelId}/calculate_channel_word`, data)
+      .then((response: AxiosResponse) => toCamelCase(response.data))
+      .catch((error: string) => {
+        console.error('API実行結果エラー:', error)
+        throw error
+      })
+  },
   async getChannelVideoList(
     channelId: string,
     page: number,

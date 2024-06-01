@@ -215,7 +215,16 @@ export default {
           console.error(error + 'エラーが返ってきた')
         })
     }
-
+    const calculateChannelWord = async () => {
+      channelRepository
+        .calculateChannelWord(channelStore.channelId, 3, 2, 100)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
     const totalPages = ref(1)
     const total = ref(0)
     const getChannelVideoList = async () => {
@@ -332,7 +341,8 @@ export default {
       selectedLanguageCodeList,
       selectedLanguageCode,
       channelStore,
-      subtitleListLanguages
+      subtitleListLanguages,
+      calculateChannelWord
     }
   }
 }
