@@ -176,7 +176,9 @@
               />
             </div>
           </div>
-          <button type="submit" class="btn btn-primary mt-3">計算</button>
+          <button type="submit" class="btn btn-primary m-2">
+            <i class="bi bi-calculator"></i> 計算
+          </button>
         </form>
 
         <div v-if="calculateWord" class="m-2">
