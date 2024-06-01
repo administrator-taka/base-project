@@ -73,7 +73,11 @@
       <!-- 検索結果の表示 -->
       <div v-if="searchResults" class="m-2">
         <h2>検索結果</h2>
-        <div class="overflow-auto" style="height: 1000px">
+        <div
+          v-if="searchResults.length > 0"
+          class="overflow-auto"
+          style="height: 1000px"
+        >
           <div
             v-for="(result, index) in searchResults"
             :key="index"
@@ -91,12 +95,17 @@
             </a>
           </div>
         </div>
+        <div v-else-if="searchResults.length == 0">結果がありません</div>
       </div>
 
-      <!-- 検索結果の表示 -->
+      <!-- 複数処理結果の表示 -->
       <div v-if="searchMultipleResults" class="m-2">
         <h2>複数処理結果</h2>
-        <div class="overflow-auto" style="height: 1000px">
+        <div
+          v-if="searchMultipleResults.length > 0"
+          class="overflow-auto"
+          style="height: 1000px"
+        >
           <div
             v-for="(result, index) in searchMultipleResults"
             :key="index"
@@ -114,7 +123,11 @@
             </a>
           </div>
         </div>
+        <div v-else-if="searchMultipleResults.length == 0">
+          結果がありません
+        </div>
       </div>
+
       <h2>絞り込み</h2>
       <DropdownMultiSelect
         :options="languageCode"
