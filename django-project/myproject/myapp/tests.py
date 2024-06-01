@@ -27,7 +27,8 @@ class TestAPIEndpoints(unittest.TestCase):
         data = {
             'min_word': 3,
             'min_word_length': 2,
-            'top_n': 100
+            'top_n': 100,
+            'subtitle_type': 1
         }
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())

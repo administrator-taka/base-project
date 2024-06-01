@@ -294,7 +294,7 @@ class YoutubeDownloadService:
         return search_results
 
     # 単語集計
-    def calculate_word(self, channel_id, min_word, min_word_length, top_n):
+    def calculate_word(self, channel_id, min_word, min_word_length, top_n, subtitle_type):
         default_audio_language, translation_languages = self.get_translation_info(channel_id)
 
         # VideoDetailをベースにクエリを構築
@@ -306,7 +306,7 @@ class YoutubeDownloadService:
         queryset = queryset.prefetch_related(
             Prefetch('videosubtitleinfo_set',
                      queryset=VideoSubtitleInfo.objects.filter(
-                         # subtitle_type=SubtitleType.MANUAL.value,
+                         subtitle_type=subtitle_type.value,
                          language_code=default_audio_language.value
                      ).prefetch_related(
                          Prefetch('videosubtitle_set',
