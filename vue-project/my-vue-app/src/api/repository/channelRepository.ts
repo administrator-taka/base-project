@@ -55,6 +55,16 @@ export default {
       })
   },
 
+  async searchMultipleWord(channelId: string, searchWord: string) {
+    return youtubeAppApiClient
+      .post(`/channel/${channelId}/search_multiple_word`, { search_word: searchWord })
+      .then((response: AxiosResponse) => toCamelCase(response.data))
+      .catch((error: string) => {
+        console.error('API実行結果エラー:', error)
+        throw error
+      })
+  },
+
   async updateTranslationLanguage(
     channelId: string,
     defaultAudioLanguage: string,

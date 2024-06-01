@@ -92,6 +92,29 @@
           </div>
         </div>
       </div>
+
+      <!-- 検索結果の表示 -->
+      <div v-if="searchMultipleResults" class="m-2">
+        <h2>複数処理結果</h2>
+        <div class="overflow-auto" style="height: 1000px">
+          <div
+            v-for="(result, index) in searchMultipleResults"
+            :key="index"
+            class="mb-2"
+          >
+            <JsonTable :data="result" />
+            <button
+              @click="goToVideoPage(result.videoId)"
+              class="btn btn-info m-2"
+            >
+              動画詳細
+            </button>
+            <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
+              <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
+            </a>
+          </div>
+        </div>
+      </div>
       <h2>絞り込み</h2>
       <DropdownMultiSelect
         :options="languageCode"
@@ -163,6 +186,7 @@ export default {
 
     const searchWord = ref('')
     const searchResults = ref()
+    const searchMultipleResults = ref()
 
     const getChannelData = async () => {
       channelRepository
@@ -213,6 +237,15 @@ export default {
         .searchWord(channelStore.channelId, searchWord.value)
         .then((response) => {
           searchResults.value = response.searchResults
+          console.log(response)
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+      channelRepository
+        .searchMultipleWord(channelStore.channelId, searchWord.value)
+        .then((response) => {
+          searchMultipleResults.value = response.searchMultipleResults
           console.log(response)
         })
         .catch((error) => {
@@ -275,6 +308,7 @@ export default {
       goToVideoPage,
       search,
       searchResults,
+      searchMultipleResults,
       searchWord,
       downloadChannelSubtitles,
       totalPages,

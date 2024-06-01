@@ -46,6 +46,13 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
+    def test_search_multiple_word(self):
+        channel_id = TEST_YOUTUBE_CHANNEL_ID
+        url = f"{self.base_url}channel/{channel_id}/search_multiple_word"
+        data = {"search_word": "인터넷"}
+        response = requests.post(url, json=data)
+        FileHandler.format_json_print(response.json())
+
     def test_update_translation_language(self):
         channel_id = TEST_YOUTUBE_CHANNEL_ID
         url = f"{self.base_url}channel/{channel_id}/update_translation_language"

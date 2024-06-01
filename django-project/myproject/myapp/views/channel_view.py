@@ -52,7 +52,6 @@ def get_channel_video_list(request, channel_id):
     return JsonResponse(data=data, status=200)
 
 
-
 @api_view(['GET'])
 def download_channel_subtitles(request, channel_id):
     start_time = time.time()
@@ -102,6 +101,31 @@ def search_word(request, channel_id):
     # JSONレスポンスを作成
     data = {
         "search_results": search_results
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['POST'])
+def search_multiple_word(request, channel_id):
+    # リクエストのJSONの中身を取得
+    request_data = request.data
+
+    # search_wordを取得
+    search_word = request_data.get('search_word', None)
+
+    # search_wordが空文字、空白、またはNoneの場合、処理を中断しエラーレスポンスを返す
+    if not search_word or search_word.strip() == '':
+        # TODO:バリデーション、エラーレスポンス追加
+        return JsonResponse(data={'error': '検索ワードが無効です。'}, status=400)
+
+    youtube_download_service = YoutubeDownloadService()
+    # TODO:言語どうにかする
+    search_multiple_results = youtube_download_service.search_multiple_word(search_word, channel_id,
+                                                                            SubtitleType.AUTOMATIC)
+    # JSONレスポンスを作成
+    data = {
+        "search_multiple_results": search_multiple_results
     }
 
     return JsonResponse(data=data, status=200)

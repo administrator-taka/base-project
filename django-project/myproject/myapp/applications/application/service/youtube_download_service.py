@@ -188,7 +188,6 @@ class YoutubeDownloadService:
             )
 
     # 単語検索
-    # 単語検索
     def search_single_row_word(self, search_word, channel_id=None, subtitle_type=None, language_code=None):
         # 検索クエリを構築
         query = Q(subtitle_text__icontains=search_word)
@@ -212,12 +211,83 @@ class YoutubeDownloadService:
             logging.debug(f"Subtitle Text: {result.subtitle_text}")
             logging.debug(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
             result_dict = {
-                "video_id": result.subtitle_id.video_id_id,
+                "video_id": result.subtitle_id.video_id.video_id,
+                "title": result.subtitle_id.video_id.title,
                 "t_start_ms": result.t_start_ms,
                 "subtitle_text": result.subtitle_text,
                 "youtube_url": f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms"
             }
             search_results.append(result_dict)
+
+        return search_results
+
+    # 単語検索
+    def search_multiple_word(self, search_word, channel_id=None, subtitle_type=None, language_code=None):
+        # VideoDetailをベースにクエリを構築
+        queryset = VideoDetail.objects.filter(
+            channel_id=channel_id
+        ).order_by('published_at')
+
+        # PrefetchでSubtitleTranslationとSubtitleLearningMemoryを取得
+        queryset = queryset.prefetch_related(
+            Prefetch('videosubtitleinfo_set',
+                     queryset=VideoSubtitleInfo.objects.filter(
+                         subtitle_type=subtitle_type.value
+                     ).prefetch_related(
+                         Prefetch('videosubtitle_set',
+                                  queryset=VideoSubtitle.objects.all().order_by('t_start_ms', 't_offset_ms'))
+                     ))
+        )
+
+        # 結果を辞書のリストに詰めて返す
+        search_results = []
+        search_word_list = search_word.split()
+        n = len(search_word_list)
+        logging.debug(f"検索開始")
+        for video in queryset:
+            logging.debug("★★★")
+            # 翻訳データを取得して辞書に追加
+            for info in video.videosubtitleinfo_set.all():
+                subtitles = info.videosubtitle_set.all()
+                full_text = ' '.join(subtitle.subtitle_text for subtitle in subtitles)
+
+                # 検索語が結合テキストに含まれているか確認
+                if search_word in full_text:
+                    t_start_ms = ''
+                    subtitle_text = ''
+                    for i in range(n - 1, len(subtitles)):
+                        target_word_list = [subtitles[i - (n - j - 1)].subtitle_text for j in range(n)]
+                        target_word = ' '.join(target_word_list)
+
+                        if target_word == search_word:
+                            start = subtitles[i - (n - 1)]
+                            end = subtitles[i]
+                            logging.debug(
+                                f"start!subtitle_id: {start.subtitle_id},subtitle_text: {start.subtitle_text},t_start_ms: {start.t_start_ms}, t_offset_ms: {start.t_offset_ms}")
+                            logging.debug(
+                                f"end!subtitle_id: {end.subtitle_id},subtitle_text: {end.subtitle_text},t_start_ms: {end.t_start_ms}, t_offset_ms: {end.t_offset_ms}")
+                            t_start_ms = start.t_start_ms
+
+                            # 追加: 特定範囲の字幕データを取得
+                            subtitles_in_range = subtitles.filter(
+                                subtitle_id=info.subtitle_id,
+                                t_start_ms__gte=start.t_start_ms,
+                                t_start_ms__lte=end.t_start_ms
+                            ).order_by('t_start_ms', 't_offset_ms')
+
+                            result = [subtitle.subtitle_text for subtitle in subtitles_in_range]
+                            subtitle_text = ' '.join(result)
+                            logging.debug(subtitle_text)
+                    youtube_url = f"https://www.youtube.com/watch?v={video.video_id}&t={t_start_ms}ms"
+                    result_dict = {
+                        "video_id": video.video_id,
+                        "title": video.title,
+                        "t_start_ms": t_start_ms,
+                        "subtitle_text": subtitle_text,
+                        "youtube_url": youtube_url,
+                    }
+                    logging.debug(youtube_url)
+                    search_results.append(result_dict)
 
         return search_results
 
