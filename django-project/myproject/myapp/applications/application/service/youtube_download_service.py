@@ -306,7 +306,7 @@ class YoutubeDownloadService:
         queryset = queryset.prefetch_related(
             Prefetch('videosubtitleinfo_set',
                      queryset=VideoSubtitleInfo.objects.filter(
-                         subtitle_type=SubtitleType.MANUAL.value,
+                         # subtitle_type=SubtitleType.MANUAL.value,
                          language_code=default_audio_language.value
                      ).prefetch_related(
                          Prefetch('videosubtitle_set',
@@ -332,7 +332,7 @@ class YoutubeDownloadService:
                 duplicate_ratio = len(duplicate_check_list) / len(all_subtitle_texts)
                 logging.debug(f"{len(duplicate_check_list)}/{len(all_subtitle_texts)}={duplicate_ratio}")
 
-                if duplicate_ratio < 0.5:
+                if duplicate_ratio < 0.5 and info.subtitle_type == SubtitleType.MANUAL.value:
                     logging.debug(f"追加しない(重複チェック): {video.video_id}")
                     continue
 
@@ -356,24 +356,24 @@ class YoutubeDownloadService:
 
                     current_subtitle_text = subtitle_text
 
-                    def get_combinations(words, min_word):
-                        combinations = []
-                        for i in range(len(words) - min_word + 1):
-                            combination = ' '.join(words[i:i + min_word])
-                            combinations.append(combination)
-                        return combinations
-
                     # 各字幕テキストを単語に分割し、リストに追加
                     words = subtitle_text.split()
-                    join_words = get_combinations(words, min_word)  # min_wordごとの組み合わせで結合
-                    info_words.extend(join_words)
+                    info_words.extend(words)
 
                 ratio = count / len(subtitles)
                 logging.debug(f"{count}/{len(subtitles)}={ratio}")
 
+                def get_combinations(words, min_word):
+                    combinations = []
+                    for i in range(len(words) - min_word + 1):
+                        combination = ' '.join(words[i:i + min_word])
+                        combinations.append(combination)
+                    return combinations
+
                 if ratio < 0.5:
                     logging.debug(f"追加 {video.video_id}")
-                    all_words.extend(info_words)  # 各infoの単語を全単語リストに追加
+                    join_words = get_combinations(info_words, min_word)  # min_wordごとの組み合わせで結合
+                    all_words.extend(join_words)  # 各infoの単語を全単語リストに追加
                 else:
                     logging.debug(f"追加しない(階段チェック): {video.video_id}")
 
