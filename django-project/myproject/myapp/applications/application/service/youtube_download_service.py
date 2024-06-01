@@ -1,3 +1,4 @@
+import collections
 import datetime
 import logging
 import time
@@ -290,6 +291,49 @@ class YoutubeDownloadService:
                     search_results.append(result_dict)
 
         return search_results
+
+    # 単語集計
+    def calculate_word(self, channel_id):
+        default_audio_language, translation_languages = self.get_translation_info(channel_id)
+
+        # VideoDetailをベースにクエリを構築
+        queryset = VideoDetail.objects.filter(
+            channel_id=channel_id
+        ).order_by('published_at')
+
+        # PrefetchでSubtitleTranslationとSubtitleLearningMemoryを取得
+        queryset = queryset.prefetch_related(
+            Prefetch('videosubtitleinfo_set',
+                     queryset=VideoSubtitleInfo.objects.filter(
+                         subtitle_type=SubtitleType.MANUAL.value,
+                         language_code=default_audio_language.value
+                     ).prefetch_related(
+                         Prefetch('videosubtitle_set',
+                                  queryset=VideoSubtitle.objects.all().order_by('t_start_ms'))
+                     ))
+        )
+
+        logging.debug(f"検索開始")
+        all_words = []  # 全単語を収集するリストを初期化
+
+        for video in queryset:
+            logging.debug("★★★ Processing video ID: %s", video.video_id)
+            # 翻訳データを取得して辞書に追加
+            for info in video.videosubtitleinfo_set.all():
+                subtitles = info.videosubtitle_set.all()
+                info_words = []  # 各infoの単語を一時的に収集するリストを初期化
+                for subtitle in subtitles:
+                    # 各字幕テキストを単語に分割し、リストに追加
+                    words = subtitle.subtitle_text.split()
+                    info_words.extend(words)
+                all_words.extend(info_words)  # 各infoの単語を全単語リストに追加
+
+        # 単語の頻度を計測
+        word_counter = collections.Counter(all_words)
+        # 上位100までに絞り込む
+        top_100_words = word_counter.most_common(100)
+
+        return top_100_words
 
     def get_video_data(self, video_id):
         video_detail_dict = {}
