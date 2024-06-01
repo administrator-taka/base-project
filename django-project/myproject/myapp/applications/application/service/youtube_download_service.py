@@ -1,6 +1,7 @@
 import collections
 import datetime
 import logging
+import re
 import time
 import unittest
 from datetime import datetime
@@ -293,7 +294,7 @@ class YoutubeDownloadService:
         return search_results
 
     # 単語集計
-    def calculate_word(self, channel_id):
+    def calculate_word(self, channel_id, min_word_length, top_n):
         default_audio_language, translation_languages = self.get_translation_info(channel_id)
 
         # VideoDetailをベースにクエリを構築
@@ -368,12 +369,23 @@ class YoutubeDownloadService:
                 else:
                     logging.debug(f"追加しない(階段チェック): {video.video_id}")
 
-        # 単語の頻度を計測
-        word_counter = collections.Counter(all_words)
-        # 上位100までに絞り込む
-        top_100_words = word_counter.most_common(100)
+        # フィルタリングの条件
+        def is_valid_word(word, min_word_length):
+            is_longer_than_min_length = len(word) >= min_word_length  # 単語の長さがmin_word_length文字以上
+            is_not_symbol_only = not re.match(r'^[^\w\s]+$', word)  # 単語が記号のみで構成されていない
+            is_not_enclosed_in_brackets = not re.match(r'^\[.*\]$', word)  # 単語が鍵かっこで囲まれていない
+            return is_longer_than_min_length and is_not_symbol_only and is_not_enclosed_in_brackets
 
-        return top_100_words
+        # 単語のフィルター処理
+        filtered_words = [word for word in all_words if is_valid_word(word, min_word_length)]
+
+        # 単語の頻度を計測
+        word_counter = collections.Counter(filtered_words)
+        # 上位top_nまでに絞り込む
+        top_words = word_counter.most_common(top_n)
+
+        return top_words
+
     def get_video_data(self, video_id):
         video_detail_dict = {}
         try:
