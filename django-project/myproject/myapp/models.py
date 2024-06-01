@@ -220,10 +220,9 @@ class SubtitleTranslation(models.Model):
 
 
 class SubtitleLearningMemory(models.Model):
-
     # 字幕学習記録ID
     subtitle_learning_memory_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
-                                                    verbose_name='字幕学習記録ID')
+                                                   verbose_name='字幕学習記録ID')
     # 字幕翻訳テキストID
     subtitle_translation_text_id = models.ForeignKey(SubtitleTranslation, db_column='subtitle_translation_text_id',
                                                      on_delete=models.CASCADE,

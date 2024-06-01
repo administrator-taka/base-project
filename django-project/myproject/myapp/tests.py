@@ -2,7 +2,6 @@ import unittest
 
 import requests
 
-from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myproject.settings.base import TEST_YOUTUBE_CHANNEL_ID, TEST_YOUTUBE_VIDEO_ID
 

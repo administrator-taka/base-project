@@ -15,7 +15,7 @@ def get_learning_subtitle_text_list(request):
     learning_status = request_data.get('learning_status', None)
 
     learning_language_service = LearningLanguageService()
-    learning_subtitle_list=learning_language_service.get_learning_subtitle_text_list(
+    learning_subtitle_list = learning_language_service.get_learning_subtitle_text_list(
         YouTubeLanguage(language_code),
         LearningStatus(learning_status))
 
