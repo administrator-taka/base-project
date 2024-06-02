@@ -125,6 +125,9 @@
 │       │   └─wsgi.py
 │       ├─requirements.txt
 │       ├─resource
+│       │   ├─chatgpt_translation_prompt
+│       │   │   ├─from_en_to_ja.txt
+│       │   │   └─from_ko_to_ja.txt
 │       │   └─test.sql
 │       └─sample.env
 ├─docker
@@ -280,6 +283,7 @@
         │   │           └─VideoHome.vue
         │   ├─enums
         │   │   ├─learning-status.ts
+        │   │   ├─subtitle-type.ts
         │   │   └─youtube-language.ts
         │   ├─main.ts
         │   ├─router
