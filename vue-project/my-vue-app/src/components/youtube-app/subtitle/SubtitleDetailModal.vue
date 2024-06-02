@@ -60,7 +60,7 @@
       </div>
       <div class="m-2">
         <label for="subtitleLiteralTranslationText" class="form-label"
-          >字幕翻訳テキスト</label
+          >直訳</label
         >
         <input
           type="text"
@@ -71,7 +71,7 @@
       </div>
       <div class="m-2">
         <label for="subtitleTranslationTextDetail" class="form-label"
-          >字幕翻訳詳細</label
+          >翻訳詳細</label
         >
         <button @click="copyChatgptPrompt" class="btn btn-light m-2">
           <i class="bi bi-clipboard"></i> プロンプトのコピー
