@@ -74,6 +74,13 @@
         <label for="subtitleTranslationTextDetail" class="form-label"
           >字幕翻訳詳細</label
         >
+        <button
+          @click="executeChatgptTranslation"
+          class="btn btn-info m-2"
+          :disabled="!!subtitleTranslationTextDetail"
+        >
+          ChatGPTで字幕生成
+        </button>
         <textarea
           id="subtitleTranslationTextDetail"
           class="form-control"
@@ -131,7 +138,6 @@ export default defineComponent({
             response.subtitleTextData.learningStatus
           )
           console.log(response)
-          executeChatgptTranslation()
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
@@ -143,10 +149,11 @@ export default defineComponent({
         .executeChatgptTranslation(
           props.subtitleTextId,
           props.languageCode,
-          false
+          true
         )
         .then((response) => {
           console.log(response)
+          subtitleTranslationTextDetail.value = response.chatgptData.response
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
@@ -212,7 +219,8 @@ export default defineComponent({
       subtitleLiteralTranslationText,
       subtitleTranslationTextDetail,
       learningStatus,
-      selectedLearningStatus
+      selectedLearningStatus,
+      executeChatgptTranslation
     }
   }
 })
