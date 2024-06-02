@@ -74,18 +74,25 @@
         <label for="subtitleTranslationTextDetail" class="form-label"
           >字幕翻訳詳細</label
         >
+        <button @click="copyChatgptPrompt" class="btn btn-light m-2">
+          <i class="bi bi-clipboard"></i> プロンプトのコピー
+        </button>
         <button
           @click="executeChatgptTranslation"
-          class="btn btn-info m-2"
+          class="btn btn-warning m-2"
           :disabled="!!subtitleTranslationTextDetail"
         >
-          ChatGPTで字幕生成
+          <i class="bi bi-exclamation-triangle"></i> ChatGPTで字幕生成
         </button>
         <textarea
           id="subtitleTranslationTextDetail"
           class="form-control"
           v-model="subtitleTranslationTextDetail"
-          rows="6"
+          :rows="
+            subtitleTranslationTextDetail
+              ? subtitleTranslationTextDetail.split('\n').length + 2
+              : 3
+          "
         ></textarea>
       </div>
     </div>
@@ -160,6 +167,35 @@ export default defineComponent({
         })
     }
 
+    const copyChatgptPrompt = async () => {
+      subtitleRepository
+        .executeChatgptTranslation(
+          props.subtitleTextId,
+          props.languageCode,
+          false
+        )
+        .then((response) => {
+          console.log(response)
+          const request = response.chatgptData.request // リクエストを取得
+          // クリップボードにテキストをコピー
+          navigator.clipboard
+            .writeText(request)
+            .then(() => {
+              console.log('クリップボードにコピーされました')
+              // コピー成功時の処理を追加することもできます
+            })
+            .catch((error) => {
+              console.error(
+                'クリップボードの操作中にエラーが発生しました:',
+                error
+              )
+            })
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
     const updateCancelFlag = ref(false)
 
     const updateSubtitleTranslation = async () => {
@@ -220,7 +256,8 @@ export default defineComponent({
       subtitleTranslationTextDetail,
       learningStatus,
       selectedLearningStatus,
-      executeChatgptTranslation
+      executeChatgptTranslation,
+      copyChatgptPrompt
     }
   }
 })

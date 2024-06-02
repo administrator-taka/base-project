@@ -43,7 +43,8 @@ class YoutubeDownloadService:
         # プレースホルダーに変数を代入する
         request = template.format(
             subtitle_text=subtitle_text,
-            subtitle_translation_text=subtitle_translation_text
+            subtitle_translation_text=subtitle_translation_text,
+            copy_code_block="コピーできるようにすべてコードブロックに出力してください。" if not call_api else ""
         )
         logging.debug(request)
         if call_api:
