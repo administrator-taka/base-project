@@ -13,6 +13,20 @@ export default {
         throw error
       })
   },
+  async executeChatgptTranslation(
+    subtitleTextId: string,
+    languageCode: string,
+    callApi: boolean
+  ) {
+    const data = { language_code: languageCode, call_api: callApi }
+    return youtubeAppApiClient
+      .post(`/subtitle/${subtitleTextId}/execute_chatgpt_translation`, data)
+      .then((response: AxiosResponse) => toCamelCase(response.data))
+      .catch((error: string) => {
+        console.error('API実行結果エラー:', error)
+        throw error
+      })
+  },
 
   async updateSubtitleTranslation(
     subtitleTextId: string,

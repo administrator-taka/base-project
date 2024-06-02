@@ -26,13 +26,13 @@ export default {
     min_word: number,
     min_word_length: number,
     top_n: number,
-    subtitle_type: number,
+    subtitle_type: number
   ) {
     const data = {
       min_word: min_word,
       min_word_length: min_word_length,
       top_n: top_n,
-      subtitle_type: subtitle_type,
+      subtitle_type: subtitle_type
     }
 
     return youtubeAppApiClient

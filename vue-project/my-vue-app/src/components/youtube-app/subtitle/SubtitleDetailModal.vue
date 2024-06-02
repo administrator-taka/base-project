@@ -130,6 +130,23 @@ export default defineComponent({
           selectedLearningStatus.value = parseInt(
             response.subtitleTextData.learningStatus
           )
+          console.log(response)
+          executeChatgptTranslation()
+        })
+        .catch((error) => {
+          console.error(error + 'エラーが返ってきた')
+        })
+    }
+
+    const executeChatgptTranslation = async () => {
+      subtitleRepository
+        .executeChatgptTranslation(
+          props.subtitleTextId,
+          props.languageCode,
+          false
+        )
+        .then((response) => {
+          console.log(response)
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
