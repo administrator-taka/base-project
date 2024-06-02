@@ -537,8 +537,7 @@ class YoutubeDownloadService:
             video_detail.title = title
             video_detail.published_at = published_at
             video_detail.description = description
-            # サムネイルが"maxres"から始まらない場合に更新
-            if not video_detail.thumbnail.startswith('maxres'):
+            if 'maxres' not in video_detail.thumbnail:
                 video_detail.thumbnail = thumbnail
             video_detail.default_language = default_language
             video_detail.default_audio_language = default_audio_language
@@ -655,8 +654,7 @@ class YoutubeDownloadService:
             video_detail.title = title
             video_detail.published_at = published_at
             video_detail.description = description
-            # サムネイルが"maxres"から始まらない場合に更新
-            if not video_detail.thumbnail.startswith('maxres'):
+            if 'maxres' not in video_detail.thumbnail:
                 video_detail.thumbnail = thumbnail
             video_detail.channel_id = ChannelDetail.objects.get(channel_id=channel_id)
             video_detail.e_tag = e_tag
