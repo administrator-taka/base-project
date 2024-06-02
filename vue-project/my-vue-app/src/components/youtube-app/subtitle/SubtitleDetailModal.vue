@@ -82,7 +82,7 @@
           class="btn btn-warning m-2"
           :disabled="!!subtitleTranslationTextDetail"
         >
-          <i class="bi bi-exclamation-triangle"></i> ChatGPTで字幕生成
+          <i class="bi bi-exclamation-triangle"></i> ChatGPTで解説生成
         </button>
         <textarea
           id="subtitleTranslationTextDetail"
