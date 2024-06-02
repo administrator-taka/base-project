@@ -95,6 +95,16 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
+    def test_execute_chatgpt_translation(self):
+        subtitle_text_id = "D5791D90FDA5431EAA5BE2EF0E1DB5BC"
+        url = f"{self.base_url}subtitle/{subtitle_text_id}/execute_chatgpt_translation"
+        data = {
+            "language_code": "ja",
+            "call_api": False,
+        }
+        response = requests.post(url, json=data)
+        FileHandler.format_json_print(response.json())
+
     def test_update_subtitle_translation(self):
         subtitle_text_id = "29C698E5E667466F9BE70E47A721929E"
         url = f"{self.base_url}subtitle/{subtitle_text_id}/update_subtitle_translation"

@@ -1,3 +1,4 @@
+import json
 import logging
 import unittest
 from datetime import datetime
@@ -37,6 +38,12 @@ class ChatGPTApiLogic:
         # すべてのAPIキーを試行しても成功しない場合
         logging.error("すべてのAPIキーがレート制限に達しました。レスポンスを生成できません。")
         raise Exception("すべてのAPIキーがレート制限に達しました。")
+
+    def execute_chatgpt(self, prompt):
+        response = self.generate_response(prompt)
+        # 直接辞書のようにアクセスして必要なデータを抽出
+        content = response['choices'][0]['message']['content']
+        return content
 
     def _write_json_response(self, response):
         # 現在の日時を取得し、フォーマットを指定して文字列に変換

@@ -26,6 +26,29 @@ def get_subtitle_text_data(request, subtitle_text_id):
 
 
 @api_view(['POST'])
+def execute_chatgpt_translation(request, subtitle_text_id):
+    # リクエストのJSONの中身を取得
+    request_data = request.data
+
+    language_code = request_data.get('language_code', None)
+
+    call_api = request_data.get('call_api', False)
+
+    youtube_download_service = YoutubeDownloadService()
+
+    chatgpt_data = youtube_download_service.execute_chatgpt_translation(subtitle_text_id,
+                                                                        YouTubeLanguage(language_code),
+                                                                        call_api)
+
+    # JSONレスポンスを作成
+    data = {
+        "chatgpt_data": chatgpt_data,
+    }
+
+    return JsonResponse(data=data, status=200)
+
+
+@api_view(['POST'])
 def update_subtitle_translation(request, subtitle_text_id):
     # リクエストのJSONの中身を取得
     request_data = request.data

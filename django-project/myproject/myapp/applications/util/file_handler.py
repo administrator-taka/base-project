@@ -120,6 +120,24 @@ class FileHandler:
         return data
 
     @staticmethod
+    def read_txt(file_path, encoding='utf-8'):
+        """
+        指定されたテキストファイルを読み込み、その内容を返す。
+
+        Args:
+            file_path (str): 読み込むテキストファイルのパス
+            encoding (str): ファイルのエンコーディング（デフォルトは utf-8）
+
+        Returns:
+            str: 読み込んだテキストファイルの内容
+        """
+        if not file_path.endswith('.txt'):
+            file_path += '.txt'
+        with open(file_path, 'r', encoding=encoding) as txt_file:
+            data = txt_file.read()
+        return data
+
+    @staticmethod
     def get_json_response(file_path):
         """
         指定されたJSONファイルのパスを受け取り、その内容をJSON形式のレスポンスとして返す。

@@ -10,6 +10,7 @@ from typing import List
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q, Prefetch, OuterRef, Exists
 
+from myapp.applications.domain.logic.chat_gpt_api_logic import ChatGPTApiLogic
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.learning_status import LearningStatus
@@ -28,6 +29,30 @@ class YoutubeDownloadService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
+        self.chatgpt_api_logic = ChatGPTApiLogic()
+
+    def execute_chatgpt_translation(self, subtitle_text_id, language, call_api=False):
+        subtitle_translation = SubtitleTranslation.objects.get(
+            subtitle_text_id=subtitle_text_id, language_code=language.value)
+
+        subtitle_text = subtitle_translation.subtitle_text_id.subtitle_text
+        subtitle_translation_text = subtitle_translation.subtitle_translation_text
+        default_language = subtitle_translation.subtitle_text_id.subtitle_id.language_code
+        request_path = f"resource/chatgpt_translation_prompt/from_{default_language}_to_{language.value}.txt"
+        template = FileHandler.read_txt(request_path)
+        # プレースホルダーに変数を代入する
+        request = template.format(
+            subtitle_text=subtitle_text,
+            subtitle_translation_text=subtitle_translation_text
+        )
+        logging.debug(request)
+        if call_api:
+            response = self.chatgpt_api_logic.execute_chatgpt(request)
+            logging.debug(request)
+        else:
+            response = None
+
+        return {"request": request, "response": response}
 
     def get_activate_channel_list(self):
         channel_translation_infos = ChannelTranslationInfo.objects.filter(

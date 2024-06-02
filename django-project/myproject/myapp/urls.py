@@ -5,7 +5,7 @@ from myapp.views.channel_view import get_channel_data, search_word, download_cha
     update_translation_language, get_channel_video_list, get_channel_list, search_multiple_word, calculate_channel_word
 from myapp.views.learning_language import get_learning_subtitle_text_list
 from myapp.views.subtitle_text_view import get_subtitle_text_data, update_subtitle_translation, \
-    insert_or_update_subtitle_learning_memory
+    insert_or_update_subtitle_learning_memory, execute_chatgpt_translation
 from myapp.views.test_views import TestViewSet
 from myapp.views.video_view import get_video_data, download_video_subtitle
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path("video/<str:video_id>", get_video_data, name="get_video_data"),
     path("video/<str:video_id>/download_video_subtitle", download_video_subtitle, name="download_video_subtitle"),
     path("subtitle/<str:subtitle_text_id>", get_subtitle_text_data, name="get_subtitle_text_data"),
+    path("subtitle/<str:subtitle_text_id>/execute_chatgpt_translation", execute_chatgpt_translation, name="execute_chatgpt_translation"),
     path("subtitle/<str:subtitle_text_id>/update_subtitle_translation", update_subtitle_translation,
          name="update_subtitle_translation"),
     path("subtitle/<str:subtitle_text_id>/insert_or_update_subtitle_learning_memory",
