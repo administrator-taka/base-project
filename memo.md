@@ -73,3 +73,4 @@ csv から動画データ一覧の字幕をダウンロードする機能
 
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
+https://note.com/masato1230/n/nf5e198455a65
