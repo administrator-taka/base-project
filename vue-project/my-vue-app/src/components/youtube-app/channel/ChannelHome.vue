@@ -319,8 +319,8 @@ export default {
       datasets: [
         {
           label: '頻出単語集計',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(0, 163, 175, 0.2)',
+          borderColor: 'rgba(0, 163, 175, 1)',
           borderWidth: 1,
           data: [] as number[]
         }
