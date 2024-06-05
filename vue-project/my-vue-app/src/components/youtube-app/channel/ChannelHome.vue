@@ -183,6 +183,12 @@
 
         <div v-if="calculateWord" class="m-2">
           <h2>集計結果</h2>
+          <ChartComp
+            :chartId="chartId"
+            :chartData="chartData"
+            :chartOptions="chartOptions"
+          />
+
           <div
             v-if="calculateWord.length > 0"
             class="overflow-auto"
@@ -256,14 +262,20 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
 import { useChannelStore } from '@/store/useChannelStore'
 import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
+import ChartComp from '@/components/common/graph/ChartComp.vue'
 
+interface ChannelWord {
+  word: string
+  count: number
+}
 export default {
   components: {
     PaginationComponent,
     DropdownMultiSelect,
     DropdownSelect,
     JsonTable,
-    RangeSelector
+    RangeSelector,
+    ChartComp
   },
   setup() {
     const channelStore = useChannelStore()
@@ -301,6 +313,23 @@ export default {
     const subtitleTypeCode = SubtitleTypeLabel
     const subtitleType = ref<number>(SubtitleType.MANUAL)
     const calculateWord = ref()
+    const chartId = 'my-chart-id'
+    const chartData = ref({
+      labels: [] as string[],
+      datasets: [
+        {
+          label: '頻出単語集計',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1,
+          data: [] as number[]
+        }
+      ]
+    })
+    const chartOptions = {
+      responsive: true
+    }
+
     const calculateChannelWord = async () => {
       channelRepository
         .calculateChannelWord(
@@ -313,6 +342,10 @@ export default {
         .then((response) => {
           calculateWord.value = response.calculateWord
           console.log(response)
+          const data = response.calculateWord as ChannelWord[]
+
+          chartData.value.labels = data.map((item) => item.word)
+          chartData.value.datasets[0].data = data.map((item) => item.count)
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
@@ -441,7 +474,10 @@ export default {
       topN,
       subtitleTypeCode,
       subtitleType,
-      calculateWord
+      calculateWord,
+      chartId,
+      chartData,
+      chartOptions
     }
   }
 }
