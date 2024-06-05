@@ -97,7 +97,7 @@ export default {
     const selectedSubtitleTextId = ref<string>('')
     const selectedLanguageCode = ref<string>('')
     const router = useRouter()
-    const languageCode = ref()
+    const languageCode = ref([{ name: '', value: '' }])
 
     const downloadVideoSubtitle = async () => {
       videoRepository

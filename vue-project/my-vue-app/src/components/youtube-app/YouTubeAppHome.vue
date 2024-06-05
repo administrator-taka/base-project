@@ -78,8 +78,8 @@ export default {
       'UCP68LAhxzwC2WMO33bGRtFQ',
       // 	PLAVE 플레이브
       'UCPZIPuQPrfrUG9Xe_okEmQA',
-      // aaa
-      'aaa',
+      // 따라해볼레이 by섭씨쉽도
+      'UC4ZF3-w9ENwXTczPPZG6fng',
       // aaa
       'aaa',
       // aaa
