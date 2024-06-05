@@ -70,3 +70,6 @@ https://zenn.dev/kiriyama/scraps/4e05acd94a4b10
 動画データに除外するフラグを付けたい。
 有効な動画データだけ一覧取得して csv に出力する機能
 csv から動画データ一覧の字幕をダウンロードする機能
+
+pg_dump
+docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
