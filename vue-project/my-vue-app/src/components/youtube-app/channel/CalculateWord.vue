@@ -52,11 +52,7 @@
 
     <div v-if="calculateWord" class="m-2">
       <h2>集計結果</h2>
-      <ChartComp
-        :chartId="chartId"
-        :chartData="chartData"
-        :chartOptions="chartOptions"
-      />
+      <ChartComp :chartId="chartId" :chartData="chartData" />
 
       <div
         v-if="calculateWord.length > 0"
@@ -86,6 +82,7 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 import { useChannelStore } from '@/store/use-channel-store'
 import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
 import ChartComp from '@/components/common/graph/ChartComp.vue'
+import { ChartData } from '@/interfaces/chart'
 
 interface ChannelWord {
   word: string
@@ -99,29 +96,27 @@ export default {
   },
   setup() {
     const channelStore = useChannelStore()
+    const subtitleTypeCode = SubtitleTypeLabel
+    const subtitleType = ref<number>(SubtitleType.MANUAL)
 
     const minWord = ref(1)
     const minWordLength = ref(2)
     const topN = ref(50)
-    const subtitleTypeCode = SubtitleTypeLabel
-    const subtitleType = ref<number>(SubtitleType.MANUAL)
-    const calculateWord = ref()
+    const calculateWord = ref<ChannelWord[] | null>(null)
     const chartId = 'my-chart-id'
-    const chartData = ref({
-      labels: [] as string[],
+    // ChartData 型の chartData 変数
+    const chartData = ref<ChartData>({
+      labels: [], // チャートのラベル
       datasets: [
         {
-          label: '頻出単語集計',
-          backgroundColor: 'rgba(0, 163, 175, 0.2)',
-          borderColor: 'rgba(0, 163, 175, 1)',
-          borderWidth: 1,
-          data: [] as number[]
+          label: '頻出単語集計', // データセットのラベル
+          backgroundColor: 'rgba(0, 163, 175, 0.2)', // バーの背景色
+          borderColor: 'rgba(0, 163, 175, 1)', // バーの境界線の色
+          borderWidth: 1, // バーの境界線の幅
+          data: [] // チャートに表示するデータ
         }
       ]
     })
-    const chartOptions = {
-      responsive: true
-    }
 
     const calculateChannelWord = async () => {
       channelRepository
@@ -155,8 +150,7 @@ export default {
       subtitleType,
       calculateWord,
       chartId,
-      chartData,
-      chartOptions
+      chartData
     }
   }
 }

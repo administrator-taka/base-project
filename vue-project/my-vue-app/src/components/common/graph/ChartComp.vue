@@ -1,11 +1,12 @@
 <template>
   <div>
-    <Bar :id="chartId" :options="chartOptions" :data="chartData" />
+    <Bar :id="chartId" :data="chartData" />
   </div>
 </template>
-
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
 import { Bar } from 'vue-chartjs'
+import { ChartData } from '@/interfaces/chart'
 import {
   Chart as ChartJS,
   Title,
@@ -18,28 +19,20 @@ import {
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-export default {
+export default defineComponent({
   props: {
     chartId: {
       type: String,
       default: 'my-chart-id'
     },
     chartData: {
-      type: Object,
+      type: Object as () => ChartData,
       default: () => ({
         labels: [],
         datasets: [{ data: [] }]
       })
-    },
-    chartOptions: {
-      type: Object,
-      default: () => ({
-        responsive: true
-      })
     }
   },
   components: { Bar }
-}
+})
 </script>
-
-<style scoped></style>
