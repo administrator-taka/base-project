@@ -67,9 +67,10 @@ https://zenn.dev/kiriyama/scraps/4e05acd94a4b10
 言語の方言のタグ付け
 /動画ページで言語選択できるようにする。
 コンポーネント分割
-動画データに除外するフラグを付けたい。
+動画データに除外するフラグを付けたい。（計測時とは別で）
 有効な動画データだけ一覧取得して csv に出力する機能
 csv から動画データ一覧の字幕をダウンロードする機能
+グラフの再読み込み処理
 
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
