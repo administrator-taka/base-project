@@ -1,6 +1,6 @@
 import { youtubeAppApiClient } from '@/api/repository/index'
 import { AxiosResponse } from 'axios'
-import toCamelCase from '@/utils/to_camel_case'
+import toCamelCase from '@/utils/to-camel-case'
 
 export default {
   async getLearningSubtitleList(languageCode: string, learningStatus: number) {

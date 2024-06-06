@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import videoRepository from '@/api/repository/videoRepository'
+import videoRepository from '@/api/repository/video-repository'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 

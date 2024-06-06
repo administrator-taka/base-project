@@ -72,10 +72,10 @@
 </template>
 
 <script lang="ts">
-import channelRepository from '@/api/repository/channelRepository'
+import channelRepository from '@/api/repository/channel-repository'
 import { ref } from 'vue'
 import JsonTable from '@/components/common/table/JsonTable.vue'
-import { useChannelStore } from '@/store/useChannelStore'
+import { useChannelStore } from '@/store/use-channel-store'
 import { useRouter } from 'vue-router'
 
 export default {

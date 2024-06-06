@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import channelRepository from '@/api/repository/channelRepository'
+import channelRepository from '@/api/repository/channel-repository'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import JsonTable from '@/components/common/table/JsonTable.vue'

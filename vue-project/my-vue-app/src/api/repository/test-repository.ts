@@ -3,8 +3,8 @@ import {
   djangoApiClient,
   youtubeAppApiClient
 } from '@/api/repository/index'
-import { testRequest } from '@/api/request/testRequest'
-import { testResponse } from '@/api/response/testResponse'
+import { testRequest } from '@/api/request/test-request'
+import { testResponse } from '@/api/response/test-response'
 import { AxiosResponse } from 'axios'
 
 export default {

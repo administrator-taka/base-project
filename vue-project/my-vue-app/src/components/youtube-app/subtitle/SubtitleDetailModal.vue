@@ -101,7 +101,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, watch, watchEffect } from 'vue'
 import BaseModal from '@/components/common/modal/BaseModal.vue'
-import subtitleRepository from '@/api/repository/subtitleRepository'
+import subtitleRepository from '@/api/repository/subtitle-repository'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { LearningStatusLabel } from '@/enums/learning-status'
 

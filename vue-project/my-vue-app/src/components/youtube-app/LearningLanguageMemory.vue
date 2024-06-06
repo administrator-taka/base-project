@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import learningLanguageMemoryRepository from '@/api/repository/learningLanguageMemoryRepository'
+import learningLanguageMemoryRepository from '@/api/repository/learning-language-memory-repository'
 import { onMounted, ref, watch } from 'vue'
 import SubtitleDetailModal from '@/components/youtube-app/subtitle/SubtitleDetailModal.vue'
 import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'

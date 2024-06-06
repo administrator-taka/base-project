@@ -79,11 +79,11 @@
 </template>
 
 <script lang="ts">
-import channelRepository from '@/api/repository/channelRepository'
+import channelRepository from '@/api/repository/channel-repository'
 import { ref } from 'vue'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import JsonTable from '@/components/common/table/JsonTable.vue'
-import { useChannelStore } from '@/store/useChannelStore'
+import { useChannelStore } from '@/store/use-channel-store'
 import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
 import ChartComp from '@/components/common/graph/ChartComp.vue'
 

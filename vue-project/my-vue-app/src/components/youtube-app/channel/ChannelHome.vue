@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import channelRepository from '@/api/repository/channelRepository'
+import channelRepository from '@/api/repository/channel-repository'
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PaginationComponent from '@/components/common/pagination/PaginationComponent.vue'
@@ -98,7 +98,7 @@ import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { YouTubeLanguageLabel } from '@/enums/youtube-language'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
-import { useChannelStore } from '@/store/useChannelStore'
+import { useChannelStore } from '@/store/use-channel-store'
 import CaluculateWord from '@/components/youtube-app/channel/CalculateWord.vue'
 import SearchWord from '@/components/youtube-app/channel/SearchWord.vue'
 

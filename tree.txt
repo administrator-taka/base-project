@@ -295,7 +295,7 @@
         │   │   ├─test.ts
         │   │   └─useChannelStore.ts
         │   ├─utils
-        │   │   └─to_camel_case.ts
+        │   │   └─to-camel-case.ts
         │   └─views
         │       ├─AboutView.vue
         │       └─HomeView.vue

@@ -1,5 +1,5 @@
 import { youtubeAppApiClient } from '@/api/repository/index'
-import toCamelCase from '@/utils/to_camel_case'
+import toCamelCase from '@/utils/to-camel-case'
 import { AxiosResponse } from 'axios'
 
 export default {

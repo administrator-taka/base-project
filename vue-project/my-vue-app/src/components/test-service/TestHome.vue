@@ -32,13 +32,13 @@
 </template>
 
 <script lang="ts">
-import testRepository from '@/api/repository/testRepository'
+import testRepository from '@/api/repository/test-repository'
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useCounterStore } from '@/store/counter'
-import channelRepository from '@/api/repository/channelRepository'
-import videoRepository from '@/api/repository/videoRepository'
-import subtitleRepository from '@/api/repository/subtitleRepository'
+import channelRepository from '@/api/repository/channel-repository'
+import videoRepository from '@/api/repository/video-repository'
+import subtitleRepository from '@/api/repository/subtitle-repository'
 
 export default {
   components: {},
