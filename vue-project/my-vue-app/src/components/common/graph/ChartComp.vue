@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Bar :id="chartId" :data="copiedChartData" :key="shouldRedrawChart" />
+    <Bar :id="chartId" :data="chartData" :key="shouldRedrawChart" />
   </div>
 </template>
 
@@ -36,20 +36,20 @@ export default defineComponent({
   },
   setup(props) {
     const copiedChartData = shallowReactive({ ...props.chartData })
-    const shouldRedrawChart = ref(false)
+    const shouldRedrawChart = ref(0)
 
     // chartData の変更を監視し、変更があればグラフを再描画する
     watch(
       () => props.chartData.labels,
       () => {
-        shouldRedrawChart.value = !shouldRedrawChart.value
+        shouldRedrawChart.value += 1
       }
     )
 
     watch(
       () => props.chartData.datasets,
       () => {
-        shouldRedrawChart.value = !shouldRedrawChart.value
+        shouldRedrawChart.value += 1
       }
     )
 
