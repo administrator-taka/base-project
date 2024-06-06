@@ -127,90 +127,7 @@
           結果がありません
         </div>
       </div>
-      <div class="m-2">
-        <h2>頻出単語集計</h2>
-        <form @submit.prevent="calculateChannelWord">
-          <div class="row g-3">
-            <div class="col-md-3">
-              <label for="minWordInput" class="form-label">最小単語数</label>
-              <input
-                v-model.number="minWord"
-                type="number"
-                class="form-control m-2"
-                id="minWordInput"
-                placeholder="最小単語数"
-                required
-              />
-            </div>
-            <div class="col-md-3">
-              <label for="minWordLengthInput" class="form-label"
-                >最小単語の長さ</label
-              >
-              <input
-                v-model.number="minWordLength"
-                type="number"
-                class="form-control m-2"
-                id="minWordLengthInput"
-                placeholder="最小単語の長さ"
-                required
-              />
-            </div>
-            <div class="col-md-3">
-              <label for="topNInput" class="form-label">上位N件</label>
-              <input
-                v-model.number="topN"
-                type="number"
-                class="form-control m-2"
-                id="topNInput"
-                placeholder="上位N件"
-                required
-              />
-            </div>
-            <div class="col-md-3">
-              <label for="subtitleTypeCodeDropdown" class="form-label"
-                >字幕種類</label
-              >
-              <DropdownSelect
-                :options="subtitleTypeCode"
-                v-model="subtitleType"
-              />
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary m-2">
-            <i class="bi bi-calculator"></i> 計算
-          </button>
-        </form>
-
-        <div v-if="calculateWord" class="m-2">
-          <h2>集計結果</h2>
-          <ChartComp
-            :chartId="chartId"
-            :chartData="chartData"
-            :chartOptions="chartOptions"
-          />
-
-          <div
-            v-if="calculateWord.length > 0"
-            class="overflow-auto"
-            style="height: 1000px"
-          >
-            <div
-              v-for="(word, index) in calculateWord"
-              :key="index"
-              class="m-2"
-            >
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="m-3">
-                    <JsonTable :data="word" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else-if="calculateWord.length == 0">結果がありません</div>
-        </div>
-      </div>
+      <CaluculateWord></CaluculateWord>
 
       <h2>絞り込み</h2>
       <DropdownMultiSelect
@@ -262,7 +179,7 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
 import { useChannelStore } from '@/store/useChannelStore'
 import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
-import ChartComp from '@/components/common/graph/ChartComp.vue'
+import CaluculateWord from '@/components/youtube-app/channel/CalculateWord.vue'
 
 interface ChannelWord {
   word: string
@@ -275,7 +192,7 @@ export default {
     DropdownSelect,
     JsonTable,
     RangeSelector,
-    ChartComp
+    CaluculateWord
   },
   setup() {
     const channelStore = useChannelStore()
