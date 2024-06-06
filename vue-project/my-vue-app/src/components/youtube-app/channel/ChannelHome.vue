@@ -309,7 +309,7 @@ export default {
 
     const minWord = ref(1)
     const minWordLength = ref(2)
-    const topN = ref(100)
+    const topN = ref(50)
     const subtitleTypeCode = SubtitleTypeLabel
     const subtitleType = ref<number>(SubtitleType.MANUAL)
     const calculateWord = ref()
