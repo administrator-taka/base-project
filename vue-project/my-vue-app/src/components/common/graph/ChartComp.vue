@@ -1,10 +1,11 @@
 <template>
   <div>
-    <Bar :id="chartId" :data="chartData" />
+    <Bar :id="chartId" :data="copiedChartData" :key="shouldRedrawChart" />
   </div>
 </template>
+
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, shallowReactive, watch } from 'vue'
 import { Bar } from 'vue-chartjs'
 import { ChartData } from '@/interfaces/chart'
 import {
@@ -33,6 +34,32 @@ export default defineComponent({
       })
     }
   },
-  components: { Bar }
+  setup(props) {
+    const copiedChartData = shallowReactive({ ...props.chartData })
+    const shouldRedrawChart = ref(false)
+
+    // chartData の変更を監視し、変更があればグラフを再描画する
+    watch(
+      () => props.chartData.labels,
+      () => {
+        shouldRedrawChart.value = !shouldRedrawChart.value
+      }
+    )
+
+    watch(
+      () => props.chartData.datasets,
+      () => {
+        shouldRedrawChart.value = !shouldRedrawChart.value
+      }
+    )
+
+    return {
+      copiedChartData,
+      shouldRedrawChart
+    }
+  },
+  components: {
+    Bar
+  }
 })
 </script>
