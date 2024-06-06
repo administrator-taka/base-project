@@ -4,26 +4,22 @@
     <form @submit.prevent="calculateChannelWord">
       <div class="row g-3">
         <div class="col-md-3">
-          <label for="minWordInput" class="form-label">最小単語数</label>
+          <label for="minWordInput" class="form-label">N-gram</label>
           <input
             v-model.number="minWord"
             type="number"
             class="form-control m-2"
             id="minWordInput"
-            placeholder="最小単語数"
             required
           />
         </div>
         <div class="col-md-3">
-          <label for="minWordLengthInput" class="form-label"
-            >最小単語の長さ</label
-          >
+          <label for="minWordLengthInput" class="form-label">最小文字数</label>
           <input
             v-model.number="minWordLength"
             type="number"
             class="form-control m-2"
             id="minWordLengthInput"
-            placeholder="最小単語の長さ"
             required
           />
         </div>
@@ -34,7 +30,6 @@
             type="number"
             class="form-control m-2"
             id="topNInput"
-            placeholder="上位N件"
             required
           />
         </div>
