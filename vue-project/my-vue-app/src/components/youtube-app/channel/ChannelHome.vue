@@ -47,86 +47,7 @@
         </div>
       </div>
       <JsonTable v-if="channelData" :data="channelData" />
-      <!-- 検索フォームの追加 -->
-      <div class="m-2">
-        <form @submit.prevent="search">
-          <h2>出現箇所検索</h2>
-          <div class="col-md-6">
-            <input
-              v-model="searchWord"
-              type="text"
-              class="form-control"
-              placeholder="検索ワードを入力"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            class="btn btn-primary m-2"
-            :disabled="!searchWord"
-          >
-            <i class="bi bi-search"></i> 検索
-          </button>
-        </form>
-      </div>
-
-      <!-- 検索結果の表示 -->
-      <div v-if="searchResults" class="m-2">
-        <h2>検索結果</h2>
-        <div
-          v-if="searchResults.length > 0"
-          class="overflow-auto"
-          style="height: 1000px"
-        >
-          <div
-            v-for="(result, index) in searchResults"
-            :key="index"
-            class="mb-2"
-          >
-            <JsonTable :data="result" />
-            <button
-              @click="goToVideoPage(result.videoId)"
-              class="btn btn-info m-2"
-            >
-              動画詳細
-            </button>
-            <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
-              <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
-            </a>
-          </div>
-        </div>
-        <div v-else-if="searchResults.length == 0">結果がありません</div>
-      </div>
-
-      <!-- 複数処理結果の表示 -->
-      <div v-if="searchMultipleResults" class="m-2">
-        <h2>複数処理結果</h2>
-        <div
-          v-if="searchMultipleResults.length > 0"
-          class="overflow-auto"
-          style="height: 1000px"
-        >
-          <div
-            v-for="(result, index) in searchMultipleResults"
-            :key="index"
-            class="mb-2"
-          >
-            <JsonTable :data="result" />
-            <button
-              @click="goToVideoPage(result.videoId)"
-              class="btn btn-info m-2"
-            >
-              動画詳細
-            </button>
-            <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
-              <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
-            </a>
-          </div>
-        </div>
-        <div v-else-if="searchMultipleResults.length == 0">
-          結果がありません
-        </div>
-      </div>
+      <SearchWord></SearchWord>
       <CaluculateWord></CaluculateWord>
 
       <h2>絞り込み</h2>
@@ -178,13 +99,9 @@ import { YouTubeLanguageLabel } from '@/enums/youtube-language'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
 import { useChannelStore } from '@/store/useChannelStore'
-import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
 import CaluculateWord from '@/components/youtube-app/channel/CalculateWord.vue'
+import SearchWord from '@/components/youtube-app/channel/SearchWord.vue'
 
-interface ChannelWord {
-  word: string
-  count: number
-}
 export default {
   components: {
     PaginationComponent,
@@ -192,7 +109,8 @@ export default {
     DropdownSelect,
     JsonTable,
     RangeSelector,
-    CaluculateWord
+    CaluculateWord,
+    SearchWord
   },
   setup() {
     const channelStore = useChannelStore()
@@ -204,10 +122,6 @@ export default {
 
     const channelData = ref()
     const videoList = ref()
-
-    const searchWord = ref('')
-    const searchResults = ref()
-    const searchMultipleResults = ref()
 
     const getChannelData = async () => {
       channelRepository
@@ -224,50 +138,6 @@ export default {
         })
     }
 
-    const minWord = ref(1)
-    const minWordLength = ref(2)
-    const topN = ref(50)
-    const subtitleTypeCode = SubtitleTypeLabel
-    const subtitleType = ref<number>(SubtitleType.MANUAL)
-    const calculateWord = ref()
-    const chartId = 'my-chart-id'
-    const chartData = ref({
-      labels: [] as string[],
-      datasets: [
-        {
-          label: '頻出単語集計',
-          backgroundColor: 'rgba(0, 163, 175, 0.2)',
-          borderColor: 'rgba(0, 163, 175, 1)',
-          borderWidth: 1,
-          data: [] as number[]
-        }
-      ]
-    })
-    const chartOptions = {
-      responsive: true
-    }
-
-    const calculateChannelWord = async () => {
-      channelRepository
-        .calculateChannelWord(
-          channelStore.channelId,
-          minWord.value,
-          minWordLength.value,
-          topN.value,
-          subtitleType.value
-        )
-        .then((response) => {
-          calculateWord.value = response.calculateWord
-          console.log(response)
-          const data = response.calculateWord as ChannelWord[]
-
-          chartData.value.labels = data.map((item) => item.word)
-          chartData.value.datasets[0].data = data.map((item) => item.count)
-        })
-        .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
-        })
-    }
     const totalPages = ref(1)
     const total = ref(0)
     const getChannelVideoList = async () => {
@@ -295,27 +165,6 @@ export default {
     const handlePageChange = (page: number) => {
       channelStore.page = page
       getChannelVideoList()
-    }
-
-    const search = async () => {
-      channelRepository
-        .searchWord(channelStore.channelId, searchWord.value)
-        .then((response) => {
-          searchResults.value = response.searchResults
-          console.log(response)
-        })
-        .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
-        })
-      channelRepository
-        .searchMultipleWord(channelStore.channelId, searchWord.value)
-        .then((response) => {
-          searchMultipleResults.value = response.searchMultipleResults
-          console.log(response)
-        })
-        .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
-        })
     }
 
     const downloadChannelSubtitles = async () => {
@@ -371,10 +220,6 @@ export default {
       channelData,
       videoList,
       goToVideoPage,
-      search,
-      searchResults,
-      searchMultipleResults,
-      searchWord,
       downloadChannelSubtitles,
       totalPages,
       handlePageChange,
@@ -384,17 +229,7 @@ export default {
       selectedLanguageCodeList,
       selectedLanguageCode,
       channelStore,
-      subtitleListLanguages,
-      calculateChannelWord,
-      minWord,
-      minWordLength,
-      topN,
-      subtitleTypeCode,
-      subtitleType,
-      calculateWord,
-      chartId,
-      chartData,
-      chartOptions
+      subtitleListLanguages
     }
   }
 }
