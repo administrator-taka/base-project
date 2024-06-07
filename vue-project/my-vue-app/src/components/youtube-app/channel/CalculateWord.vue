@@ -101,8 +101,8 @@ export default {
     const calculateWord = ref<ChannelWord[] | null>(null)
     const chartId = 'my-chart-id'
 
-    const backgroundColorHex = '#00a3af'
-    const borderColorHex = '#7d7d7d'
+    const backgroundColorHex = '#008b8b'
+    const borderColorHex = '#2f4f4f'
     const alpha = 0.5 // 背景色の透明度
 
     // ChartData 型の chartData 変数
