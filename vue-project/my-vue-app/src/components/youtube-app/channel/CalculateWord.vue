@@ -47,13 +47,13 @@
 
     <div v-if="calculateWord" class="m-2">
       <h2>集計結果</h2>
-      <ChartComp :chartId="chartId" :chartData="chartData" />
-
       <div
         v-if="calculateWord.length > 0"
         class="overflow-auto"
         style="height: 1000px"
       >
+        <ChartComp :chartId="chartId" :chartData="chartData" />
+
         <div v-for="(word, index) in calculateWord" :key="index" class="m-2">
           <div class="row">
             <div class="col-md-8">
