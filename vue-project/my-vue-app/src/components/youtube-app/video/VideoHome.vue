@@ -64,6 +64,7 @@
       <SubtitleDetailModal
         :subtitleTextId="selectedSubtitleTextId"
         :languageCode="selectedLanguageCode"
+        @update="getVideoData()"
       />
     </main>
   </div>
@@ -147,7 +148,8 @@ export default {
       openModal,
       downloadVideoSubtitle,
       goToChannelPage,
-      languageCode
+      languageCode,
+      getVideoData
     }
   }
 }

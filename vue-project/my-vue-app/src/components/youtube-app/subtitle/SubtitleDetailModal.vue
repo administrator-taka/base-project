@@ -99,7 +99,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch, watchEffect } from 'vue'
+import { PropType, defineComponent, ref, watch, watchEffect } from 'vue'
 import BaseModal from '@/components/common/modal/BaseModal.vue'
 import subtitleRepository from '@/api/repository/subtitle-repository'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
@@ -121,7 +121,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['update'],
+  setup(props, { emit }) {
     const subtitleLiteralTranslationText = ref('')
     const subtitleTranslationTextDetail = ref('')
     const subtitleTextData = ref()
@@ -207,6 +208,7 @@ export default defineComponent({
           subtitleTextData.value = response.subtitleTextData
           console.log(response)
           getSubtitleTextData()
+          emit('update')
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
@@ -223,6 +225,7 @@ export default defineComponent({
         .then((response) => {
           console.log(response)
           getSubtitleTextData()
+          emit('update')
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')

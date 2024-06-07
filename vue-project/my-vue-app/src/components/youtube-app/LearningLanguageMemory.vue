@@ -61,6 +61,7 @@
       <SubtitleDetailModal
         :subtitleTextId="selectedModalSubtitleTextId"
         :languageCode="selectedModalLanguageCode"
+        @update="getLearningSubtitleList()"
       />
     </main>
   </div>
@@ -134,7 +135,8 @@ export default {
       selectedLanguageCode,
       learningStatus,
       selectedLearningStatus,
-      goToVideoPage
+      goToVideoPage,
+      getLearningSubtitleList
     }
   }
 }
