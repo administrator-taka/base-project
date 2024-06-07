@@ -49,38 +49,39 @@
       <JsonTable v-if="channelData" :data="channelData" />
       <SearchWord></SearchWord>
       <CaluculateWord></CaluculateWord>
+      <div class="m-2">
+        <h2>絞り込み</h2>
+        <DropdownMultiSelect
+          :options="languageCode"
+          v-model="subtitleListLanguages"
+        />
+        <PaginationComponent
+          :currentPage="channelStore.page"
+          :totalPages="totalPages"
+          @page-changed="handlePageChange"
+        />
 
-      <h2>絞り込み</h2>
-      <DropdownMultiSelect
-        :options="languageCode"
-        v-model="subtitleListLanguages"
-      />
-      <PaginationComponent
-        :currentPage="channelStore.page"
-        :totalPages="totalPages"
-        @page-changed="handlePageChange"
-      />
-
-      <div v-if="videoList">
-        <h2>動画一覧(全{{ total }}件)</h2>
-        <div class="overflow-auto" style="height: 1000px">
-          <div v-for="(video, index) in videoList" :key="index" class="m-2">
-            <RangeSelector @range-selected="goToVideoPage(video.videoId)">
-              <div class="row">
-                <div class="col-md-4">
-                  <img
-                    :src="video.thumbnail"
-                    alt="Image"
-                    class="img-thumbnail m-3"
-                  />
-                </div>
-                <div class="col-md-8">
-                  <div class="m-3">
-                    <JsonTable :data="video" />
+        <div v-if="videoList">
+          <h2>動画一覧(全{{ total }}件)</h2>
+          <div class="overflow-auto" style="height: 1000px">
+            <div v-for="(video, index) in videoList" :key="index" class="m-2">
+              <RangeSelector @range-selected="goToVideoPage(video.videoId)">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img
+                      :src="video.thumbnail"
+                      alt="Image"
+                      class="img-thumbnail m-3"
+                    />
+                  </div>
+                  <div class="col-md-8">
+                    <div class="m-3">
+                      <JsonTable :data="video" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </RangeSelector>
+              </RangeSelector>
+            </div>
           </div>
         </div>
       </div>
