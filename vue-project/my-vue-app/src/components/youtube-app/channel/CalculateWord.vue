@@ -78,6 +78,7 @@ import { useChannelStore } from '@/store/use-channel-store'
 import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
 import ChartComp from '@/components/common/graph/ChartComp.vue'
 import { ChartData } from '@/interfaces/chart'
+import { hexToRgba } from '@/utils/util-color' // 関数をインポート
 
 interface ChannelWord {
   word: string
@@ -99,14 +100,19 @@ export default {
     const topN = ref(50)
     const calculateWord = ref<ChannelWord[] | null>(null)
     const chartId = 'my-chart-id'
+
+    const backgroundColorHex = '#00a3af'
+    const borderColorHex = '#7d7d7d'
+    const alpha = 0.5 // 背景色の透明度
+
     // ChartData 型の chartData 変数
     const chartData = ref<ChartData>({
       labels: [], // チャートのラベル
       datasets: [
         {
           label: '頻出単語集計', // データセットのラベル
-          backgroundColor: 'rgba(0, 163, 175, 0.2)', // バーの背景色
-          borderColor: 'rgba(0, 163, 175, 1)', // バーの境界線の色
+          backgroundColor: hexToRgba(backgroundColorHex, alpha), // バーの背景色
+          borderColor: hexToRgba(borderColorHex, 1), // バーの境界線の色
           borderWidth: 1, // バーの境界線の幅
           data: [] // チャートに表示するデータ
         }
