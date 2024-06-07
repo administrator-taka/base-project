@@ -9,6 +9,8 @@
 │   ├─docker_start.bat
 │   ├─env__sample_update.bat
 │   ├─format_vue_project.bat
+│   ├─pg_dump.bat
+│   ├─pg_dump_execute.bat
 │   ├─start_vue_local_server.bat
 │   └─tree_update.bat
 ├─django-project
@@ -240,16 +242,16 @@
         │   ├─App.vue
         │   ├─api
         │   │   ├─repository
-        │   │   │   ├─channelRepository.ts
+        │   │   │   ├─channel-repository.ts
         │   │   │   ├─index.ts
-        │   │   │   ├─learningLanguageMemoryRepository.ts
-        │   │   │   ├─subtitleRepository.ts
-        │   │   │   ├─testRepository.ts
-        │   │   │   └─videoRepository.ts
+        │   │   │   ├─learning-language-memory-repository.ts
+        │   │   │   ├─subtitle-repository.ts
+        │   │   │   ├─test-repository.ts
+        │   │   │   └─video-repository.ts
         │   │   ├─request
-        │   │   │   └─testRequest.ts
+        │   │   │   └─test-request.ts
         │   │   └─response
-        │   │       └─testResponse.ts
+        │   │       └─test-response.ts
         │   ├─assets
         │   │   ├─logo.png
         │   │   └─main.scss
@@ -263,6 +265,8 @@
         │   │   │   ├─dropdown
         │   │   │   │   ├─DropdownMultiSelect.vue
         │   │   │   │   └─DropdownSelect.vue
+        │   │   │   ├─graph
+        │   │   │   │   └─ChartComp.vue
         │   │   │   ├─modal
         │   │   │   │   └─BaseModal.vue
         │   │   │   ├─pagination
@@ -275,7 +279,9 @@
         │   │       ├─LearningLanguageMemory.vue
         │   │       ├─YouTubeAppHome.vue
         │   │       ├─channel
-        │   │       │   └─ChannelHome.vue
+        │   │       │   ├─CalculateWord.vue
+        │   │       │   ├─ChannelHome.vue
+        │   │       │   └─SearchWord.vue
         │   │       ├─subtitle
         │   │       │   ├─SubtitleDetailModal.vue
         │   │       │   └─SubtitleHome.vue
@@ -285,6 +291,8 @@
         │   │   ├─learning-status.ts
         │   │   ├─subtitle-type.ts
         │   │   └─youtube-language.ts
+        │   ├─interfaces
+        │   │   └─chart.ts
         │   ├─main.ts
         │   ├─router
         │   │   └─index.ts
@@ -293,7 +301,7 @@
         │   │   ├─counter.ts
         │   │   ├─index.ts
         │   │   ├─test.ts
-        │   │   └─useChannelStore.ts
+        │   │   └─use-channel-store.ts
         │   ├─utils
         │   │   └─to-camel-case.ts
         │   └─views
