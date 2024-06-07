@@ -188,6 +188,8 @@
 
 ## その他
 
+- http://localhost:3000/
+
 - `generate_sample_env.py`  
    Git で管理されていない環境ファイルのパラメータサンプルを生成する。
 
