@@ -72,6 +72,9 @@ https://zenn.dev/kiriyama/scraps/4e05acd94a4b10
 csv から動画データ一覧の字幕をダウンロードする機能
 グラフの再読み込み処理
 ストップワードの設定、日本語、英語、韓国語
+曲のプレイリストから動画を除外
+文章を自然な位置で分割
+自動字幕の一覧表示
 
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
