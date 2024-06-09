@@ -23,7 +23,11 @@ from myapp.applications.util.util_generate import generate_subtitle_id, generate
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
     ChannelTranslationInfo, SubtitleLearningMemory
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
-
+import collections
+import re
+import logging
+import nltk
+from nltk.corpus import stopwords
 
 class YoutubeDownloadService:
     def __init__(self):
@@ -403,12 +407,29 @@ class YoutubeDownloadService:
                 else:
                     logging.debug(f"追加しない(階段チェック): {video.video_id}")
 
+        # 言語ごとのストップワードリストを取得
+        def get_stop_words(language_code):
+            if language_code == YouTubeLanguage.ENGLISH:
+                return set(stopwords.words('english'))
+            elif language_code == YouTubeLanguage.JAPANESE:
+                # 日本語のストップワードを手動で設定（NLTKに日本語のストップワードリストは含まれていないため）
+                return set(['の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ', 'ある', 'いる', 'も', 'する', 'から', 'な', 'こと', 'として', 'い', 'や', 'れる', 'など', 'なっ', 'なり', 'いっ', 'その', 'これ', 'それ', 'あれ', 'あの', 'この', 'そう', 'いう', 'たち', 'どこ', 'なん', 'でき', 'なかっ', 'どんな', 'いつ', 'もの', 'という'])
+            elif language_code == YouTubeLanguage.KOREAN:
+                # 韓国語のストップワードを手動で設定（NLTKに韓国語のストップワードリストは含まれていないため）
+                return set(['의', '가', '이', '은', '들', '는', '과', '를', '으로', '자', '에', '와', '한', '하다', '그', '도', '수', '등', '에', '와', '의', '이', '가', '로', '에', '과', '를', '을', '으로', '를', '으로', '그리고', '그러나', '또', '하지만', '또한', '그리고'])
+            else:
+                logging.warning(f"ストップワードリストが見つかりません: {language_code}")
+                return set()
+
+        stop_words = get_stop_words(default_audio_language)
+
         # フィルタリングの条件
         def is_valid_word(word, min_word_length):
             is_longer_than_min_length = len(word) >= min_word_length  # 単語の長さがmin_word_length文字以上
             is_not_symbol_only = not re.match(r'^[^\w\s]+$', word)  # 単語が記号のみで構成されていない
             is_not_enclosed_in_symbols = not re.match(r'^\W.*\W$', word)  # 単語が記号で囲まれていない
-            return is_longer_than_min_length and is_not_symbol_only and is_not_enclosed_in_symbols
+            is_not_stop_word = word.lower() not in stop_words  # 単語がストップワードリストに含まれていない
+            return is_longer_than_min_length and is_not_symbol_only and is_not_enclosed_in_symbols and is_not_stop_word
 
         # 単語のフィルター処理
         filtered_words = [word for word in all_words if is_valid_word(word, min_word_length)]

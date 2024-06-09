@@ -3,10 +3,14 @@
 import os
 import sys
 
+import nltk
+
 
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings.base')
+    # NLTK stopwords download
+    nltk.download('stopwords')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
