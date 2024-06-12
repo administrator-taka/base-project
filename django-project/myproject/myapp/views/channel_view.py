@@ -42,7 +42,8 @@ def calculate_channel_word(request, channel_id):
     min_word_length = request.data.get('min_word_length', 1)
     top_n = request.data.get('top_n', 100)
     subtitle_type = SubtitleType(request.data.get('subtitle_type', 1))
-    calculate_word = youtube_download_service.calculate_word(channel_id, min_word, min_word_length, top_n, subtitle_type)
+    stop_word_flag = request.data.get('stop_word_flag', False)
+    calculate_word = youtube_download_service.calculate_word(channel_id, min_word, min_word_length, top_n, subtitle_type,stop_word_flag)
     # JSONレスポンスを作成
     data = {
         "calculate_word": calculate_word,

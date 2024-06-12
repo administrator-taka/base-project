@@ -4,7 +4,7 @@
     <form @submit.prevent="calculateChannelWord">
       <div class="row g-3">
         <div class="col-md-3">
-          <label for="minWordInput" class="form-label">N-gram</label>
+          <label for="minWordInput" class="form-label">最小単語数</label>
           <input
             v-model.number="minWord"
             type="number"

@@ -324,7 +324,7 @@ class YoutubeDownloadService:
         return search_results
 
     # 単語集計
-    def calculate_word(self, channel_id, min_word, min_word_length, top_n, subtitle_type):
+    def calculate_word(self, channel_id, min_word, min_word_length, top_n, subtitle_type, stop_word_flag):
         default_audio_language, translation_languages = self.get_translation_info(channel_id)
 
         # VideoDetailをベースにクエリを構築
@@ -413,15 +413,23 @@ class YoutubeDownloadService:
                 return set(stopwords.words('english'))
             elif language_code == YouTubeLanguage.JAPANESE:
                 # 日本語のストップワードを手動で設定（NLTKに日本語のストップワードリストは含まれていないため）
-                return set(['の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ', 'ある', 'いる', 'も', 'する', 'から', 'な', 'こと', 'として', 'い', 'や', 'れる', 'など', 'なっ', 'なり', 'いっ', 'その', 'これ', 'それ', 'あれ', 'あの', 'この', 'そう', 'いう', 'たち', 'どこ', 'なん', 'でき', 'なかっ', 'どんな', 'いつ', 'もの', 'という'])
+                return {'の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ', 'ある', 'いる', 'も', 'する', 'から', 'な',
+                        'こと', 'として', 'い', 'や', 'れる', 'など', 'なっ', 'なり', 'いっ', 'その', 'これ', 'それ', 'あれ', 'あの', 'この', 'そう',
+                        'いう', 'たち', 'どこ', 'なん', 'でき', 'なかっ', 'どんな', 'いつ', 'もの', 'という'}
             elif language_code == YouTubeLanguage.KOREAN:
                 # 韓国語のストップワードを手動で設定（NLTKに韓国語のストップワードリストは含まれていないため）
-                return set(['의', '가', '이', '은', '들', '는', '과', '를', '으로', '자', '에', '와', '한', '하다', '그', '도', '수', '등', '에', '와', '의', '이', '가', '로', '에', '과', '를', '을', '으로', '를', '으로', '그리고', '그러나', '또', '하지만', '또한', '그리고'])
+                return {'의', '가', '이', '은', '들', '는', '과', '를', '으로', '자', '에', '와', '한', '하다', '그', '도', '수', '등', '에',
+                        '와', '의', '이', '가', '로', '에', '과', '를', '을', '으로', '를', '으로', '그리고', '그러나', '또', '하지만', '또한',
+                        '그리고'}
             else:
                 logging.warning(f"ストップワードリストが見つかりません: {language_code}")
                 return set()
 
-        stop_words = get_stop_words(default_audio_language)
+        # ストップワードの適用をフラグで制御
+        if stop_word_flag:
+            stop_words = get_stop_words(default_audio_language)
+        else:
+            stop_words = set()
 
         # フィルタリングの条件
         def is_valid_word(word, min_word_length):
