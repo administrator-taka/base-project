@@ -37,9 +37,9 @@
           <label for="stopWordFlag" class="form-label"
             >ストップワード適用</label
           >
-          <div class="form-check form-switch">
+          <div class="form-check form-switch m-2">
             <input
-              class="form-check-input m-2"
+              class="form-check-input"
               type="checkbox"
               id="stopWordFlag"
               v-model="stopWordFlag"
