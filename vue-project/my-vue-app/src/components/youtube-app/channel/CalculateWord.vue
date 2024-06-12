@@ -3,7 +3,7 @@
     <h2>頻出単語集計</h2>
     <form @submit.prevent="calculateChannelWord">
       <div class="row g-3">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="minWordInput" class="form-label">最小単語数</label>
           <input
             v-model.number="minWord"
@@ -13,7 +13,7 @@
             required
           />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="minWordLengthInput" class="form-label">最小文字数</label>
           <input
             v-model.number="minWordLength"
@@ -23,7 +23,7 @@
             required
           />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label for="topNInput" class="form-label">上位N件</label>
           <input
             v-model.number="topN"
@@ -33,7 +33,23 @@
             required
           />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
+          <label for="stopWordFlag" class="form-label"
+            >ストップワード適用</label
+          >
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input m-2"
+              type="checkbox"
+              id="stopWordFlag"
+              v-model="stopWordFlag"
+            />
+            <label class="form-check-label" for="stopWordFlag">{{
+              stopWordFlag ? '適用' : '適用しない'
+            }}</label>
+          </div>
+        </div>
+        <div class="col-md-2">
           <label for="subtitleTypeCodeDropdown" class="form-label"
             >字幕種類</label
           >
@@ -71,7 +87,6 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import channelRepository from '@/api/repository/channel-repository'
 import { onMounted, ref } from 'vue'
@@ -87,6 +102,7 @@ interface ChannelWord {
   word: string
   count: number
 }
+
 export default {
   components: {
     DropdownSelect,
@@ -101,6 +117,8 @@ export default {
     const minWord = ref(1)
     const minWordLength = ref(2)
     const topN = ref(50)
+    const stopWordFlag = ref(false)
+
     const calculateWord = ref<ChannelWord[] | null>(null)
     const chartId = 'my-chart-id'
 
@@ -129,7 +147,8 @@ export default {
           minWord.value,
           minWordLength.value,
           topN.value,
-          subtitleType.value
+          subtitleType.value,
+          stopWordFlag.value
         )
         .then((response) => {
           calculateWord.value = response.calculateWord
@@ -143,9 +162,11 @@ export default {
           console.error(error + 'エラーが返ってきた')
         })
     }
+
     onMounted(() => {
       calculateChannelWord()
     })
+
     return {
       channelStore,
       calculateChannelWord,
@@ -154,6 +175,7 @@ export default {
       topN,
       subtitleTypeCode,
       subtitleType,
+      stopWordFlag,
       calculateWord,
       chartId,
       chartData
@@ -161,5 +183,3 @@ export default {
   }
 }
 </script>
-
-<style scoped></style>
