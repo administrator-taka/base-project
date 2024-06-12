@@ -117,7 +117,7 @@ export default {
     const minWord = ref(1)
     const minWordLength = ref(2)
     const topN = ref(50)
-    const stopWordFlag = ref(false)
+    const stopWordFlag = ref(true)
 
     const calculateWord = ref<ChannelWord[] | null>(null)
     const chartId = 'my-chart-id'
