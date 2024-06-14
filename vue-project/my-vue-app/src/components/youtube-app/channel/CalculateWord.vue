@@ -37,17 +37,12 @@
           <label for="stopWordFlag" class="form-label"
             >ストップワード適用</label
           >
-          <div class="form-check form-switch m-2">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="stopWordFlag"
-              v-model="stopWordFlag"
-            />
-            <label class="form-check-label" for="stopWordFlag">{{
-              stopWordFlag ? '適用' : '適用しない'
-            }}</label>
-          </div>
+          <ToggleSwitch
+            :modelValue="stopWordFlag"
+            @update="stopWordFlag = $event"
+            id="stopWordFlag"
+            :label="stopWordFlag ? '適用' : '適用しない'"
+          />
         </div>
         <div class="col-md-2">
           <label for="subtitleTypeCodeDropdown" class="form-label"
@@ -95,6 +90,7 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 import { useChannelStore } from '@/store/use-channel-store'
 import { SubtitleType, SubtitleTypeLabel } from '@/enums/subtitle-type'
 import ChartComp from '@/components/common/graph/ChartComp.vue'
+import ToggleSwitch from '@/components/common/toggle/ToggleSwitch.vue'
 import { ChartData } from '@/interfaces/chart'
 import { hexToRgba } from '@/utils/util-color' // 関数をインポート
 
@@ -107,7 +103,8 @@ export default {
   components: {
     DropdownSelect,
     JsonTable,
-    ChartComp
+    ChartComp,
+    ToggleSwitch
   },
   setup() {
     const channelStore = useChannelStore()
