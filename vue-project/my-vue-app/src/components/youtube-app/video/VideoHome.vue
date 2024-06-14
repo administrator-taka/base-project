@@ -80,6 +80,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getYouTubeLanguagesFromCodes } from '@/enums/youtube-language' // ここで関数をインポート
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
+import { showErrorToast } from '@/utils/toast-service'
 
 export default {
   components: {
@@ -108,7 +109,7 @@ export default {
           getVideoData()
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 
@@ -127,7 +128,7 @@ export default {
           console.log(response)
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 

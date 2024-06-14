@@ -76,6 +76,7 @@ import { LearningStatus, LearningStatusLabel } from '@/enums/learning-status'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import router from '@/router'
 import JsonTable from '@/components/common/table/JsonTable.vue'
+import { showErrorToast } from '@/utils/toast-service'
 
 export default {
   components: {
@@ -110,7 +111,7 @@ export default {
           console.log(response)
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
     const goToVideoPage = (videoId: string) => {

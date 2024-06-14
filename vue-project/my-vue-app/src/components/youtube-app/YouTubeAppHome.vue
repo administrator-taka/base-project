@@ -45,6 +45,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
+import { showErrorToast } from '@/utils/toast-service'
 
 export default {
   components: { JsonTable, RangeSelector },
@@ -97,7 +98,7 @@ export default {
           console.log(response)
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 

@@ -104,6 +104,7 @@ import BaseModal from '@/components/common/modal/BaseModal.vue'
 import subtitleRepository from '@/api/repository/subtitle-repository'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { LearningStatusLabel } from '@/enums/learning-status'
+import { showErrorToast } from '@/utils/toast-service'
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
@@ -145,7 +146,7 @@ export default defineComponent({
           console.log(response)
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 
@@ -161,7 +162,7 @@ export default defineComponent({
           subtitleTranslationTextDetail.value = response.chatgptData.response
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 
@@ -190,7 +191,7 @@ export default defineComponent({
             })
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 
@@ -211,7 +212,7 @@ export default defineComponent({
           emit('update')
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 
@@ -228,7 +229,7 @@ export default defineComponent({
           emit('update')
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
 

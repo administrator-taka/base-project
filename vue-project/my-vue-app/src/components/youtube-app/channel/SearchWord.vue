@@ -77,6 +77,7 @@ import { ref } from 'vue'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 import { useChannelStore } from '@/store/use-channel-store'
 import { useRouter } from 'vue-router'
+import { showErrorToast } from '@/utils/toast-service'
 
 export default {
   components: {
@@ -96,7 +97,7 @@ export default {
           console.log(response)
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
       channelRepository
         .searchMultipleWord(channelStore.channelId, searchWord.value)
@@ -105,7 +106,7 @@ export default {
           console.log(response)
         })
         .catch((error) => {
-          console.error(error + 'エラーが返ってきた')
+          showErrorToast(error)
         })
     }
     const router = useRouter()
