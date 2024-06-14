@@ -4,7 +4,9 @@
     <form @submit.prevent="calculateChannelWord">
       <div class="row g-3">
         <div class="col-md-2">
-          <label for="minWordInput" class="form-label">最小単語数</label>
+          <label for="minWordInput" class="form-label"
+            >最小単語数（N-gram単語）</label
+          >
           <input
             v-model.number="minWord"
             type="number"
@@ -35,7 +37,7 @@
         </div>
         <div class="col-md-2">
           <label for="stopWordFlag" class="form-label"
-            >ストップワード適用</label
+            >単語の除去（ストップワード）</label
           >
           <ToggleSwitch
             :modelValue="stopWordFlag"
@@ -45,7 +47,9 @@
           />
         </div>
         <div class="col-md-2">
-          <label for="lemmatizeFlag" class="form-label">単語の基本形</label>
+          <label for="lemmatizeFlag" class="form-label"
+            >基本形での計測（レマ化）</label
+          >
           <ToggleSwitch
             :modelValue="lemmatizeFlag"
             @update="lemmatizeFlag = $event"
