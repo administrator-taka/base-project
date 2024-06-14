@@ -2,12 +2,22 @@ import collections
 import logging
 import re
 
+import nltk
+from nltk import WordNetLemmatizer
 from nltk.corpus import stopwords
+from nltk.corpus import wordnet
 
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 
 
 class NaturalLanguageProcessingLogic:
+    def __init__(self):
+        # 必要なNLTKデータセットをダウンロード
+        nltk.download('stopwords')
+        nltk.download('wordnet')
+        nltk.download('averaged_perceptron_tagger')
+        self.lemmatizer = WordNetLemmatizer()
+
     # 指定された言語に応じてストップワードのセットを取得する
     def get_stop_words(self, default_audio_language):
         if default_audio_language == YouTubeLanguage.ENGLISH:
@@ -70,3 +80,26 @@ class NaturalLanguageProcessingLogic:
             combination = ' '.join(words[i:i + min_word])
             combinations.append(combination)
         return combinations
+
+    def lemmatize_word(self, word):
+        # 単語の品詞タグを取得
+        pos_tag = nltk.pos_tag([word])[0][1][0].lower()
+        wordnet_pos = self.get_wordnet_pos(pos_tag)
+        # 単語をレマ化（基本形に変換）
+        if wordnet_pos:
+            return self.lemmatizer.lemmatize(word, wordnet_pos)
+        else:
+            return self.lemmatizer.lemmatize(word)
+
+    def get_wordnet_pos(self, pos_tag):
+        # NLTKの品詞タグをWordNetの品詞タグに変換
+        if pos_tag.startswith('j'):
+            return wordnet.ADJ
+        elif pos_tag.startswith('v'):
+            return wordnet.VERB
+        elif pos_tag.startswith('n'):
+            return wordnet.NOUN
+        elif pos_tag.startswith('r'):
+            return wordnet.ADV
+        else:
+            return None

@@ -1,7 +1,6 @@
 import collections
 import datetime
 import logging
-import re
 import time
 import unittest
 from datetime import datetime
@@ -24,11 +23,6 @@ from myapp.applications.util.util_generate import generate_subtitle_id, generate
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
     ChannelTranslationInfo, SubtitleLearningMemory
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
-import collections
-import re
-import logging
-import nltk
-from nltk.corpus import stopwords
 
 
 class YoutubeDownloadService:
@@ -372,7 +366,9 @@ class YoutubeDownloadService:
                 info_words = []
                 for subtitle in subtitles:
                     words = subtitle.subtitle_text.split()
-                    info_words.extend(words)
+                    # 単語の基本形に変換してリストに追加
+                    lemmatized_words = [self.nlp_logic.lemmatize_word(word) for word in words]
+                    info_words.extend(lemmatized_words)
 
                 # 単語の組み合わせを取得
                 join_words = self.nlp_logic.get_combinations(info_words, min_word)
