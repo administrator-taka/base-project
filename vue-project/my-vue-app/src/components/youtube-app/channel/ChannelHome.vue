@@ -102,7 +102,7 @@ import RangeSelector from '@/components/common/button/RangeSelector.vue'
 import { useChannelStore } from '@/store/use-channel-store'
 import CaluculateWord from '@/components/youtube-app/channel/CalculateWord.vue'
 import SearchWord from '@/components/youtube-app/channel/SearchWord.vue'
-import { showErrorToast } from '@/utils/toast-service'
+import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
 
 export default {
   components: {
@@ -176,6 +176,7 @@ export default {
           console.log(response)
           getChannelData()
           getChannelVideoList()
+          showSuccessToast('字幕ダウンロード処理')
         })
         .catch((error) => {
           showErrorToast(error)
@@ -193,6 +194,7 @@ export default {
           console.log(response)
           getChannelData()
           getChannelVideoList()
+          showSuccessToast('チャンネル言語更新処理')
         })
         .catch((error) => {
           showErrorToast(error)

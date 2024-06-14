@@ -77,7 +77,7 @@ import { ref } from 'vue'
 import JsonTable from '@/components/common/table/JsonTable.vue'
 import { useChannelStore } from '@/store/use-channel-store'
 import { useRouter } from 'vue-router'
-import { showErrorToast } from '@/utils/toast-service'
+import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
 
 export default {
   components: {
@@ -95,6 +95,7 @@ export default {
         .then((response) => {
           searchResults.value = response.searchResults
           console.log(response)
+          showSuccessToast('単語検索処理（手動字幕）')
         })
         .catch((error) => {
           showErrorToast(error)
@@ -104,6 +105,7 @@ export default {
         .then((response) => {
           searchMultipleResults.value = response.searchMultipleResults
           console.log(response)
+          showSuccessToast('単語集計処理（自動字幕）')
         })
         .catch((error) => {
           showErrorToast(error)
