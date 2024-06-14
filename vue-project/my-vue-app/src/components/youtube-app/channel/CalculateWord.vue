@@ -106,6 +106,7 @@ import ChartComp from '@/components/common/graph/ChartComp.vue'
 import ToggleSwitch from '@/components/common/toggle/ToggleSwitch.vue'
 import { ChartData } from '@/interfaces/chart'
 import { hexToRgba } from '@/utils/util-color' // 関数をインポート
+import { showSuccessToast } from '@/utils/toast-service'
 
 interface ChannelWord {
   word: string
@@ -169,6 +170,7 @@ export default {
 
           chartData.value.labels = data.map((item) => item.word)
           chartData.value.datasets[0].data = data.map((item) => item.count)
+          showSuccessToast('単語集計処理')
         })
         .catch((error) => {
           console.error(error + 'エラーが返ってきた')
