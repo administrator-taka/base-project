@@ -11,6 +11,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q, Prefetch, OuterRef, Exists
 
 from myapp.applications.domain.logic.chat_gpt_api_logic import ChatGPTApiLogic
+from myapp.applications.domain.logic.natural_language_processing_logic import NaturalLanguageProcessingLogic
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.learning_status import LearningStatus
@@ -29,11 +30,13 @@ import logging
 import nltk
 from nltk.corpus import stopwords
 
+
 class YoutubeDownloadService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
         self.chatgpt_api_logic = ChatGPTApiLogic()
+        self.nlp_logic = NaturalLanguageProcessingLogic()
 
     def execute_chatgpt_translation(self, subtitle_text_id, language, call_api=False):
         subtitle_translation = SubtitleTranslation.objects.get(
@@ -354,112 +357,64 @@ class YoutubeDownloadService:
                 subtitles = info.videosubtitle_set.all()
                 if not subtitles:  # subtitlesが空でないことを確認
                     continue
+                if subtitle_type == SubtitleType.MANUAL:
+                    # 重複チェック
+                    if not self.check_duplicates(subtitles):
+                        logging.debug(f"追加しない(重複チェック): {video.video_id}")
+                        continue
 
-                all_subtitle_texts = [subtitle.subtitle_text for subtitle in subtitles]
+                    # 階段チェック
+                    if not self.check_staircase(subtitles):
+                        logging.debug(f"追加しない(階段チェック): {video.video_id}")
+                        continue
 
-                # 重複率の計算
-                duplicate_check_list = collections.Counter(all_subtitle_texts)
-                duplicate_ratio = len(duplicate_check_list) / len(all_subtitle_texts)
-                logging.debug(f"{len(duplicate_check_list)}/{len(all_subtitle_texts)}={duplicate_ratio}")
-
-                if duplicate_ratio < 0.5 and info.subtitle_type == SubtitleType.MANUAL.value:
-                    logging.debug(f"追加しない(重複チェック): {video.video_id}")
-                    continue
-
-                info_words = []  # 各infoの単語を一時的に収集するリストを初期化
-                current_subtitle_text = None
-                count = 0
-                continuous_count = 2
-
+                # 各字幕テキストを単語に分割し、リストに追加
+                info_words = []
                 for subtitle in subtitles:
-                    subtitle_text = subtitle.subtitle_text
-
-                    # 階段状のチェック
-                    if current_subtitle_text and subtitle_text.startswith(current_subtitle_text):
-                        logging.debug(f"{current_subtitle_text}/{subtitle_text}")
-                        count += 1
-                        continuous_count = 0
-                    else:
-                        if continuous_count < 1:
-                            count += 1
-                        continuous_count += 1
-
-                    current_subtitle_text = subtitle_text
-
-                    # 各字幕テキストを単語に分割し、リストに追加
-                    words = subtitle_text.split()
+                    words = subtitle.subtitle_text.split()
                     info_words.extend(words)
 
-                ratio = count / len(subtitles)
-                logging.debug(f"{count}/{len(subtitles)}={ratio}")
+                # 単語の組み合わせを取得
+                join_words = self.nlp_logic.get_combinations(info_words, min_word)
+                all_words.extend(join_words)  # 各infoの単語を全単語リストに追加
 
-                def get_combinations(words, min_word):
-                    combinations = []
-                    for i in range(len(words) - min_word + 1):
-                        combination = ' '.join(words[i:i + min_word])
-                        combinations.append(combination)
-                    return combinations
-
-                if ratio < 0.5:
-                    logging.debug(f"追加 {video.video_id}")
-                    join_words = get_combinations(info_words, min_word)  # min_wordごとの組み合わせで結合
-                    all_words.extend(join_words)  # 各infoの単語を全単語リストに追加
-                else:
-                    logging.debug(f"追加しない(階段チェック): {video.video_id}")
-
-        # 言語ごとのストップワードリストを取得
-        def get_stop_words(language_code):
-            if language_code == YouTubeLanguage.ENGLISH:
-                return set(stopwords.words('english'))
-            elif language_code == YouTubeLanguage.JAPANESE:
-                # 日本語のストップワードを手動で設定（NLTKに日本語のストップワードリストは含まれていないため）
-                return {'の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ', 'ある', 'いる', 'も', 'する', 'から', 'な',
-                        'こと', 'として', 'い', 'や', 'れる', 'など', 'なっ', 'なり', 'いっ', 'その', 'これ', 'それ', 'あれ', 'あの', 'この', 'そう',
-                        'いう', 'たち', 'どこ', 'なん', 'でき', 'なかっ', 'どんな', 'いつ', 'もの', 'という'}
-            elif language_code == YouTubeLanguage.KOREAN:
-                # 韓国語のストップワードを手動で設定（NLTKに韓国語のストップワードリストは含まれていないため）
-                return {'의', '가', '이', '은', '들', '는', '과', '를', '으로', '자', '에', '와', '한', '하다', '그', '도', '수', '등', '에',
-                        '와', '의', '이', '가', '로', '에', '과', '를', '을', '으로', '를', '으로', '그리고', '그러나', '또', '하지만', '또한',
-                        '그리고'}
-            else:
-                logging.warning(f"ストップワードリストが見つかりません: {language_code}")
-                return set()
-
-        # ストップワードの適用をフラグで制御
-        if stop_word_flag:
-            stop_words = get_stop_words(default_audio_language)
-        else:
-            stop_words = set()
-
-        # フィルタリングの条件
-        def is_valid_word(word, min_word_length):
-            is_longer_than_min_length = len(word) >= min_word_length  # 単語の長さがmin_word_length文字以上
-            is_not_symbol_only = not re.match(r'^[^\w\s]+$', word)  # 単語が記号のみで構成されていない
-            is_not_enclosed_in_symbols = not re.match(r'^\W.*\W$', word)  # 単語が記号で囲まれていない
-            is_not_stop_word = word.lower() not in stop_words  # 単語がストップワードリストに含まれていない
-            return is_longer_than_min_length and is_not_symbol_only and is_not_enclosed_in_symbols and is_not_stop_word
-
-        # 単語のフィルター処理
-        filtered_words = [word for word in all_words if is_valid_word(word, min_word_length)]
-
-        # 単語の頻度を計測
-        word_counter = collections.Counter(filtered_words)
-        # 上位top_nまでに絞り込む
-        top_words = word_counter.most_common(top_n)
-
-        # 同率の場合も考慮して辞書型リストに詰める
-        top_words_list = []
-        rank = 1
-        prev_count = None
-        prev_rank = 1
-        for word, count in top_words:
-            if count != prev_count:
-                prev_rank = rank
-            rank += 1
-            top_words_list.append({"rank": prev_rank, "word": word, "count": count})
-            prev_count = count
+        stop_words = self.nlp_logic.get_stop_words(default_audio_language) if stop_word_flag else set()
+        filtered_words = self.nlp_logic.filter_words(all_words, min_word_length, stop_words)
+        top_words_list = self.nlp_logic.calculate_word_frequencies(filtered_words, top_n)
 
         return top_words_list
+
+    def check_duplicates(self, subtitles):
+        all_subtitle_texts = [subtitle.subtitle_text for subtitle in subtitles]
+
+        duplicate_check_list = collections.Counter(all_subtitle_texts)
+        duplicate_ratio = len(duplicate_check_list) / len(all_subtitle_texts)
+        logging.debug(f"{len(duplicate_check_list)}/{len(all_subtitle_texts)}={duplicate_ratio}")
+        if duplicate_ratio < 0.5:
+            return False
+        return True
+
+    def check_staircase(self, subtitles):
+        current_subtitle_text = None
+        count = 0
+        continuous_count = 2
+
+        for subtitle in subtitles:
+            subtitle_text = subtitle.subtitle_text
+
+            if current_subtitle_text and subtitle_text.startswith(current_subtitle_text):
+                count += 1
+                continuous_count = 0
+            else:
+                if continuous_count < 1:
+                    count += 1
+                continuous_count += 1
+
+            current_subtitle_text = subtitle_text
+
+        ratio = count / len(subtitles)
+        logging.debug(f"{count}/{len(subtitles)}={ratio}")
+        return ratio < 0.5
 
     def get_video_data(self, video_id):
         video_detail_dict = {}

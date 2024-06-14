@@ -75,6 +75,7 @@ csv から動画データ一覧の字幕をダウンロードする機能
 曲のプレイリストから動画を除外
 文章を自然な位置で分割
 自動字幕の一覧表示
+分析ツールで言語ごとにきちんと分けたい。また、英語の場合形態素解析を行うようにしたい。
 
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
