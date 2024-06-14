@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'middleware.common_middleware.CommonMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # リクエストを許可するオリジンを追加してください
+    "http://localhost:13000",  # リクエストを許可するオリジンを追加してください
 ]
 
 # 任意: デバッグ時にすべてのオリジンを許可する場合

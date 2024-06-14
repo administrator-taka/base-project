@@ -16,7 +16,7 @@ module.exports = defineConfig({
   // 依存関係のトランスパイルを有効にする
   transpileDependencies: true,
   devServer: {
-    port: 3000 // 開発サーバーのポート番号
+    port: 13000 // 開発サーバーのポート番号
     // proxy: {
     //   // '/api'へのリクエストをAPIのURLにプロキシする設定
     //   '/api': {

@@ -18,7 +18,7 @@ services:
     build: ./docker/view
     command: /bin/sh -c "if [ ! -e node_modules ]; then npm install --check-files; fi && npm run serve-develop"
     ports:
-      - 3000:3000
+      - 13000:13000
     tty: true
     volumes:
       - ./vue-project:/app:cached
