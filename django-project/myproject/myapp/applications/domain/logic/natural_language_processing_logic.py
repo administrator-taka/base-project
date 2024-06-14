@@ -13,10 +13,10 @@ from myapp.applications.util.code.youtube_language import YouTubeLanguage
 class NaturalLanguageProcessingLogic:
     def __init__(self):
         # 必要なNLTKデータセットをダウンロード
-        nltk.download('stopwords')
-        nltk.download('wordnet')
-        nltk.download('averaged_perceptron_tagger')
-        self.lemmatizer = WordNetLemmatizer()
+        nltk.download('stopwords')  # ストップワードのデータセットをダウンロード
+        nltk.download('wordnet')  # WordNetのデータセットをダウンロード
+        nltk.download('averaged_perceptron_tagger')  # POSタガーのデータセットをダウンロード
+        self.lemmatizer = WordNetLemmatizer()  # WordNetのLemmatizerをインスタンス化
 
     # 指定された言語に応じてストップワードのセットを取得する
     def get_stop_words(self, default_audio_language):
@@ -81,25 +81,26 @@ class NaturalLanguageProcessingLogic:
             combinations.append(combination)
         return combinations
 
+    # 単語の品詞タグを取得
     def lemmatize_word(self, word):
-        # 単語の品詞タグを取得
-        pos_tag = nltk.pos_tag([word])[0][1][0].lower()
-        wordnet_pos = self.get_wordnet_pos(pos_tag)
+        pos_tag = nltk.pos_tag([word])[0][1][0].lower()  # 単語の品詞タグを取得し、小文字に変換
+        wordnet_pos = self.get_wordnet_pos(pos_tag)  # NLTKの品詞タグをWordNetの品詞タグに変換
+
         # 単語をレマ化（基本形に変換）
         if wordnet_pos:
-            return self.lemmatizer.lemmatize(word, wordnet_pos)
+            return self.lemmatizer.lemmatize(word, wordnet_pos)  # WordNetを使って単語を基本形に変換
         else:
-            return self.lemmatizer.lemmatize(word)
+            return self.lemmatizer.lemmatize(word)  # 特定の品詞タグがない場合は、通常の方法で基本形に変換
 
+    # NLTKの品詞タグをWordNetの品詞タグに変換
     def get_wordnet_pos(self, pos_tag):
-        # NLTKの品詞タグをWordNetの品詞タグに変換
-        if pos_tag.startswith('j'):
+        if pos_tag.startswith('j'):  # 形容詞
             return wordnet.ADJ
-        elif pos_tag.startswith('v'):
+        elif pos_tag.startswith('v'):  # 動詞
             return wordnet.VERB
-        elif pos_tag.startswith('n'):
+        elif pos_tag.startswith('n'):  # 名詞
             return wordnet.NOUN
-        elif pos_tag.startswith('r'):
+        elif pos_tag.startswith('r'):  # 副詞
             return wordnet.ADV
         else:
-            return None
+            return None  # 未知の品詞タグの場合はNoneを返す
