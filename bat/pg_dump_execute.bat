@@ -8,6 +8,6 @@ if /i "%CONTINUE%" NEQ "y" (
 )
 
 docker exec -i postgresql psql -U postgres -d postgres -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-docker exec -i postgresql psql -U postgres -d postgres < test.sql
+docker exec -i postgresql psql -U postgres -d postgres < pg_dump.sql
 
 @REM cmd /k
