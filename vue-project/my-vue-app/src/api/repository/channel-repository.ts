@@ -27,14 +27,16 @@ export default {
     min_word_length: number,
     top_n: number,
     subtitle_type: number,
-    stop_word_flag: boolean
+    stop_word_flag: boolean,
+    lemmatize_flag: boolean
   ) {
     const data = {
       min_word: min_word,
       min_word_length: min_word_length,
       top_n: top_n,
       subtitle_type: subtitle_type,
-      stop_word_flag:stop_word_flag
+      stop_word_flag:stop_word_flag,
+      lemmatize_flag:lemmatize_flag
     }
 
     return youtubeAppApiClient

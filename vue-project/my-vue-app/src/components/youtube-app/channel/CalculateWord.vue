@@ -45,6 +45,15 @@
           />
         </div>
         <div class="col-md-2">
+          <label for="lemmatizeFlag" class="form-label">単語の基本形</label>
+          <ToggleSwitch
+            :modelValue="lemmatizeFlag"
+            @update="lemmatizeFlag = $event"
+            id="lemmatizeFlag"
+            :label="lemmatizeFlag ? '適用' : '適用しない'"
+          />
+        </div>
+        <div class="col-md-2">
           <label for="subtitleTypeCodeDropdown" class="form-label"
             >字幕種類</label
           >
@@ -115,6 +124,7 @@ export default {
     const minWordLength = ref(2)
     const topN = ref(50)
     const stopWordFlag = ref(true)
+    const lemmatizeFlag = ref(false)
 
     const calculateWord = ref<ChannelWord[] | null>(null)
     const chartId = 'my-chart-id'
@@ -145,7 +155,8 @@ export default {
           minWordLength.value,
           topN.value,
           subtitleType.value,
-          stopWordFlag.value
+          stopWordFlag.value,
+          lemmatizeFlag.value
         )
         .then((response) => {
           calculateWord.value = response.calculateWord
@@ -173,6 +184,7 @@ export default {
       subtitleTypeCode,
       subtitleType,
       stopWordFlag,
+      lemmatizeFlag,
       calculateWord,
       chartId,
       chartData
