@@ -321,7 +321,8 @@ class YoutubeDownloadService:
         return search_results
 
     # 単語集計
-    def calculate_word(self, channel_id, min_word, min_word_length, top_n, subtitle_type, stop_word_flag):
+    def calculate_word(self, channel_id, min_word, min_word_length, top_n, subtitle_type, stop_word_flag, lemmatize_flag):
+        # チャンネルの翻訳情報を取得
         default_audio_language, translation_languages = self.get_translation_info(channel_id)
 
         # VideoDetailをベースにクエリを構築
@@ -366,8 +367,11 @@ class YoutubeDownloadService:
                 info_words = []
                 for subtitle in subtitles:
                     words = subtitle.subtitle_text.split()
-                    # 単語の基本形に変換してリストに追加
-                    lemmatized_words = [self.nlp_logic.lemmatize_word(word) for word in words]
+                    # 単語の基本形に変換してリストに追加（フラグで制御）
+                    if lemmatize_flag:
+                        lemmatized_words = [self.nlp_logic.lemmatize_word(word) for word in words]
+                    else:
+                        lemmatized_words = words  # 基本形にしない場合はそのままの単語を使う
                     info_words.extend(lemmatized_words)
 
                 # 単語の組み合わせを取得

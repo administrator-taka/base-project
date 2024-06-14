@@ -29,7 +29,8 @@ class TestAPIEndpoints(unittest.TestCase):
             'min_word_length': 2,
             'top_n': 100,
             'subtitle_type': 1,
-            'stop_word_flag': False
+            'stop_word_flag': False,
+            'lemmatize_flag': True
         }
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
