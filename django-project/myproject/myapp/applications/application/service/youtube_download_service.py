@@ -749,7 +749,29 @@ class YoutubeDownloadService:
 
             # ターゲット字幕とベース字幕をマージしてペアを見つける
             for base_subtitle in base_subtitles:
+                # まず、同じ開始時間のターゲット字幕を探す
                 target_subtitle = target_subtitles.filter(t_start_ms=base_subtitle.t_start_ms).first()
+
+                # 同じ開始時間のターゲット字幕がない場合
+                if not target_subtitle:
+                    # ベース字幕の開始時間に最も近いターゲット字幕を見つける
+                    # 前後の字幕を探す
+                    previous_subtitle = target_subtitles.filter(t_start_ms__lt=base_subtitle.t_start_ms).order_by(
+                        '-t_start_ms').first()
+                    next_subtitle = target_subtitles.filter(t_start_ms__gt=base_subtitle.t_start_ms).order_by(
+                        't_start_ms').first()
+
+                    if previous_subtitle and next_subtitle:
+                        # 前後の字幕の中でベース字幕に最も近いものを選択
+                        if base_subtitle.t_start_ms - previous_subtitle.t_start_ms <= next_subtitle.t_start_ms - base_subtitle.t_start_ms:
+                            target_subtitle = previous_subtitle
+                        else:
+                            target_subtitle = next_subtitle
+                    elif previous_subtitle:
+                        target_subtitle = previous_subtitle
+                    elif next_subtitle:
+                        target_subtitle = next_subtitle
+
                 if target_subtitle:
                     logging.debug(f"{target_subtitle.subtitle_text}:登録中")
                     # 翻訳を挿入
