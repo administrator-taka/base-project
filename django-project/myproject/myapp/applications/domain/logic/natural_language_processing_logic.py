@@ -3,6 +3,7 @@ import logging
 import re
 
 import nltk
+import spacy
 from nltk import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet
@@ -18,10 +19,18 @@ class NaturalLanguageProcessingLogic:
         nltk.download('averaged_perceptron_tagger')  # POSタガーのデータセットをダウンロード
         self.lemmatizer = WordNetLemmatizer()  # WordNetのLemmatizerをインスタンス化
 
+        # Spacyの英語モデルをロード(Dockerfileにも記載)
+        self.nlp = spacy.load('en_core_web_sm')
+
     # 指定された言語に応じてストップワードのセットを取得する
     def get_stop_words(self, default_audio_language):
         if default_audio_language == YouTubeLanguage.ENGLISH:
-            return set(stopwords.words('english'))
+            # NLTKのストップワード
+            nltk_stopwords = set(stopwords.words('english'))
+            # Spacyのストップワード
+            spacy_stopwords = self.nlp.Defaults.stop_words
+            # 両方のストップワードを結合
+            return nltk_stopwords.union(spacy_stopwords)
         elif default_audio_language == YouTubeLanguage.JAPANESE:
             return {'の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ', 'ある', 'いる', 'も', 'する', 'から', 'な',
                     'こと', 'として', 'い', 'や', 'れる', 'など', 'なっ', 'なり', 'いっ', 'その', 'これ', 'それ', 'あれ', 'あの', 'この', 'そう',
