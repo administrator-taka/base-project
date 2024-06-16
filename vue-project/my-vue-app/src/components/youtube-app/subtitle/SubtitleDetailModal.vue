@@ -5,16 +5,24 @@
     :actionFunction="updateSubtitleTranslation"
   >
     <div class="container">
-      <div class="m-2">
-        <label for="learningStatusDropdown" class="form-label"
-          >学習ステータス</label
-        >
-        <DropdownSelect
-          :options="learningStatus"
-          v-model="selectedLearningStatus"
-          @update="updateLearningStatus()"
-        />
-        <StarIcon v-model="isFavorite" @update="updateLearningStatus()" />
+      <div class="row">
+        <div class="col-md-8">
+          <div class="m-2">
+            <label for="learningStatusDropdown" class="form-label"
+              >学習ステータス</label
+            >
+            <DropdownSelect
+              :options="learningStatus"
+              v-model="selectedLearningStatus"
+              @update="updateLearningStatus()"
+            />
+          </div>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <div class="m-2">
+            <StarIcon v-model="isFavorite" @update="updateLearningStatus()" />
+          </div>
+        </div>
       </div>
       <div class="m-2" v-if="subtitleTextData">
         <label for="aaa" class="form-label">タイムスタンプ付き動画リンク</label>
