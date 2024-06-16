@@ -136,5 +136,12 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
+    def test_get_favorite_subtitle_text_list(self):
+        url = f"{self.base_url}favorite"
+        data = {
+            "language_code": "ko"}
+        response = requests.post(url, json=data)
+        FileHandler.format_json_print(response.json())
+
 # if __name__ == '__main__':
 #     unittest.main()

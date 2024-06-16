@@ -25,3 +25,22 @@ def get_learning_subtitle_text_list(request):
     }
 
     return JsonResponse(data=data, status=200)
+
+
+@api_view(['POST'])
+def get_favorite_subtitle_text_list(request):
+    # リクエストのJSONの中身を取得
+    request_data = request.data
+
+    language_code = request_data.get('language_code', None)
+
+    learning_language_service = LearningLanguageService()
+    favorite_subtitle_list = learning_language_service.get_favorite_subtitle_text_list(
+        YouTubeLanguage(language_code))
+
+    # JSONレスポンスを作成
+    data = {
+        "favorite_subtitle_list": favorite_subtitle_list
+    }
+
+    return JsonResponse(data=data, status=200)

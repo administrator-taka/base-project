@@ -58,6 +58,43 @@
           </div>
         </div>
       </div>
+
+      <div v-if="favoriteSubtitleList">
+        <h2>お気に入り</h2>
+        <div v-for="(subtitle, index) in favoriteSubtitleList" :key="index">
+          <div class="row">
+            <div class="col-md-4">
+              <img
+                :src="subtitle.thumbnail"
+                alt="Image"
+                class="img-thumbnail m-2"
+              />
+            </div>
+            <div class="col-md-6">
+              <JsonTable :data="subtitle" />
+            </div>
+            <div class="col-md-2">
+              <button
+                type="button"
+                class="btn btn-primary m-2"
+                @click="
+                  openModal(subtitle.subtitleTextId, subtitle.languageCode)
+                "
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                字幕詳細
+              </button>
+              <button
+                @click="goToVideoPage(subtitle.videoId)"
+                class="btn btn-info m-2"
+              >
+                動画詳細
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <SubtitleDetailModal
         :subtitleTextId="selectedModalSubtitleTextId"
         :languageCode="selectedModalLanguageCode"
@@ -86,6 +123,7 @@ export default {
   },
   setup() {
     const learningSubtitleList = ref()
+    const favoriteSubtitleList = ref()
     const selectedModalSubtitleTextId = ref<string>('')
     const selectedModalLanguageCode = ref<string>('')
 
@@ -114,17 +152,31 @@ export default {
           showErrorToast(error)
         })
     }
+
+    const getFavoriteSubtitleList = async () => {
+      learningLanguageMemoryRepository
+        .getFavoriteSubtitleList(selectedLanguageCode.value)
+        .then((response) => {
+          favoriteSubtitleList.value = response.favoriteSubtitleList
+          console.log(response)
+        })
+        .catch((error) => {
+          showErrorToast(error)
+        })
+    }
     const goToVideoPage = (videoId: string) => {
       router.push(`/video/${videoId}`)
     }
 
     onMounted(() => {
       getLearningSubtitleList()
+      getFavoriteSubtitleList()
     })
 
     // selectedLanguageCode か selectedLearningStatus が変更されたら、自動的に字幕リストを更新する
     watch([selectedLanguageCode, selectedLearningStatus], () => {
       getLearningSubtitleList()
+      getFavoriteSubtitleList()
     })
 
     return {
@@ -137,7 +189,8 @@ export default {
       learningStatus,
       selectedLearningStatus,
       goToVideoPage,
-      getLearningSubtitleList
+      getLearningSubtitleList,
+      favoriteSubtitleList
     }
   }
 }

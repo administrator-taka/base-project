@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from myapp.views.channel_view import get_channel_data, search_word, download_channel_subtitles, \
     update_translation_language, get_channel_video_list, get_channel_list, search_multiple_word, calculate_channel_word
-from myapp.views.learning_language import get_learning_subtitle_text_list
+from myapp.views.learning_language import get_learning_subtitle_text_list, get_favorite_subtitle_text_list
 from myapp.views.subtitle_text_view import get_subtitle_text_data, update_subtitle_translation, \
     insert_or_update_subtitle_learning_memory, execute_chatgpt_translation
 from myapp.views.test_views import TestViewSet
@@ -39,4 +39,6 @@ urlpatterns = [
          name="insert_or_update_subtitle_learning_memory"),
     path("learning", get_learning_subtitle_text_list,
          name="get_learning_subtitle_text_list"),
+    path("favorite", get_favorite_subtitle_text_list,
+         name="get_favorite_subtitle_text_list"),
 ]
