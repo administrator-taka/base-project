@@ -12,7 +12,9 @@
         <DropdownSelect
           :options="learningStatus"
           v-model="selectedLearningStatus"
+          @update="updateLearningStatus()"
         />
+        <StarIcon v-model="isFavorite" @update="updateLearningStatus()" />
       </div>
       <div class="m-2" v-if="subtitleTextData">
         <label for="aaa" class="form-label">タイムスタンプ付き動画リンク</label>
@@ -99,18 +101,20 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent, ref, watch, watchEffect } from 'vue'
+import { PropType, defineComponent, ref, watchEffect } from 'vue'
 import BaseModal from '@/components/common/modal/BaseModal.vue'
 import subtitleRepository from '@/api/repository/subtitle-repository'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { LearningStatusLabel } from '@/enums/learning-status'
 import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
+import StarIcon from '@/components/common/button/StarIcon.vue'
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
   components: {
     BaseModal,
-    DropdownSelect
+    DropdownSelect,
+    StarIcon
   },
   props: {
     subtitleTextId: {
@@ -131,6 +135,8 @@ export default defineComponent({
     const learningStatus = LearningStatusLabel
     const selectedLearningStatus = ref()
 
+    const isFavorite = ref(false)
+
     const getSubtitleTextData = async () => {
       subtitleRepository
         .getSubtitleTextData(props.subtitleTextId, props.languageCode)
@@ -143,6 +149,7 @@ export default defineComponent({
           selectedLearningStatus.value = parseInt(
             response.subtitleTextData.learningStatus
           )
+          isFavorite.value = response.subtitleTextData.favorite
           console.log(response)
         })
         .catch((error) => {
@@ -223,6 +230,7 @@ export default defineComponent({
         .updateLearningStatus(
           props.subtitleTextId,
           props.languageCode,
+          isFavorite.value,
           selectedLearningStatus.value
         )
         .then((response) => {
@@ -243,15 +251,15 @@ export default defineComponent({
       }
     })
 
-    // selectedLearningStatusの変更を監視し、変更があるたびに関数を実行
-    watch(selectedLearningStatus, () => {
-      // 別モーダルからの遷移で更新しないように修正
-      if (updateCancelFlag.value) {
-        updateCancelFlag.value = false
-      } else {
-        updateLearningStatus()
-      }
-    })
+    // // selectedLearningStatusの変更を監視し、変更があるたびに関数を実行
+    // watch(selectedLearningStatus, () => {
+    //   // 別モーダルからの遷移で更新しないように修正
+    //   if (updateCancelFlag.value) {
+    //     updateCancelFlag.value = false
+    //   } else {
+    //     updateLearningStatus()
+    //   }
+    // })
 
     return {
       updateSubtitleTranslation,
@@ -261,7 +269,9 @@ export default defineComponent({
       learningStatus,
       selectedLearningStatus,
       executeChatgptTranslation,
-      copyChatgptPrompt
+      copyChatgptPrompt,
+      isFavorite,
+      updateLearningStatus
     }
   }
 })

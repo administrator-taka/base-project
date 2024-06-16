@@ -51,10 +51,12 @@ export default {
   async updateLearningStatus(
     subtitleTextId: string,
     languageCode: string,
+    favorite:boolean,
     learningStatus: number
   ) {
     const data = {
       language_code: languageCode,
+      favorite: favorite,
       learning_status: learningStatus
     }
     return youtubeAppApiClient

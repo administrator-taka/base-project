@@ -232,6 +232,9 @@ class SubtitleLearningMemory(models.Model):
     learning_status = models.CharField(choices=[(tag.value, tag.name) for tag in LearningStatus],
                                        verbose_name='言語コード')
 
+    # お気に入り
+    favorite = models.BooleanField(default=False, verbose_name='お気に入り')
+
     last_updated = models.DateTimeField(verbose_name='最終更新日時', null=True)
 
     class Meta:

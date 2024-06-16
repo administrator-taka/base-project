@@ -31,7 +31,7 @@ export default {
       required: true
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'update'],
   setup(props, { emit }) {
     const selectedOption = ref(props.modelValue)
     const labelName = ref(
@@ -58,6 +58,7 @@ export default {
     const selectOption = (option) => {
       selectedOption.value = option.value
       emit('update:modelValue', option.value)
+      emit('update') // 更新イベントを発火する
       isOpen.value = false
       updateLabelName()
     }

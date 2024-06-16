@@ -123,6 +123,7 @@ class TestAPIEndpoints(unittest.TestCase):
         url = f"{self.base_url}subtitle/{subtitle_text_id}/insert_or_update_subtitle_learning_memory"
         data = {
             "language_code": "ja",
+            "favorite": True,
             "learning_status": 3}
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())

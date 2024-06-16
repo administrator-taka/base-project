@@ -72,7 +72,7 @@ class YoutubeDownloadService:
             channel_list.append(channel_data)
         return channel_list
 
-    def insert_or_update_subtitle_learning_memory(self, subtitle_text_id, language_code, learning_status):
+    def insert_or_update_subtitle_learning_memory(self, subtitle_text_id, language_code, learning_status,favorite):
         # 対象のSubtitleTranslationレコードを取得
         subtitle_translation = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language_code.value)
@@ -82,6 +82,7 @@ class YoutubeDownloadService:
             subtitle_translation_text_id=subtitle_translation,
             defaults={
                 'learning_status': learning_status.value,
+                'favorite':favorite,
                 'last_updated': datetime.now()
             }
         )
@@ -111,6 +112,7 @@ class YoutubeDownloadService:
             'language_code': subtitle_translation.language_code,
             'last_updated': learning_memory.last_updated if learning_memory else None,
             'learning_status': learning_memory.learning_status if learning_memory else LearningStatus.NOT_CHECKED.value,
+            'favorite': learning_memory.favorite if learning_memory else False,
         }
         return subtitle_text_data
 
