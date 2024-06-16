@@ -730,7 +730,8 @@ class YoutubeDownloadService:
                     language_code=language.value
             ).exists():
                 logging.debug(f"字幕解説登録済み")
-                return
+                # TODO:修正前の字幕解説を更新するために毎度生成するようにしている
+                # return
 
             # 各言語のターゲット字幕を取得
             target_subtitles = VideoSubtitle.objects.filter(

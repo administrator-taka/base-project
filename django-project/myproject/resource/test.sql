@@ -108,3 +108,9 @@ WHERE n_live_tup > 0;
 --動画情報更新用
 update video_detail
 set e_tag='test';
+
+--字幕詳細削除用
+DELETE FROM subtitle_translation
+USING video_subtitle
+WHERE video_subtitle.subtitle_text_id = subtitle_translation.subtitle_text_id
+AND video_subtitle.subtitle_id = 'E2r9u5l0Y6k1en';
