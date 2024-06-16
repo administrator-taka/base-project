@@ -9,22 +9,26 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
       required: true
     }
   },
-  emits: ['update:modelValue', 'update'],
-  methods: {
-    toggleFavorite() {
-      // favoriteプロパティの値をトグルして親コンポーネントに通知する
-      this.$emit('update:modelValue', !this.modelValue)
-      this.$emit('update') // 更新イベントを発火する
+  setup(props, { emit }) {
+    const toggleFavorite = () => {
+      emit('update:modelValue', !props.modelValue)
+      emit('update') // 更新イベントを発火する
+    }
+
+    return {
+      toggleFavorite
     }
   }
-}
+})
 </script>
 
 <style scoped>
