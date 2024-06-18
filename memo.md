@@ -76,7 +76,8 @@ csv から動画データ一覧の字幕をダウンロードする機能
 文章を自然な位置で分割
 自動字幕の一覧表示
 分析ツールで言語ごとにきちんと分けたい。また、英語の場合形態素解析を行うようにしたい。
-gemini apiに切り替える
+gemini api に切り替える
+ページネーション...
 
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
