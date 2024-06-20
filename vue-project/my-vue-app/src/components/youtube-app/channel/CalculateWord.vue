@@ -48,7 +48,7 @@
         </div>
         <div class="col-md-2">
           <label for="lemmatizeFlag" class="form-label"
-            >基本形での計測（レマ化）</label
+            >基本形での計測（レンマ化）</label
           >
           <ToggleSwitch
             :modelValue="lemmatizeFlag"

@@ -95,7 +95,7 @@ class NaturalLanguageProcessingLogic:
         pos_tag = nltk.pos_tag([word])[0][1][0].lower()  # 単語の品詞タグを取得し、小文字に変換
         wordnet_pos = self.get_wordnet_pos(pos_tag)  # NLTKの品詞タグをWordNetの品詞タグに変換
 
-        # 単語をレマ化（基本形に変換）
+        # 単語をレンマ化（基本形に変換）
         if wordnet_pos:
             return self.lemmatizer.lemmatize(word, wordnet_pos)  # WordNetを使って単語を基本形に変換
         else:
