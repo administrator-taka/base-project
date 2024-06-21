@@ -8,7 +8,6 @@ from typing import List
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q, Prefetch, OuterRef, Exists
 
-from myapp.applications.domain.logic.chat_gpt_api_logic import ChatGPTApiLogic
 from myapp.applications.domain.logic.natural_language_processing_logic import NaturalLanguageProcessingLogic
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
@@ -27,7 +26,6 @@ class ChannelService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
-        self.chatgpt_api_logic = ChatGPTApiLogic()
         self.nlp_logic = NaturalLanguageProcessingLogic()
 
     def get_activate_channel_list(self):

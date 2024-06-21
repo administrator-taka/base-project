@@ -7,8 +7,6 @@ from typing import List
 
 from django.db.models import Prefetch
 
-from myapp.applications.domain.logic.chat_gpt_api_logic import ChatGPTApiLogic
-from myapp.applications.domain.logic.natural_language_processing_logic import NaturalLanguageProcessingLogic
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
@@ -25,8 +23,6 @@ class VideoService:
     def __init__(self):
         self.youtube_subtitle_logic = YouTubeSubtitleLogic()
         self.youtube_api_logic = YouTubeApiLogic()
-        self.chatgpt_api_logic = ChatGPTApiLogic()
-        self.nlp_logic = NaturalLanguageProcessingLogic()
 
     def get_video_data(self, video_id):
         video_detail_dict = {}

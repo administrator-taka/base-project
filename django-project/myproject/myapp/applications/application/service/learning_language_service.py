@@ -1,12 +1,7 @@
-from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
-from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.models import SubtitleLearningMemory
 
 
 class LearningLanguageService:
-    def __init__(self):
-        self.youtube_subtitle_logic = YouTubeSubtitleLogic()
-        self.youtube_api_logic = YouTubeApiLogic()
 
     def get_learning_subtitle_text_list(self, language, learning_status):
         subtitle_learning_memorys = SubtitleLearningMemory.objects.filter(
