@@ -31,7 +31,6 @@ class LearningLanguageService:
             learning_subtitle_list.append(subtitle_text_data)
         return learning_subtitle_list
 
-
     def get_favorite_subtitle_text_list(self, language):
         subtitle_learning_memorys = SubtitleLearningMemory.objects.filter(
             subtitle_translation_text_id__subtitle_text_id__subtitle_id__language_code=language.value,

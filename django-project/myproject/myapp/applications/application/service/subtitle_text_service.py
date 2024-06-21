@@ -1,28 +1,15 @@
-import collections
+import datetime
 import datetime
 import logging
-import time
-import unittest
 from datetime import datetime
-from typing import List
-
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Q, Prefetch, OuterRef, Exists
 
 from myapp.applications.domain.logic.chat_gpt_api_logic import ChatGPTApiLogic
 from myapp.applications.domain.logic.natural_language_processing_logic import NaturalLanguageProcessingLogic
 from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.learning_status import LearningStatus
-from myapp.applications.util.code.subtitle_status import SubtitleStatus
-from myapp.applications.util.code.subtitle_type import SubtitleType
-from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
-from myapp.applications.util.pagination_info import PaginationInfo
-from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
-from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
-    ChannelTranslationInfo, SubtitleLearningMemory
-from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
+from myapp.models import SubtitleTranslation, SubtitleLearningMemory
 
 
 class SubtitleTextService:

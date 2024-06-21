@@ -1,12 +1,12 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
-from myapp.applications.application.service.youtube_download_service import YoutubeDownloadService
+from myapp.applications.application.service.video_service import VideoService
 
 
 @api_view(['GET'])
 def get_video_data(request, video_id):
-    youtube_download_service = YoutubeDownloadService()
+    youtube_download_service = VideoService()
     video_data = youtube_download_service.get_video_data(video_id)
 
     youtube_download_service.insert_initial_subtitle_detail(video_id)
@@ -23,7 +23,7 @@ def get_video_data(request, video_id):
 
 @api_view(['GET'])
 def download_video_subtitle(request, video_id):
-    youtube_download_service = YoutubeDownloadService()
+    youtube_download_service = VideoService()
 
     youtube_download_service.single_download_video_subtitle(video_id)
     # JSONレスポンスを作成
