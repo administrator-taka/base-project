@@ -369,47 +369,6 @@ class VideoService:
         else:
             logging.debug("動画情報は既に最新です。")
 
-    # 動画詳細登録
-    def insert_or_update_video_detail(self, video_data):
-        video_id = video_data['video_id']
-        e_tag = video_data['e_tag']
-        title = video_data['title']
-        published_at = video_data['published_at']
-        description = video_data['description']
-        thumbnail = video_data['thumbnail']
-        channel_id = video_data['channel_id']
-
-        # video_idで既存のレコードを取得する
-        try:
-            video_detail = VideoDetail.objects.get(video_id=video_id)
-        except VideoDetail.DoesNotExist:
-            # 既存のレコードがない場合は新規作成
-            VideoDetail.objects.create(
-                video_id=video_id,
-                e_tag=e_tag,
-                title=title,
-                published_at=published_at,
-                description=description,
-                thumbnail=thumbnail,
-                channel_id=ChannelDetail.objects.get(channel_id=channel_id),
-            )
-            logging.debug("動画情報が追加されました。")
-            return
-
-        # 既存のレコードがある場合、etagが異なる場合のみ更新
-        if video_detail.e_tag != e_tag:
-            video_detail.title = title
-            video_detail.published_at = published_at
-            video_detail.description = description
-            if 'maxres' not in video_detail.thumbnail:
-                video_detail.thumbnail = thumbnail
-            video_detail.channel_id = ChannelDetail.objects.get(channel_id=channel_id)
-            video_detail.e_tag = e_tag
-            video_detail.save()
-            logging.debug("動画情報が更新されました。")
-        else:
-            logging.debug("動画情報は既に最新です。")
-
     def download_video_subtitle(self, video_id: str,
                                 default_audio_language: YouTubeLanguage,
                                 translation_languages: List[YouTubeLanguage]) -> None:
