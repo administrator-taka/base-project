@@ -1,9 +1,7 @@
 import datetime
 import datetime
 import logging
-import time
 from datetime import datetime
-from typing import List
 
 from django.db.models import Prefetch
 
@@ -12,12 +10,9 @@ from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
-from myapp.applications.util.code.youtube_language import YouTubeLanguage
-from myapp.applications.util.file_handler import FileHandler
-from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
+from myapp.applications.util.util_generate import generate_subtitle_id
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
     ChannelTranslationInfo, SubtitleLearningMemory
-from myproject.settings.base import TEST_DIR
 
 
 class VideoService:
@@ -236,7 +231,7 @@ class VideoService:
         video_detail = VideoDetail.objects.get(video_id=video_id)
         default_audio_language, translation_languages = self.database_common_logic.get_translation_info(
             video_detail.channel_id)
-        self.download_video_subtitle(video_id, default_audio_language, translation_languages)
+        self.database_common_logic.download_video_subtitle(video_id, default_audio_language, translation_languages)
 
     def update_video_caption(self, video_id, default_audio_language, translation_languages):
         video_captions = self.youtube_api_logic.get_subtitle_info(video_id, default_audio_language,
@@ -331,73 +326,3 @@ class VideoService:
             logging.debug("動画情報が更新されました。")
         else:
             logging.debug("動画情報は既に最新です。")
-
-    def download_video_subtitle(self, video_id: str,
-                                default_audio_language: YouTubeLanguage,
-                                translation_languages: List[YouTubeLanguage]) -> None:
-
-        subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
-        FileHandler.write_json(subtitle_info, TEST_DIR + "subtitle_data/", video_id, )
-        # return
-        # # TODO:データを事前に用意している場合は以下を使用
-        # subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
-        # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
-        # 自動生成字幕
-        self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
-                                                  default_audio_language)
-        # 手動作成字幕
-        self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
-                                                  default_audio_language)
-
-        # TODO:リストが単体だと動作不良を起こすため明示的に再度リストに格納（引数渡す時に間違ってたので多分なおっている）
-        if not isinstance(translation_languages, list):
-            translation_languages = [translation_languages]
-
-        for language in translation_languages:
-            self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
-                                                      language)
-
-    def create_or_update_video_subtitle_info(self, video_id, subtitle_info, subtitle_type, language):
-        # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
-        time.sleep(1)
-        # 自動生成字幕
-        subtitle_status, subtitle = self.youtube_subtitle_logic.extract_and_process_subtitle_json(subtitle_info,
-                                                                                                  subtitle_type,
-                                                                                                  language)
-        # 最初にインサートし、データがあればupdateするように修正
-        subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
-
-        self.database_common_logic.insert_or_update_video_subtitle_info(video_id,
-                                                                        subtitle_type,
-                                                                        language,
-                                                                        SubtitleStatus.NO_SUBTITLE,
-                                                                        None)
-        # 字幕があった場合、
-        if subtitle_status == SubtitleStatus.REGISTERED:
-            self.insert_subtitle_data(video_id, subtitle, subtitle_type, language)
-            VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
-                subtitle_status=SubtitleStatus.REGISTERED.value,
-                remarks=None
-            )
-        # 字幕の登録に失敗した場合
-        elif subtitle_status == SubtitleStatus.REGISTRATION_FAILED:
-            # サブタイトル情報がある場合、備考にサブタイトルを設定する
-            VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
-                subtitle_status=SubtitleStatus.REGISTRATION_FAILED.value,
-                remarks=subtitle
-            )
-
-    def insert_subtitle_data(self, video_id, subtitle, subtitle_type, language):
-        # 辞書型リストのデータを順番に処理してデータベースに挿入
-        for data in subtitle:
-            # 字幕情報を保存する前に、関連するVideoSubtitleInfoインスタンスを取得する必要があります
-            subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
-            subtitle_info_instance = VideoSubtitleInfo.objects.get(subtitle_id=subtitle_id)
-            VideoSubtitle.objects.create(
-                subtitle_id=subtitle_info_instance,
-                subtitle_text_id=generate_uuid(),
-                t_start_ms=data['t_start_ms'],
-                d_duration_ms=data['d_duration_ms'],
-                t_offset_ms=data['t_offset_ms'],
-                subtitle_text=data['subtitle_text']
-            )
