@@ -440,8 +440,8 @@ class ChannelService:
 
             # 既に処理を行っている場合実行しない
             if not existing_subtitle_info:
-                self.database_common_logic.download_video_subtitle(video_id, default_audio_language,
-                                                                   translation_languages)
+                self.youtube_subtitle_logic.download_video_subtitle(video_id, default_audio_language,
+                                                                    translation_languages)
             else:
                 logging.debug(f"{video_id}:登録済み")
 

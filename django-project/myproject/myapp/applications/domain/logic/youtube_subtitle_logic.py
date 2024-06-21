@@ -3,9 +3,11 @@ import os
 import re
 import traceback
 import unittest
+from typing import List
 
 import yt_dlp
 
+from myapp.applications.domain.logic.database_common_logic import DatabaseCommonLogic
 from myapp.applications.infrastructure.repository.web_client import WebClient
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
@@ -16,6 +18,9 @@ from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
 
 class YouTubeSubtitleLogic:
+    def __init__(self):
+        self.database_common_logic = DatabaseCommonLogic()
+
     def download_subtitle_vtt(self, video_id: str, lang: YouTubeLanguage, output_path: str, write_subtitles=True,
                               write_automatic_sub=True, encoding='utf-8') -> str:
         """指定したYouTubeビデオの字幕ファイルをダウンロードする
@@ -370,6 +375,32 @@ class YouTubeSubtitleLogic:
     def format_subtitle_text(self, subtitle_text):
         # 前後の空白とゼロ幅スペースを削除して返す
         return subtitle_text.strip("\u200b").strip()
+
+    def download_video_subtitle(self, video_id: str,
+                                default_audio_language: YouTubeLanguage,
+                                translation_languages: List[YouTubeLanguage]) -> None:
+
+        subtitle_info = self.download_subtitles_info(video_id)
+        FileHandler.write_json(subtitle_info, TEST_DIR + "subtitle_data/", video_id, )
+        # return
+        # # TODO:データを事前に用意している場合は以下を使用
+        # subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
+        # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
+        # 自動生成字幕
+        self.database_common_logic.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
+                                                                        default_audio_language)
+        # 手動作成字幕
+        self.database_common_logic.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
+                                                                        default_audio_language)
+
+        # TODO:リストが単体だと動作不良を起こすため明示的に再度リストに格納（引数渡す時に間違ってたので多分なおっている）
+        if not isinstance(translation_languages, list):
+            translation_languages = [translation_languages]
+
+        for language in translation_languages:
+            self.database_common_logic.create_or_update_video_subtitle_info(video_id, subtitle_info,
+                                                                            SubtitleType.MANUAL,
+                                                                            language)
 
 
 class TestYouTubeDownloadLogic(unittest.TestCase):

@@ -2,23 +2,15 @@ import datetime
 import logging
 import time
 from datetime import datetime
-from typing import List
 
-from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
-from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
-from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, VideoDetail, \
     ChannelTranslationInfo
-from myproject.settings.base import TEST_DIR
 
 
 class DatabaseCommonLogic:
-
-    def __init__(self):
-        self.youtube_subtitle_logic = YouTubeSubtitleLogic()
 
     def get_translation_info(self, channel_id):
         # ChannelTranslationInfoからデータを取得
@@ -102,29 +94,3 @@ class DatabaseCommonLogic:
                 subtitle_status=SubtitleStatus.REGISTRATION_FAILED.value,
                 remarks=subtitle
             )
-
-    def download_video_subtitle(self, video_id: str,
-                                default_audio_language: YouTubeLanguage,
-                                translation_languages: List[YouTubeLanguage]) -> None:
-
-        subtitle_info = self.youtube_subtitle_logic.download_subtitles_info(video_id)
-        FileHandler.write_json(subtitle_info, TEST_DIR + "subtitle_data/", video_id, )
-        # return
-        # # TODO:データを事前に用意している場合は以下を使用
-        # subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
-        # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
-        # 自動生成字幕
-        self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
-                                                  default_audio_language)
-        # 手動作成字幕
-        self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
-                                                  default_audio_language)
-
-        # TODO:リストが単体だと動作不良を起こすため明示的に再度リストに格納（引数渡す時に間違ってたので多分なおっている）
-        if not isinstance(translation_languages, list):
-            translation_languages = [translation_languages]
-
-        for language in translation_languages:
-            self.create_or_update_video_subtitle_info(video_id, subtitle_info,
-                                                      SubtitleType.MANUAL,
-                                                      language)

@@ -231,7 +231,7 @@ class VideoService:
         video_detail = VideoDetail.objects.get(video_id=video_id)
         default_audio_language, translation_languages = self.database_common_logic.get_translation_info(
             video_detail.channel_id)
-        self.database_common_logic.download_video_subtitle(video_id, default_audio_language, translation_languages)
+        self.youtube_subtitle_logic.download_video_subtitle(video_id, default_audio_language, translation_languages)
 
     def update_video_caption(self, video_id, default_audio_language, translation_languages):
         video_captions = self.youtube_api_logic.get_subtitle_info(video_id, default_audio_language,
