@@ -79,6 +79,7 @@ gemini api に切り替える
 ページネーション...
 エラーハンドリング
 サービス層を整理する。db操作はそれぞれの処理で書いて共通化しない。
+画面側で再生位置とリンクさせたい
 
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
