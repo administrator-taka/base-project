@@ -1,6 +1,8 @@
+import os
 import logging
 import os
 import re
+import time
 import traceback
 import unittest
 from typing import List
@@ -14,6 +16,8 @@ from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_convert import convert_to_milliseconds
+from myapp.applications.util.util_generate import generate_subtitle_id
+from myapp.models import VideoSubtitleInfo
 from myproject.settings.base import TEST_YOUTUBE_VIDEO_ID, TEST_DIR
 
 
@@ -387,20 +391,50 @@ class YouTubeSubtitleLogic:
         # subtitle_info = FileHandler.get_json_response(TEST_DIR + "subtitle_data/" + video_id)
         # TODO:自動字幕は一旦取得しないようにコメントアウト（量が多すぎる）
         # 自動生成字幕
-        self.database_common_logic.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
-                                                                        default_audio_language)
+        self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.AUTOMATIC,
+                                                  default_audio_language)
         # 手動作成字幕
-        self.database_common_logic.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
-                                                                        default_audio_language)
+        self.create_or_update_video_subtitle_info(video_id, subtitle_info, SubtitleType.MANUAL,
+                                                  default_audio_language)
 
         # TODO:リストが単体だと動作不良を起こすため明示的に再度リストに格納（引数渡す時に間違ってたので多分なおっている）
         if not isinstance(translation_languages, list):
             translation_languages = [translation_languages]
 
         for language in translation_languages:
-            self.database_common_logic.create_or_update_video_subtitle_info(video_id, subtitle_info,
-                                                                            SubtitleType.MANUAL,
-                                                                            language)
+            self.create_or_update_video_subtitle_info(video_id, subtitle_info,
+                                                      SubtitleType.MANUAL,
+                                                      language)
+
+    def create_or_update_video_subtitle_info(self, video_id, subtitle_info, subtitle_type, language):
+        # TODO:データを用意している場合、処理が速すぎるため念のため一時停止
+        time.sleep(1)
+        # 自動生成字幕
+        subtitle_status, subtitle = self.extract_and_process_subtitle_json(subtitle_info,
+                                                                           subtitle_type,
+                                                                           language)
+        # 最初にインサートし、データがあればupdateするように修正
+        subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
+
+        self.database_common_logic.insert_or_update_video_subtitle_info(video_id,
+                                                                        subtitle_type,
+                                                                        language,
+                                                                        SubtitleStatus.NO_SUBTITLE,
+                                                                        None)
+        # 字幕があった場合、
+        if subtitle_status == SubtitleStatus.REGISTERED:
+            self.database_common_logic.insert_subtitle_data(video_id, subtitle, subtitle_type, language)
+            VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
+                subtitle_status=SubtitleStatus.REGISTERED.value,
+                remarks=None
+            )
+        # 字幕の登録に失敗した場合
+        elif subtitle_status == SubtitleStatus.REGISTRATION_FAILED:
+            # サブタイトル情報がある場合、備考にサブタイトルを設定する
+            VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).update(
+                subtitle_status=SubtitleStatus.REGISTRATION_FAILED.value,
+                remarks=subtitle
+            )
 
 
 class TestYouTubeDownloadLogic(unittest.TestCase):
