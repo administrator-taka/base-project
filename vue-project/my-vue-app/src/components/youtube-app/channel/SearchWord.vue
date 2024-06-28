@@ -33,8 +33,13 @@
           >
             動画詳細
           </button>
-          <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
-            <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
+          <a
+            :href="generate_timestamp_url(result.videoId, result.tStartMs)"
+            target="_blank"
+            class="btn btn-link"
+          >
+            <i class="bi bi-youtube"></i>
+            {{ generate_timestamp_url(result.videoId, result.tStartMs) }}
           </a>
         </div>
       </div>
@@ -61,8 +66,13 @@
           >
             動画詳細
           </button>
-          <a :href="result.youtubeUrl" target="_blank" class="btn btn-link">
-            <i class="bi bi-youtube"></i> {{ result.youtubeUrl }}
+          <a
+            :href="generate_timestamp_url(result.videoId, result.tStartMs)"
+            target="_blank"
+            class="btn btn-link"
+          >
+            <i class="bi bi-youtube"></i>
+            {{ generate_timestamp_url(result.videoId, result.tStartMs) }}
           </a>
         </div>
       </div>
@@ -78,6 +88,7 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 import { useChannelStore } from '@/store/use-channel-store'
 import { useRouter } from 'vue-router'
 import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
+import { generate_timestamp_url } from '@/utils/generate-timestamp-url' // 関数をインポート
 
 export default {
   components: {
@@ -122,7 +133,8 @@ export default {
       searchMultipleResults,
       searchWord,
       channelStore,
-      goToVideoPage
+      goToVideoPage,
+      generate_timestamp_url
     }
   }
 }

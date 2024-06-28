@@ -73,7 +73,6 @@ class ChannelService:
                 "title": result.subtitle_id.video_id.title,
                 "t_start_ms": result.t_start_ms,
                 "subtitle_text": result.subtitle_text,
-                "youtube_url": f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms"
             }
             search_results.append(result_dict)
 
@@ -136,15 +135,12 @@ class ChannelService:
                             result = [subtitle.subtitle_text for subtitle in subtitles_in_range]
                             subtitle_text = ' '.join(result)
                             logging.debug(subtitle_text)
-                    youtube_url = f"https://www.youtube.com/watch?v={video.video_id}&t={t_start_ms}ms"
                     result_dict = {
                         "video_id": video.video_id,
                         "title": video.title,
                         "t_start_ms": t_start_ms,
                         "subtitle_text": subtitle_text,
-                        "youtube_url": youtube_url,
                     }
-                    logging.debug(youtube_url)
                     search_results.append(result_dict)
 
         return search_results

@@ -51,7 +51,7 @@ export default {
   async updateLearningStatus(
     subtitleTextId: string,
     languageCode: string,
-    favorite:boolean,
+    favorite: boolean,
     learningStatus: number
   ) {
     const data = {

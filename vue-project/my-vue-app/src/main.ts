@@ -16,12 +16,12 @@ const app = createApp(App)
 const pinia = createPinia()
 pinia.use(createPersistedState()) // 追加
 
-import Toast from 'vue-toastification';
-import 'vue-toastification/dist/index.css';
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 app.use(Toast, {
-    // オプションの設定（必要に応じて）
-  });
-  
+  // オプションの設定（必要に応じて）
+})
+
 app.use(pinia)
 app.use(router)
 app.use(store)

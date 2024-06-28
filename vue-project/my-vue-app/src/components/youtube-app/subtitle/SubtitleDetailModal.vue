@@ -29,21 +29,19 @@
         <div>
           <a
             :href="
-              'https://www.youtube.com/watch?v=' +
-              subtitleTextData.videoId +
-              '&t=' +
-              subtitleTextData.tStartMs +
-              'ms'
+              generate_timestamp_url(
+                subtitleTextData.videoId,
+                subtitleTextData.tStartMs
+              )
             "
             target="_blank"
             class="btn btn-link"
             ><i class="bi bi-youtube"></i>
             {{
-              'https://www.youtube.com/watch?v=' +
-              subtitleTextData.videoId +
-              '&t=' +
-              subtitleTextData.tStartMs +
-              'ms'
+              generate_timestamp_url(
+                subtitleTextData.videoId,
+                subtitleTextData.tStartMs
+              )
             }}
           </a>
         </div>
@@ -116,6 +114,7 @@ import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { LearningStatusLabel } from '@/enums/learning-status'
 import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
 import StarIcon from '@/components/common/button/StarIcon.vue'
+import { generate_timestamp_url } from '@/utils/generate-timestamp-url' // 関数をインポート
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
@@ -279,7 +278,8 @@ export default defineComponent({
       executeChatgptTranslation,
       copyChatgptPrompt,
       isFavorite,
-      updateLearningStatus
+      updateLearningStatus,
+      generate_timestamp_url
     }
   }
 })

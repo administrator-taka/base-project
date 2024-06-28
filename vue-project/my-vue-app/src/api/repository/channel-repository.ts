@@ -35,8 +35,8 @@ export default {
       min_word_length: min_word_length,
       top_n: top_n,
       subtitle_type: subtitle_type,
-      stop_word_flag:stop_word_flag,
-      lemmatize_flag:lemmatize_flag
+      stop_word_flag: stop_word_flag,
+      lemmatize_flag: lemmatize_flag
     }
 
     return youtubeAppApiClient

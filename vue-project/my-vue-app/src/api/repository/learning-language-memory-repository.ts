@@ -18,7 +18,8 @@ export default {
   },
   async getFavoriteSubtitleList(languageCode: string) {
     const data = {
-      language_code: languageCode    }
+      language_code: languageCode
+    }
     return youtubeAppApiClient
       .post(`/favorite`, data)
       .then((response: AxiosResponse) => toCamelCase(response.data))
