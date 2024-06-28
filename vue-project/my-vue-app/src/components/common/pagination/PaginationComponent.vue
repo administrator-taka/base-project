@@ -85,13 +85,9 @@ export default defineComponent({
           pages.push(
             1,
             '...',
-            this.currentPage - 3,
-            this.currentPage - 2,
             this.currentPage - 1,
             this.currentPage,
             this.currentPage + 1,
-            this.currentPage + 2,
-            this.currentPage + 3,
             '...',
             this.totalPages
           )
