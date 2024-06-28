@@ -1,6 +1,4 @@
 ├─.gitignore
-├─.vscode
-│   └─settings.json
 ├─README.md
 ├─bat
 │   ├─clean_node_modules.bat
@@ -30,14 +28,18 @@
 │       │   │   │   ├─__init__.py
 │       │   │   │   └─service
 │       │   │   │       ├─__init__.py
+│       │   │   │       ├─channel_service.py
 │       │   │   │       ├─learning_language_service.py
-│       │   │   │       └─youtube_download_service.py
+│       │   │   │       ├─subtitle_text_service.py
+│       │   │   │       └─video_service.py
 │       │   │   ├─domain
 │       │   │   │   ├─__init__.py
 │       │   │   │   └─logic
 │       │   │   │       ├─__init__.py
 │       │   │   │       ├─chat_gpt_api_logic.py
+│       │   │   │       ├─database_common_logic.py
 │       │   │   │       ├─deepl_api_logic.py
+│       │   │   │       ├─natural_language_processing_logic.py
 │       │   │   │       ├─youtube_api_logic.py
 │       │   │   │       ├─youtube_api_logic_2.py
 │       │   │   │       ├─youtube_download_logic.py
@@ -98,6 +100,7 @@
 │       │   │   ├─0030_alter_subtitlelearningmemory_unique_together.py
 │       │   │   ├─0031_remove_subtitlelearningmemory_id_and_more.py
 │       │   │   ├─0032_alter_channeltranslationinfo_default_audio_language_and_more.py
+│       │   │   ├─0033_subtitlelearningmemory_favorite.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
@@ -261,7 +264,8 @@
         │   │   ├─TopComponent.vue
         │   │   ├─common
         │   │   │   ├─button
-        │   │   │   │   └─RangeSelector.vue
+        │   │   │   │   ├─RangeSelector.vue
+        │   │   │   │   └─StarIcon.vue
         │   │   │   ├─dropdown
         │   │   │   │   ├─DropdownMultiSelect.vue
         │   │   │   │   └─DropdownSelect.vue
@@ -271,8 +275,10 @@
         │   │   │   │   └─BaseModal.vue
         │   │   │   ├─pagination
         │   │   │   │   └─PaginationComponent.vue
-        │   │   │   └─table
-        │   │   │       └─JsonTable.vue
+        │   │   │   ├─table
+        │   │   │   │   └─JsonTable.vue
+        │   │   │   └─toggle
+        │   │   │       └─ToggleSwitch.vue
         │   │   ├─test-service
         │   │   │   └─TestHome.vue
         │   │   └─youtube-app
@@ -303,7 +309,9 @@
         │   │   ├─test.ts
         │   │   └─use-channel-store.ts
         │   ├─utils
-        │   │   └─to-camel-case.ts
+        │   │   ├─to-camel-case.ts
+        │   │   ├─toast-service.ts
+        │   │   └─util-color.ts
         │   └─views
         │       ├─AboutView.vue
         │       └─HomeView.vue
