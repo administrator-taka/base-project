@@ -1,4 +1,4 @@
-export function generate_timestamp_url(
+export function generateTimestampUrl(
   videoId: string,
   timestamp: number
 ): string {

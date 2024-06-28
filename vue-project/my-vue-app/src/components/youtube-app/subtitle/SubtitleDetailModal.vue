@@ -29,7 +29,7 @@
         <div>
           <a
             :href="
-              generate_timestamp_url(
+              generateTimestampUrl(
                 subtitleTextData.videoId,
                 subtitleTextData.tStartMs
               )
@@ -38,7 +38,7 @@
             class="btn btn-link"
             ><i class="bi bi-youtube"></i>
             {{
-              generate_timestamp_url(
+              generateTimestampUrl(
                 subtitleTextData.videoId,
                 subtitleTextData.tStartMs
               )
@@ -114,7 +114,7 @@ import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { LearningStatusLabel } from '@/enums/learning-status'
 import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
 import StarIcon from '@/components/common/button/StarIcon.vue'
-import { generate_timestamp_url } from '@/utils/generate-timestamp-url' // 関数をインポート
+import { generateTimestampUrl } from '@/utils/generate-timestamp-url' // 関数をインポート
 
 export default defineComponent({
   name: 'SubtitleDetailModal',
@@ -279,7 +279,7 @@ export default defineComponent({
       copyChatgptPrompt,
       isFavorite,
       updateLearningStatus,
-      generate_timestamp_url
+      generateTimestampUrl
     }
   }
 })
