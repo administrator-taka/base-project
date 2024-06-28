@@ -11,14 +11,14 @@
         <!-- ページ番号 -->
         <li
           class="page-item"
-          v-for="page in totalPages"
+          v-for="page in visiblePages"
           :key="page"
           :class="{ active: currentPage === page }"
         >
           <button v-if="page === currentPage" class="btn btn-primary">
             {{ page }}
           </button>
-          <button v-else class="page-link" @click="changePage(page)">
+          <button v-else class="page-link" @click="changePage(Number(page))">
             {{ page }}
           </button>
         </li>
@@ -60,6 +60,44 @@ export default defineComponent({
       if (this.currentPage < this.totalPages) {
         this.changePage(this.currentPage + 1)
       }
+    }
+  },
+  computed: {
+    visiblePages() {
+      const pages = []
+      if (this.totalPages <= 5) {
+        for (let i = 1; i <= this.totalPages; i++) {
+          pages.push(i)
+        }
+      } else {
+        if (this.currentPage <= 3) {
+          pages.push(1, 2, 3, 4, '...', this.totalPages)
+        } else if (this.currentPage >= this.totalPages - 2) {
+          pages.push(
+            1,
+            '...',
+            this.totalPages - 3,
+            this.totalPages - 2,
+            this.totalPages - 1,
+            this.totalPages
+          )
+        } else {
+          pages.push(
+            1,
+            '...',
+            this.currentPage - 3,
+            this.currentPage - 2,
+            this.currentPage - 1,
+            this.currentPage,
+            this.currentPage + 1,
+            this.currentPage + 2,
+            this.currentPage + 3,
+            '...',
+            this.totalPages
+          )
+        }
+      }
+      return pages
     }
   }
 })
