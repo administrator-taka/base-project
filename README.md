@@ -193,7 +193,10 @@
 - 翻訳の詳細には ChatGPT を用いて形態素解析など文法的な説明を含めた結果を取得することができる。
 - ChatGPT の API は無制限ではないので、プロンプトをコピーするボタンを用意している。ブラウザで ChatGPT を開き、そのプロンプトを貼り付けることで同じ結果を得ることができる。
 - 結果はコードブロックに出力してもらうようにコピペ用のプロンプトには追加している。
-
+- プロンプト一例
+  - [韓国語→日本語](django-project/myproject/resource/chatgpt_translation_prompt/from_ko_to_ja.txt)
+  - [英語→日本語](django-project/myproject/resource/chatgpt_translation_prompt/from_en_to_ja.txt)
+  
 ### 言語学習記録確認画面
 
 - 学習ステータスが割り当てられている字幕の履歴を確認することができる。
