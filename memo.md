@@ -56,3 +56,6 @@ https://zenn.dev/kiriyama/scraps/4e05acd94a4b10
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
 https://note.com/masato1230/n/nf5e198455a65
+
+Djangoで定期実行できそう？
+https://kosuke-space.com/django-apscheduler
