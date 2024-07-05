@@ -170,7 +170,7 @@ class VideoService:
                 # 経過率をデバッグに出力
                 logging.info(f"処理進行状況: {processed_subtitles}/{total_subtitles}")
 
-    def get_video_subtitle_data(self, video_id):
+    def get_video_subtitle_data(self, video_id, user_id):
         try:
             video_detail = VideoDetail.objects.get(video_id=video_id)
         except VideoDetail.DoesNotExist:
@@ -189,7 +189,8 @@ class VideoService:
         queryset = queryset.prefetch_related(
             Prefetch('subtitletranslation_set',
                      queryset=SubtitleTranslation.objects.all().prefetch_related(
-                         Prefetch('subtitlelearningmemory_set', queryset=SubtitleLearningMemory.objects.all())
+                         Prefetch('subtitlelearningmemory_set',
+                                  queryset=SubtitleLearningMemory.objects.filter(user_id__user_id=user_id))
                      ))
         )
         # 辞書のリストを初期化
