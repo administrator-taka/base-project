@@ -19,6 +19,7 @@ class CommonMiddleware(MiddlewareMixin):
         else:
             # Authorizationヘッダーが存在しない場合やBearerトークンが使用されていない場合は、Noneを設定する
             request.user_id = "test_onigiri"
+            # request.user_id = None
             logging.debug("★★★：ユーザー名なし")
 
     def extract_username_from_token(self, token):
