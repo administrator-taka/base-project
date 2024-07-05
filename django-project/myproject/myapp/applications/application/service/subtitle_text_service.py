@@ -5,7 +5,7 @@ from datetime import datetime
 from myapp.applications.domain.logic.chat_gpt_api_logic import ChatGPTApiLogic
 from myapp.applications.util.code.learning_status import LearningStatus
 from myapp.applications.util.file_handler import FileHandler
-from myapp.models import SubtitleTranslation, SubtitleLearningMemory
+from myapp.models import SubtitleTranslation, SubtitleLearningMemory, UserData
 
 
 class SubtitleTextService:
@@ -71,10 +71,13 @@ class SubtitleTextService:
         subtitle_translation = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language_code.value)
 
+        # UserDataインスタンスを取得
+        user = UserData.objects.get(user_id=user_id)
+
         # update_or_createメソッドを使用して、存在確認と更新または新規作成を行う
         SubtitleLearningMemory.objects.update_or_create(
             subtitle_translation_text_id=subtitle_translation,
-            user_id__user_id=user_id,
+            user_id=user,
             defaults={
                 'learning_status': learning_status.value,
                 'favorite': favorite,
