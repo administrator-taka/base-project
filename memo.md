@@ -59,3 +59,5 @@ https://note.com/masato1230/n/nf5e198455a65
 
 Djangoで定期実行できそう？
 https://kosuke-space.com/django-apscheduler
+
+Djangoだと外部キーを設定していると取得タイミングで結合されているテーブルも取得で切るっぽいが、その場合外部キーを設定していないテーブルは結合できない？

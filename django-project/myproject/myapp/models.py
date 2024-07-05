@@ -25,6 +25,15 @@ class Test(models.Model):
         db_table = 'test'
 
 
+class UserData(models.Model):
+    user_id = models.CharField(primary_key=True, max_length=50)
+    user_name = models.CharField(max_length=50, blank=True, null=True)
+    password = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        db_table = 'user_data'
+
+
 class ChannelDetail(models.Model):
     # チャンネルID
     channel_id = models.CharField(primary_key=True, max_length=50, verbose_name='チャンネルID')
