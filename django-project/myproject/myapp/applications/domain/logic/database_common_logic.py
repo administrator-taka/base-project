@@ -4,6 +4,7 @@ from datetime import datetime
 
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
+from myapp.applications.util.custom_error import DatabaseCommonError
 from myapp.applications.util.util_generate import generate_subtitle_id, generate_uuid
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, VideoDetail, \
     ChannelTranslationInfo
@@ -16,8 +17,7 @@ class DatabaseCommonLogic:
         translation_info = ChannelTranslationInfo.objects.get(channel_id=channel_id)
 
         if translation_info.default_audio_language is None or translation_info.translation_languages is None:
-            logging.error("TODO:デフォルト言語指定エラー")
-            return
+            raise DatabaseCommonError("デフォルト言語指定エラーまたは翻訳言語リストが見つかりません。")
         # デフォルトの言語コードを取得
         default_audio_language = YouTubeLanguage(translation_info.default_audio_language)
 

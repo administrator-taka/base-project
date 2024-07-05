@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from myapp.applications.application.service.channel_service import ChannelService
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
+from myapp.applications.util.custom_error import CustomError
 from myapp.applications.util.file_handler import FileHandler
 from myapp.applications.util.util_convert import milliseconds_to_timestamp
 
@@ -110,8 +111,7 @@ def search_word(request, channel_id):
 
     # search_wordが空文字、空白、またはNoneの場合、処理を中断しエラーレスポンスを返す
     if not search_word or search_word.strip() == '':
-        # TODO:バリデーション、エラーレスポンス追加
-        return JsonResponse(data={'error': '検索ワードが無効です。'}, status=400)
+        raise CustomError("検索ワードが無効です。")
 
     youtube_download_service = ChannelService()
     # TODO:言語どうにかする
