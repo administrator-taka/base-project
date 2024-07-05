@@ -29,4 +29,4 @@ class CustomErrorHandlerMiddleware(MiddlewareMixin):
             logging.error(f"予期しないエラーが発生しました: {exception}")
 
         # JSONレスポンスを返す
-        return JsonResponse({'message': error_message}, status=status_code)
+        return JsonResponse(data={'message': error_message}, status=status_code)
