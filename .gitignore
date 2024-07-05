@@ -1,2 +1,4 @@
 ### VS Code ###
 pg_dump.sql
+# 一旦schemaは除外
+schema/
