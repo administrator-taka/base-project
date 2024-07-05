@@ -45,7 +45,8 @@ def calculate_channel_word(request, channel_id):
     subtitle_type = SubtitleType(request.data.get('subtitle_type', 1))
     stop_word_flag = request.data.get('stop_word_flag', False)
     lemmatize_flag = request.data.get('lemmatize_flag', False)
-    calculate_word = youtube_download_service.calculate_word(channel_id, min_word, min_word_length, top_n, subtitle_type,stop_word_flag,lemmatize_flag)
+    calculate_word = youtube_download_service.calculate_word(channel_id, min_word, min_word_length, top_n,
+                                                             subtitle_type, stop_word_flag, lemmatize_flag)
     # JSONレスポンスを作成
     data = {
         "calculate_word": calculate_word,
@@ -134,8 +135,7 @@ def search_multiple_word(request, channel_id):
 
     # search_wordが空文字、空白、またはNoneの場合、処理を中断しエラーレスポンスを返す
     if not search_word or search_word.strip() == '':
-        # TODO:バリデーション、エラーレスポンス追加
-        return JsonResponse(data={'error': '検索ワードが無効です。'}, status=400)
+        raise CustomError("検索ワードが無効です。")
 
     youtube_download_service = ChannelService()
     # TODO:言語どうにかする
