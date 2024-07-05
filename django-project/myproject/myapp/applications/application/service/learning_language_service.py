@@ -3,10 +3,11 @@ from myapp.models import SubtitleLearningMemory
 
 class LearningLanguageService:
 
-    def get_learning_subtitle_text_list(self, language, learning_status):
+    def get_learning_subtitle_text_list(self, language, learning_status, user_id):
         subtitle_learning_memorys = SubtitleLearningMemory.objects.filter(
             subtitle_translation_text_id__subtitle_text_id__subtitle_id__language_code=language.value,
-            learning_status=learning_status.value
+            learning_status=learning_status.value,
+            user_id__user_id=user_id
         ).order_by('-last_updated')
 
         learning_subtitle_list = []
@@ -26,10 +27,11 @@ class LearningLanguageService:
             learning_subtitle_list.append(subtitle_text_data)
         return learning_subtitle_list
 
-    def get_favorite_subtitle_text_list(self, language):
+    def get_favorite_subtitle_text_list(self, language, user_id):
         subtitle_learning_memorys = SubtitleLearningMemory.objects.filter(
             subtitle_translation_text_id__subtitle_text_id__subtitle_id__language_code=language.value,
-            favorite=True
+            favorite=True,
+            user_id__user_id=user_id
         ).order_by('-last_updated')
 
         learning_subtitle_list = []

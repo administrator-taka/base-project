@@ -13,9 +13,11 @@ def get_subtitle_text_data(request, subtitle_text_id):
 
     language_code = request_data.get('language_code', None)
 
+    user_id = request.user_id
+
     youtube_download_service = SubtitleTextService()
     subtitle_text_data = youtube_download_service.get_subtitle_text_data(subtitle_text_id,
-                                                                         YouTubeLanguage(language_code))
+                                                                         YouTubeLanguage(language_code), user_id)
 
     # JSONレスポンスを作成
     data = {

@@ -12,12 +12,12 @@ class SubtitleTextService:
     def __init__(self):
         self.chatgpt_api_logic = ChatGPTApiLogic()
 
-    def get_subtitle_text_data(self, subtitle_text_id, language):
+    def get_subtitle_text_data(self, subtitle_text_id, language, user_id):
         subtitle_translation = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language.value)
 
         learning_memory = SubtitleLearningMemory.objects.filter(
-            subtitle_translation_text_id=subtitle_translation).first()
+            subtitle_translation_text_id=subtitle_translation, user_id__user_id=user_id).first()
         subtitle_text_data = {
             'video_id': subtitle_translation.subtitle_text_id.subtitle_id.video_id.video_id,
             'subtitle_text_id': subtitle_translation.subtitle_text_id.subtitle_text_id,

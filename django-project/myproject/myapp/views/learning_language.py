@@ -14,10 +14,12 @@ def get_learning_subtitle_text_list(request):
     language_code = request_data.get('language_code', None)
     learning_status = request_data.get('learning_status', None)
 
+    user_id = request.user_id
+
     learning_language_service = LearningLanguageService()
     learning_subtitle_list = learning_language_service.get_learning_subtitle_text_list(
         YouTubeLanguage(language_code),
-        LearningStatus(learning_status))
+        LearningStatus(learning_status), user_id)
 
     # JSONレスポンスを作成
     data = {
@@ -34,9 +36,11 @@ def get_favorite_subtitle_text_list(request):
 
     language_code = request_data.get('language_code', None)
 
+    user_id = request.user_id
+
     learning_language_service = LearningLanguageService()
     favorite_subtitle_list = learning_language_service.get_favorite_subtitle_text_list(
-        YouTubeLanguage(language_code))
+        YouTubeLanguage(language_code), user_id)
 
     # JSONレスポンスを作成
     data = {
