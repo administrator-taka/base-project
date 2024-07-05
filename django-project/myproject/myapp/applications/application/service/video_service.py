@@ -10,7 +10,6 @@ from myapp.applications.domain.logic.youtube_api_logic import YouTubeApiLogic
 from myapp.applications.domain.logic.youtube_subtitle_logic import YouTubeSubtitleLogic
 from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
-from myapp.applications.util.custom_error import CustomError
 from myapp.applications.util.util_generate import generate_subtitle_id
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, SubtitleTranslation, ChannelDetail, VideoDetail, \
     ChannelTranslationInfo, SubtitleLearningMemory
@@ -127,7 +126,7 @@ class VideoService:
 
             if total_subtitles > 1000:
                 logging.debug(f"字幕行数が多すぎます。字幕数：{total_subtitles}")
-                raise CustomError(f"字幕行数が多すぎます。字幕数：{total_subtitles}")
+                return
 
             # ターゲット字幕とベース字幕をマージしてペアを見つける
             for base_subtitle in base_subtitles:
