@@ -65,7 +65,8 @@ class SubtitleTextService:
         subtitle_translation_info.subtitle_translation_text_detail = subtitle_translation_text_detail
         subtitle_translation_info.save()
 
-    def insert_or_update_subtitle_learning_memory(self, subtitle_text_id, language_code, learning_status, favorite):
+    def insert_or_update_subtitle_learning_memory(self, subtitle_text_id, language_code, learning_status, user_id,
+                                                  favorite):
         # 対象のSubtitleTranslationレコードを取得
         subtitle_translation = SubtitleTranslation.objects.get(
             subtitle_text_id=subtitle_text_id, language_code=language_code.value)
@@ -73,6 +74,7 @@ class SubtitleTextService:
         # update_or_createメソッドを使用して、存在確認と更新または新規作成を行う
         SubtitleLearningMemory.objects.update_or_create(
             subtitle_translation_text_id=subtitle_translation,
+            user_id__user_id=user_id,
             defaults={
                 'learning_status': learning_status.value,
                 'favorite': favorite,

@@ -79,11 +79,13 @@ def insert_or_update_subtitle_learning_memory(request, subtitle_text_id):
     language_code = request_data.get('language_code', None)
     learning_status = request_data.get('learning_status', None)
     favorite = request_data.get('favorite', False)
+    user_id = request.user_id
 
     youtube_download_service = SubtitleTextService()
     youtube_download_service.insert_or_update_subtitle_learning_memory(subtitle_text_id,
                                                                        YouTubeLanguage(language_code),
-                                                                       LearningStatus(learning_status),favorite)
+                                                                       LearningStatus(learning_status), user_id,
+                                                                       favorite)
 
     # JSONレスポンスを作成
     data = {

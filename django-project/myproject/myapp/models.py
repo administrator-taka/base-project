@@ -232,6 +232,9 @@ class SubtitleLearningMemory(models.Model):
     # 字幕学習記録ID
     subtitle_learning_memory_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                                    verbose_name='字幕学習記録ID')
+    # ユーザーID
+    user_id = models.ForeignKey(UserData, db_column='user_id', on_delete=models.CASCADE, verbose_name='ユーザーID')
+
     # 字幕翻訳テキストID
     subtitle_translation_text_id = models.ForeignKey(SubtitleTranslation, db_column='subtitle_translation_text_id',
                                                      on_delete=models.CASCADE,
@@ -248,4 +251,4 @@ class SubtitleLearningMemory(models.Model):
 
     class Meta:
         db_table = 'subtitle_learning_memory'
-        unique_together = ['subtitle_translation_text_id']
+        unique_together = ['subtitle_translation_text_id', 'user_id']
