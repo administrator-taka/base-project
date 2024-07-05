@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'middleware.common_middleware.CommonMiddleware',
+    'middleware.error_handler.CustomErrorHandlerMiddleware',  # カスタムミドルウェアを追加
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:13000",  # リクエストを許可するオリジンを追加してください
