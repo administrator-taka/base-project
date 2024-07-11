@@ -52,14 +52,17 @@ api のレスポンスで自動生成のものと、手動のものでファイ�
 Pinia
 https://zenn.dev/kiriyama/scraps/4e05acd94a4b10
 
-
 pg_dump
 docker exec -t postgresql pg_dump -U postgres -d postgres > test.sql
 https://note.com/masato1230/n/nf5e198455a65
 
-Djangoで定期実行できそう？
+Django で定期実行できそう？
 https://kosuke-space.com/django-apscheduler
 
-Djangoだと外部キーを設定していると取得タイミングで結合されているテーブルも取得で切るっぽいが、その場合外部キーを設定していないテーブルは結合できない？
+Django だと外部キーを設定していると取得タイミングで結合されているテーブルも取得で切るっぽいが、その場合外部キーを設定していないテーブルは結合できない？
 
 独自のエラークラスと、エラーが発生したときのハンドリング処理を追記したい。
+
+共通エラーハンドラー、途中までの処理はエラーで、画面にエラーを返したいけど処理は続けたい場合、API を分ける？
+DB から Enum や登録の際に DB に Enum の形式のまま入れれそう？
+DB の処理はそれぞれのサービスで使用するたびに書く？（若干共通化されている処理はロジックで重複してしまっている、循環参照にならないか）
