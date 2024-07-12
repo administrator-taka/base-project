@@ -164,7 +164,8 @@ class VideoSubtitleInfo(models.Model):
                                         verbose_name='字幕の種類')
 
     # 字幕の言語コード
-    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
+    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                     verbose_name='言語コード')
 
     subtitle_status = models.IntegerField(choices=[(tag.value, tag.name) for tag in SubtitleStatus],
                                           verbose_name='字幕ステータス')
@@ -212,7 +213,8 @@ class SubtitleTranslation(models.Model):
                                          verbose_name='字幕テキストID')
 
     # 字幕の言語コード
-    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage], verbose_name='言語コード')
+    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                     verbose_name='言語コード')
 
     # 翻訳字幕
     subtitle_translation_text = models.TextField(blank=True, null=True, verbose_name='翻訳字幕')
@@ -252,3 +254,33 @@ class SubtitleLearningMemory(models.Model):
     class Meta:
         db_table = 'subtitle_learning_memory'
         unique_together = ['subtitle_translation_text_id', 'user_id']
+
+
+class BaseLanguage(models.Model):
+    base_language_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
+                                        verbose_name='ベース言語ID')
+    user = models.ForeignKey(UserData, on_delete=models.CASCADE, verbose_name='ユーザー')
+    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                     max_length=20, verbose_name='言語コード')
+    documents = models.TextField(verbose_name='文書')
+    is_published = models.BooleanField(default=False, verbose_name='公開フラグ')
+
+    class Meta:
+        db_table = 'base_language'
+
+
+class LearningLanguage(models.Model):
+    learning_language_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
+                                            verbose_name='学習言語ID')
+    base_language_id = models.ForeignKey(BaseLanguage, db_column='base_language_id', on_delete=models.CASCADE,
+                                         verbose_name='ベース言語ID')
+
+    language_code = models.CharField(choices=[(tag.value, tag.name) for tag in YouTubeLanguage],
+                                     max_length=20, verbose_name='言語コード')
+    documents = models.TextField(verbose_name='文章')
+    explanation = models.TextField(verbose_name='文章の解説')
+    video_id = models.CharField(max_length=50, verbose_name='動画ID')
+    timestamp_ms = models.IntegerField(verbose_name='タイムスタンプ(ms)')
+
+    class Meta:
+        db_table = 'learning_language'
