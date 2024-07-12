@@ -1,11 +1,13 @@
 ├─.gitignore
 ├─README.md
+├─TODO.md
 ├─bat
 │   ├─clean_node_modules.bat
 │   ├─docker_cleanup.bat
 │   ├─docker_restart.bat
 │   ├─docker_start.bat
 │   ├─env__sample_update.bat
+│   ├─er_generate.bat
 │   ├─format_vue_project.bat
 │   ├─pg_dump.bat
 │   ├─pg_dump_execute.bat
@@ -19,7 +21,8 @@
 │       ├─memo.txt
 │       ├─middleware
 │       │   ├─__init__.py
-│       │   └─common_middleware.py
+│       │   ├─common_middleware.py
+│       │   └─error_handler.py
 │       ├─myapp
 │       │   ├─__init__.py
 │       │   ├─admin.py
@@ -60,6 +63,7 @@
 │       │   │       │   ├─subtitle_type.py
 │       │   │       │   ├─time_zone.py
 │       │   │       │   └─youtube_language.py
+│       │   │       ├─custom_error.py
 │       │   │       ├─encryption.py
 │       │   │       ├─file_handler.py
 │       │   │       ├─pagination_info.py
@@ -101,6 +105,9 @@
 │       │   │   ├─0031_remove_subtitlelearningmemory_id_and_more.py
 │       │   │   ├─0032_alter_channeltranslationinfo_default_audio_language_and_more.py
 │       │   │   ├─0033_subtitlelearningmemory_favorite.py
+│       │   │   ├─0034_userdata.py
+│       │   │   ├─0035_subtitlelearningmemory_user_id.py
+│       │   │   ├─0036_alter_subtitlelearningmemory_unique_together.py
 │       │   │   └─__init__.py
 │       │   ├─models.py
 │       │   ├─serializer
@@ -231,7 +238,6 @@
         ├─.browserslistrc
         ├─.env.develop
         ├─.env.local
-        ├─.eslintrc.js
         ├─.gitignore
         ├─.prettierrc
         ├─README.md
@@ -309,6 +315,7 @@
         │   │   ├─test.ts
         │   │   └─use-channel-store.ts
         │   ├─utils
+        │   │   ├─generate-timestamp-url.ts
         │   │   ├─to-camel-case.ts
         │   │   ├─toast-service.ts
         │   │   └─util-color.ts
