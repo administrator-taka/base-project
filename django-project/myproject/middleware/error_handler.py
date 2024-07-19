@@ -1,4 +1,6 @@
 import logging
+import sys
+import traceback
 
 from django.http import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
@@ -40,7 +42,19 @@ class CustomErrorHandlerMiddleware(MiddlewareMixin):
         else:
             logging.error(f"予期しないエラーが発生しました: {exception}")
 
-        logging.exception("スタックトレース:")  # スタックトレースをログに記録
+        # スタックトレースを取得
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        stack_trace = traceback.extract_tb(exc_tb)
 
+        # 自作のファイルのみエラーメッセージをログに記録
+        for frame in stack_trace:
+            filename = frame.filename
+            if filename.startswith('/app/'):  # 自作ファイルのパスに合わせて修正
+                line_number = frame.lineno
+                line_code = frame.line
+                logging.error(f"エラー発生ファイル: {filename}")
+                logging.error(f"エラー発生行: {line_number}")
+                logging.error(f"エラー発生行の内容: {line_code}")
+        logging.exception("スタックトレース:")  # スタックトレースをログに記録
         # JSONレスポンスを返す
         return JsonResponse(data={'message': error_message}, status=status_code)
