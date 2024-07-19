@@ -264,6 +264,7 @@ class BaseLanguage(models.Model):
                                      max_length=20, verbose_name='言語コード')
     documents = models.TextField(verbose_name='文書')
     is_published = models.BooleanField(default=False, verbose_name='公開フラグ')
+    last_updated = models.DateTimeField(verbose_name='最終更新日時', null=True)
 
     class Meta:
         db_table = 'base_language'
@@ -281,6 +282,7 @@ class LearningLanguage(models.Model):
     explanation = models.TextField(verbose_name='文章の解説')
     video_id = models.CharField(max_length=50, verbose_name='動画ID')
     timestamp_ms = models.IntegerField(verbose_name='タイムスタンプ(ms)')
+    last_updated = models.DateTimeField(verbose_name='最終更新日時', null=True)
 
     class Meta:
         db_table = 'learning_language'
