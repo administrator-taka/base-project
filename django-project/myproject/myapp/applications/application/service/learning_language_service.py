@@ -107,6 +107,19 @@ class LearningLanguageService:
             'learning_language_data': learning_languages_data
         }
 
+    def get_learning_language_detail(self, learning_language_id):
+        learning_language = LearningLanguage.objects.get(learning_language_id=learning_language_id)
+        return {
+            'learning_language_id': learning_language.learning_language_id,
+            'base_language_id': learning_language.base_language_id.base_language_id,
+            'language_code': learning_language.language_code,
+            'documents': learning_language.documents,
+            'explanation': learning_language.explanation,
+            'video_id': learning_language.video_id,
+            'timestamp_ms': learning_language.timestamp_ms,
+            'last_updated': learning_language.last_updated,
+        }
+
     # 新しいベース言語を作成し、関連する学習言語も一つ作成するメソッド
     def create_base_language(self, user_id, language_code, documents, is_published=False,
                              learning_language_documents='', learning_language_explanation='',

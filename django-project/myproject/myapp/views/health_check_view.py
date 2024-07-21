@@ -13,10 +13,11 @@ from myapp.applications.util.file_handler import FileHandler
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def health_check(request):
-    youtube_download_service = ChannelService()
-    channel_id = ''
-    youtube_download_service.delete_channel_data(channel_id)
-    return JsonResponse(data={"msg": "pass"}, status=200)
+    #     youtube_download_service = ChannelService()
+    #     channel_id = ''
+    #     youtube_download_service.delete_channel_data(channel_id)
+    #     return JsonResponse(data={"msg": "pass"}, status=200)
+    return test()
 
 
 def test():
@@ -95,7 +96,7 @@ def test():
         base_language_detail = language_service.get_base_language_detail(created_base_language_id)
 
         # 学習言語データを取得
-        learning_language_list = base_language_detail.get('learning_languages_data', [])
+        learning_language_list = base_language_detail.get('learning_language_data', [])
         print(f"学習言語一覧: {learning_language_list}")
 
         # 学習言語を更新
