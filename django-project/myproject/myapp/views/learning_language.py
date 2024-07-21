@@ -111,8 +111,32 @@ def create_base_language(request):
         learning_language_timestamp_ms
     )
 
-    return JsonResponse(data={"status": 0},
-                        status=201)
+    return JsonResponse(data={"status": 0}, status=200)
+
+
+@api_view(['POST'])
+def create_learning_language(request):
+    """
+    新しい学習言語を作成するAPI
+    """
+    base_language_id = request.data.get('base_language_id')
+    language_code = request.data.get('language_code')
+    documents = request.data.get('documents')
+    explanation = request.data.get('explanation')
+    video_id = request.data.get('video_id')
+    timestamp_ms = request.data.get('timestamp_ms')
+
+    language_service = LearningLanguageService()
+    language_service.create_learning_language(
+        base_language_id,
+        language_code,
+        documents,
+        explanation,
+        video_id,
+        timestamp_ms
+    )
+
+    return JsonResponse(data={"status": 0}, status=200)
 
 
 # 指定されたベース言語を更新するAPI

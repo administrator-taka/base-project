@@ -143,5 +143,83 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
+    def test_create_base_language(self):
+        url = f"{self.base_url}base_language/create/"
+        data = {
+            "language_code": "en",
+            "documents": "Sample documents",
+            "is_published": True,
+            "learning_language_documents": "Sample learning language documents",
+            "learning_language_explanation": "Sample explanation",
+            "learning_language_video_id": "sample_video_id",
+            "learning_language_timestamp_ms": 123456
+        }
+        response = requests.post(url, json=data)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_get_base_language_list(self):
+        url = f"{self.base_url}base_language/list/"
+        response = requests.get(url)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_get_base_language_detail(self):
+        base_language_id = "e2ad8ca2-2164-47c6-a134-d78d946b78d4"  # 取得したいベース言語IDに置き換えてください
+        url = f"{self.base_url}base_language/{base_language_id}/detail/"
+        response = requests.get(url)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_update_base_language(self):
+        base_language_id = "e2ad8ca2-2164-47c6-a134-d78d946b78d4"  # 更新したいベース言語IDに置き換えてください
+        url = f"{self.base_url}base_language/{base_language_id}/update/"
+        data = {
+            "documents": "Updated documents",
+            "is_published": False
+        }
+        response = requests.put(url, json=data)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_delete_base_language(self):
+        base_language_id = "e2ad8ca2-2164-47c6-a134-d78d946b78d4"  # 削除したいベース言語IDに置き換えてください
+        url = f"{self.base_url}base_language/{base_language_id}/delete/"
+        response = requests.delete(url)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_create_learning_language(self):
+        url = f"{self.base_url}learning_language/create/"
+        data = {
+            "base_language_id": "e2ad8ca2-2164-47c6-a134-d78d946b78d4",  # 作成するベース言語IDに置き換えてください
+            "language_code": "es",
+            "documents": "Learning documents",
+            "explanation": "Learning explanation",
+            "video_id": "sample_video_id",
+            "timestamp_ms": 123456
+        }
+        response = requests.post(url, json=data)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_get_learning_language_detail(self):
+        learning_language_id = "289d3942-3a9d-4af1-8924-c1b3ce229f6e"  # 取得したい学習言語IDに置き換えてください
+        url = f"{self.base_url}learning_language/{learning_language_id}/detail/"
+        response = requests.get(url)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_update_learning_language(self):
+        learning_language_id = "289d3942-3a9d-4af1-8924-c1b3ce229f6e"  # 更新したい学習言語IDに置き換えてください
+        url = f"{self.base_url}learning_language/{learning_language_id}/update/"
+        data = {
+            "documents": "Updated learning documents",
+            "explanation": "Updated explanation",
+            "video_id": "updated_video_id",
+            "timestamp_ms": 654321
+        }
+        response = requests.put(url, json=data)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
+    def test_delete_learning_language(self):
+        learning_language_id = "289d3942-3a9d-4af1-8924-c1b3ce229f6e"  # 削除したい学習言語IDに置き換えてください
+        url = f"{self.base_url}learning_language/{learning_language_id}/delete/"
+        response = requests.delete(url)
+        print(response.json())  # もしくは適切なフォーマット関数を使ってください
+
 # if __name__ == '__main__':
 #     unittest.main()
