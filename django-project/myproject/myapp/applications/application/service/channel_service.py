@@ -474,5 +474,28 @@ class ChannelService:
         # 全ての条件を満たす場合にTrueを返します
         return True
 
+    # 字幕一括更新
+    def update_channel_subtitles(self, channel_id: str) -> None:
+        self.insert_initial_video_data(channel_id)
+
+        default_audio_language, translation_languages = self.database_common_logic.get_translation_info(channel_id)
+
+        playlist_videos = VideoDetail.objects.filter(channel_id=channel_id).order_by('-published_at')
+
+        # ログ出力用
+        total_videos = len(playlist_videos)
+        processed_videos = 0
+
+        for video in playlist_videos:
+            video_id = video.video_id
+
+            self.youtube_api_logic.update_video_caption(video_id, default_audio_language, translation_languages)
+
+            # 処理されたビデオ数を更新
+            processed_videos += 1
+            logging.info(f"登録情報: {video.video_id}/{video.title}")
+            # 経過率をデバッグに出力
+            logging.info(f"処理進行状況: {processed_videos}/{total_videos}")
+
     def delete_channel_data(self, channel_id):
         ChannelDetail.objects.filter(channel_id=channel_id).delete()

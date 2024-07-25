@@ -93,7 +93,7 @@ class VideoService:
 
         default_audio_language, translation_languages = self.database_common_logic.get_translation_info(
             video_detail.channel_id)
-        self.update_video_caption(video_id, default_audio_language, translation_languages)
+        self.youtube_api_logic.update_video_caption(video_id, default_audio_language, translation_languages)
 
         # ベース字幕を取得
         base_subtitles = VideoSubtitle.objects.filter(
@@ -233,44 +233,6 @@ class VideoService:
         default_audio_language, translation_languages = self.database_common_logic.get_translation_info(
             video_detail.channel_id)
         self.youtube_subtitle_logic.download_video_subtitle(video_id, default_audio_language, translation_languages)
-
-    def update_video_caption(self, video_id, default_audio_language, translation_languages):
-        video_captions = self.youtube_api_logic.get_subtitle_info(video_id, default_audio_language,
-                                                                  translation_languages)
-        for video_caption in video_captions:
-            self.database_common_logic.insert_or_update_video_subtitle_info(video_id,
-                                                                            video_caption.get('subtitle_type'),
-                                                                            video_caption.get('language'),
-                                                                            SubtitleStatus.UNREGISTERED,
-                                                                            video_caption.get('last_updated'))
-
-        # 自動字幕の情報追加
-        self.insert_false_subtitle_info(video_id, SubtitleType.AUTOMATIC, default_audio_language)
-        self.insert_false_subtitle_info(video_id, SubtitleType.MANUAL, default_audio_language)
-        # 手動字幕の情報追加
-        for language in translation_languages:
-            self.insert_false_subtitle_info(video_id, SubtitleType.MANUAL, language)
-
-    def insert_false_subtitle_info(self, video_id, subtitle_type, language):
-        video_detail_instance, _ = VideoDetail.objects.get_or_create(video_id=video_id)
-        subtitle_id = generate_subtitle_id(video_id, subtitle_type, language)
-        # 既存のレコードがあれば取得
-        video_subtitle_info = VideoSubtitleInfo.objects.filter(subtitle_id=subtitle_id).first()
-
-        # 既存のレコードがある場合かつsubtitle_statusが1の場合は更新しない
-        if not video_subtitle_info:
-            # 既存のレコードがない場合またはsubtitle_statusが1（登録済み）でない場合は新規作成または更新
-            VideoSubtitleInfo.objects.update_or_create(
-                subtitle_id=subtitle_id,
-                defaults={
-                    'video_id': video_detail_instance,
-                    'subtitle_type': subtitle_type.value,
-                    'language_code': language.value,
-                    'subtitle_status': SubtitleStatus.NO_SUBTITLE.value,
-                    'last_updated': datetime.now(),
-                    'remarks': None
-                }
-            )
 
     def insert_video_data(self, video_data):
         video_id = video_data['video_id']

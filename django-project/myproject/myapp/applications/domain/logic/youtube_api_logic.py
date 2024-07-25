@@ -8,6 +8,8 @@ import googleapiclient.discovery
 from django.conf import settings
 from googleapiclient.errors import HttpError
 
+from myapp.applications.domain.logic.database_common_logic import DatabaseCommonLogic
+from myapp.applications.util.code.subtitle_status import SubtitleStatus
 from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
 from myapp.applications.util.file_handler import FileHandler
@@ -18,6 +20,7 @@ from myproject.settings.base import YOUTUBE_API_KEY, TEST_YOUTUBE_VIDEO_ID, TEST
 # YouTubeのAPIを操作するクラス
 class YouTubeApiLogic:
     def __init__(self):
+        self.database_common_logic = DatabaseCommonLogic()
         # YouTubeのAPIキーを読み込む
         # APIキーをリストに登録
         self.api_keys = []
@@ -301,6 +304,23 @@ class YouTubeApiLogic:
                         FileHandler.append_to_file(error_message, TEST_DIR, "error_enum.txt")
                         logging.error(f"Enumに当てはまらない文字列: {language}")
         return subtitle_info_list
+
+    def update_video_caption(self, video_id, default_audio_language, translation_languages):
+        video_captions = self.get_subtitle_info(video_id, default_audio_language,
+                                                translation_languages)
+        for video_caption in video_captions:
+            self.database_common_logic.insert_or_update_video_subtitle_info(video_id,
+                                                                            video_caption.get('subtitle_type'),
+                                                                            video_caption.get('language'),
+                                                                            SubtitleStatus.UNREGISTERED,
+                                                                            video_caption.get('last_updated'))
+
+        # 自動字幕の情報追加
+        self.database_common_logic.insert_false_subtitle_info(video_id, SubtitleType.AUTOMATIC, default_audio_language)
+        self.database_common_logic.insert_false_subtitle_info(video_id, SubtitleType.MANUAL, default_audio_language)
+        # 手動字幕の情報追加
+        for language in translation_languages:
+            self.database_common_logic.insert_false_subtitle_info(video_id, SubtitleType.MANUAL, language)
 
     # 動画のカテゴリ情報を取得する
     @retry_on_quota_exceeded
