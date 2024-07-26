@@ -13,7 +13,7 @@ from myapp.applications.util.code.subtitle_type import SubtitleType
 from myapp.applications.util.pagination_info import PaginationInfo
 from myapp.applications.util.util_generate import generate_subtitle_id
 from myapp.models import VideoSubtitleInfo, VideoSubtitle, ChannelDetail, VideoDetail, \
-    ChannelTranslationInfo
+    ChannelTranslationInfo, SubtitleTranslation, SubtitleLearningMemory
 
 
 class ChannelService:
@@ -59,7 +59,7 @@ class ChannelService:
             query &= Q(subtitle_id__language_code=language_code.value)
 
         # VideoSubtitle モデルからレコードを検索
-        results = VideoSubtitle.objects.filter(query)
+        results = VideoSubtitle.objects.filter(query).select_related('subtitle_id__video_id')
 
         # 結果を辞書のリストに詰めて返す
         search_results = []
@@ -68,11 +68,24 @@ class ChannelService:
             logging.debug(f"Start Time (ms): {result.t_start_ms}")
             logging.debug(f"Subtitle Text: {result.subtitle_text}")
             logging.debug(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
+
+            # SubtitleTranslation を取得
+            try:
+                subtitle_translation = SubtitleTranslation.objects.filter(
+                    subtitle_text_id=result
+                ).first()
+
+            except SubtitleTranslation.DoesNotExist:
+                subtitle_translation = None
+
             result_dict = {
                 "video_id": result.subtitle_id.video_id.video_id,
                 "title": result.subtitle_id.video_id.title,
                 "t_start_ms": result.t_start_ms,
                 "subtitle_text": result.subtitle_text,
+                "subtitle_translation_text": subtitle_translation.subtitle_translation_text if subtitle_translation else None,
+                "subtitle_text_id": subtitle_translation.subtitle_text_id.subtitle_text_id if subtitle_translation else None,
+                "language_code": subtitle_translation.language_code if subtitle_translation else None,
             }
             search_results.append(result_dict)
 
