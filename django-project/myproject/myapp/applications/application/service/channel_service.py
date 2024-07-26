@@ -58,8 +58,14 @@ class ChannelService:
         if language_code is not None:
             query &= Q(subtitle_id__language_code=language_code.value)
 
-        # VideoSubtitle モデルからレコードを検索
-        results = VideoSubtitle.objects.filter(query).select_related('subtitle_id__video_id')
+        # SubtitleTranslation を事前に取得するためのクエリセットを準備
+        subtitle_translations = SubtitleTranslation.objects.filter(
+            subtitle_text_id__in=VideoSubtitle.objects.filter(query).values_list('subtitle_text_id', flat=True)
+        )
+
+        # VideoSubtitle モデルからレコードを検索し、SubtitleTranslation を結合
+        results = VideoSubtitle.objects.filter(query).select_related('subtitle_id__video_id') \
+            .prefetch_related(Prefetch('subtitletranslation_set', queryset=subtitle_translations))
 
         # 結果を辞書のリストに詰めて返す
         search_results = []
@@ -70,13 +76,7 @@ class ChannelService:
             logging.debug(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
 
             # SubtitleTranslation を取得
-            try:
-                subtitle_translation = SubtitleTranslation.objects.filter(
-                    subtitle_text_id=result
-                ).first()
-
-            except SubtitleTranslation.DoesNotExist:
-                subtitle_translation = None
+            subtitle_translation = result.subtitletranslation_set.first()
 
             result_dict = {
                 "video_id": result.subtitle_id.video_id.video_id,
