@@ -76,18 +76,19 @@ class ChannelService:
             logging.debug(f"https://www.youtube.com/watch?v={result.subtitle_id.video_id_id}&t={result.t_start_ms}ms")
 
             # SubtitleTranslation を取得
-            subtitle_translation = result.subtitletranslation_set.first()
+            subtitle_translations_list = result.subtitletranslation_set.all()
 
-            result_dict = {
-                "video_id": result.subtitle_id.video_id.video_id,
-                "title": result.subtitle_id.video_id.title,
-                "t_start_ms": result.t_start_ms,
-                "subtitle_text": result.subtitle_text,
-                "subtitle_translation_text": subtitle_translation.subtitle_translation_text if subtitle_translation else None,
-                "subtitle_text_id": subtitle_translation.subtitle_text_id.subtitle_text_id if subtitle_translation else None,
-                "language_code": subtitle_translation.language_code if subtitle_translation else None,
-            }
-            search_results.append(result_dict)
+            for subtitle_translation in subtitle_translations_list:
+                result_dict = {
+                    "video_id": result.subtitle_id.video_id.video_id,
+                    "title": result.subtitle_id.video_id.title,
+                    "t_start_ms": result.t_start_ms,
+                    "subtitle_text": result.subtitle_text,
+                    "subtitle_translation_text": subtitle_translation.subtitle_translation_text,
+                    "subtitle_text_id": subtitle_translation.subtitle_text_id.subtitle_text_id,
+                    "language_code": subtitle_translation.language_code,
+                }
+                search_results.append(result_dict)
 
         return search_results
 
