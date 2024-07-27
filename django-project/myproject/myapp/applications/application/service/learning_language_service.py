@@ -63,7 +63,7 @@ class LearningLanguageService:
         result = [
             {
                 'base_language_id': base_language.base_language_id,
-                'language_code': YouTubeLanguage(base_language.language_code).name,
+                'language_code': base_language.language_code,
                 'documents': base_language.documents,
                 'last_updated': base_language.last_updated
             }
@@ -81,7 +81,7 @@ class LearningLanguageService:
         # ベース言語の情報を辞書型で格納
         base_language_data = {
             'base_language_id': base_language.base_language_id,
-            'language_code': YouTubeLanguage(base_language.language_code).name,
+            'language_code': base_language.language_code,
             'documents': base_language.documents,
             'is_published': base_language.is_published,
             'last_updated': base_language.last_updated
