@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from myapp.views.channel_view import get_channel_data, search_word, download_channel_subtitles, \
     update_translation_language, get_channel_video_list, get_channel_list, search_multiple_word, calculate_channel_word, \
     update_channel_subtitles
-from myapp.views.learning_language import get_learning_subtitle_text_list, get_favorite_subtitle_text_list, \
+from myapp.views.learning_language_view import get_learning_subtitle_text_list, get_favorite_subtitle_text_list, \
     create_base_language, get_base_language_list, get_base_language_detail, update_base_language, delete_base_language, \
     get_learning_language_detail, update_learning_language, delete_learning_language, create_learning_language
 from myapp.views.subtitle_text_view import get_subtitle_text_data, update_subtitle_translation, \
