@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import TestHome from '@/components/test-service/TestHome.vue'
 import YouTubeAppHome from '@/components/youtube-app/YouTubeAppHome.vue'
-import LearningLanguageMemory from '@/components/youtube-app/LearningLanguageMemory.vue'
+import LearningLanguageMemory from '@/components/youtube-app/learning-language/LearningLanguageMemory.vue'
 import TopComponent from '@/components/TopComponent.vue'
 import ChannelHome from '@/components/youtube-app/channel/ChannelHome.vue'
 import VideoHome from '@/components/youtube-app/video/VideoHome.vue'
