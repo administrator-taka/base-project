@@ -14,8 +14,6 @@
             @range-selected="
               goToLearningLanguagePage(learningLanguage.learningLanguageId)
             "
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
           >
             <div class="m-3">
               <!-- TODO:モーダル修正後に削除 -->
