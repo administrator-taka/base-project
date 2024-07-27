@@ -6,7 +6,7 @@ export const useChannelStore = defineStore(
   () => {
     const channelId = ref('')
     const page = ref(1)
-    const pageSize = ref(10)
+    const pageSize = ref(50)
     const languages = ref<string[]>([])
 
     const setChannelId = (newChannelId: string) => {
@@ -26,7 +26,7 @@ export const useChannelStore = defineStore(
     }
     watch(channelId, () => {
       page.value = 1
-      pageSize.value = 10
+      pageSize.value = 50
     })
 
     return {
