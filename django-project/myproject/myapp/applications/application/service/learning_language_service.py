@@ -121,7 +121,7 @@ class LearningLanguageService:
         }
 
     # 新しいベース言語を作成し、関連する学習言語も一つ作成するメソッド
-    def create_base_language(self, user_id, language_code, documents, is_published=False,
+    def create_base_language(self, user_id, language_code, documents, is_published,learning_language_code,
                              learning_language_documents='', learning_language_explanation='',
                              learning_language_video_id='', learning_language_timestamp_ms=0):
         # 新しいベース言語をデータベースに作成
@@ -138,7 +138,7 @@ class LearningLanguageService:
         LearningLanguage.objects.create(
             learning_language_id=uuid.uuid4(),  # UUIDを生成
             base_language_id=base_language,  # ベース言語IDを設定
-            language_code=language_code.value,  # 言語コードを設定
+            language_code=learning_language_code.value,  # 言語コードを設定
             documents=learning_language_documents,  # 文書を設定
             explanation=learning_language_explanation,  # 解説を設定
             video_id=learning_language_video_id,  # 動画IDを設定

@@ -155,6 +155,7 @@ class TestAPIEndpoints(unittest.TestCase):
             "language_code": "en",
             "documents": "Sample documents",
             "is_published": True,
+            "learning_language_code": "ko",
             "learning_language_documents": "Sample learning language documents",
             "learning_language_explanation": "Sample explanation",
             "learning_language_video_id": "sample_video_id",

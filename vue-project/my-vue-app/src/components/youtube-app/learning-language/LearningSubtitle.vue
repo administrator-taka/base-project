@@ -14,10 +14,12 @@
     <div>
       <h2>新しいベース言語を作成</h2>
       <form @submit.prevent="createLanguage">
-        <DropdownSelect
-          :options="languageCode"
-          v-model="selectedLanguageCode"
-        />
+        <div class="col-md-6">
+          <DropdownSelect
+            :options="languageCode"
+            v-model="selectedLanguageCode"
+          />
+        </div>
         <div class="col-md-6">
           <input
             v-model="newDocuments"
@@ -25,6 +27,12 @@
             class="form-control"
             placeholder="ドキュメント"
             required
+          />
+        </div>
+        <div class="col-md-6">
+          <DropdownSelect
+            :options="languageCode"
+            v-model="selectedLearningLanguageCode"
           />
         </div>
         <div class="col-md-6">
@@ -93,6 +101,7 @@ export default {
     const learningLanguageTimestampMs = ref<number>()
     const languageCode = YouTubeLanguageLabel
     const selectedLanguageCode = ref<string>(YouTubeLanguage.KOREAN)
+    const selectedLearningLanguageCode = ref<string>(YouTubeLanguage.KOREAN)
     const getBaseLanguageList = async () => {
       await learningLanguageMemoryRepository
         .getBaseLanguageList()
@@ -111,6 +120,7 @@ export default {
           selectedLanguageCode.value,
           newDocuments.value,
           newIsPublished.value,
+          selectedLearningLanguageCode.value,
           learningLanguageDocuments.value,
           learningLanguageExplanation.value,
           learningLanguageVideoId.value,
@@ -139,7 +149,8 @@ export default {
       learningLanguageTimestampMs,
       createLanguage,
       languageCode,
-      selectedLanguageCode
+      selectedLanguageCode,
+      selectedLearningLanguageCode
     }
   }
 }

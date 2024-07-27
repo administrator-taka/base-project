@@ -94,6 +94,7 @@ def create_base_language(request):
     language_code = YouTubeLanguage(request.data.get('language_code'))
     documents = request.data.get('documents')
     is_published = request.data.get('is_published', False)
+    learning_language_code = YouTubeLanguage(request.data.get('learning_language_code'))
     learning_language_documents = request.data.get('learning_language_documents', '')
     learning_language_explanation = request.data.get('learning_language_explanation', '')
     learning_language_video_id = request.data.get('learning_language_video_id', '')
@@ -104,7 +105,7 @@ def create_base_language(request):
         user_id,
         language_code,
         documents,
-        is_published,
+        is_published,learning_language_code,
         learning_language_documents,
         learning_language_explanation,
         learning_language_video_id,

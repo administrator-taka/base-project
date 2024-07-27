@@ -48,11 +48,12 @@ export default {
       })
   },
 
-  async createBaseLanguage(languageCode: string, documents: string, isPublished: boolean, learningLanguageDocuments?: string, learningLanguageExplanation?: string, learningLanguageVideoId?: string, learningLanguageTimestampMs?: number) {
+  async createBaseLanguage(languageCode: string, documents: string, isPublished: boolean,learningLanguageCode: string, learningLanguageDocuments?: string, learningLanguageExplanation?: string, learningLanguageVideoId?: string, learningLanguageTimestampMs?: number) {
     const data = {
       language_code: languageCode,
       documents: documents,
       is_published: isPublished,
+      learning_language_code: learningLanguageCode,
       learning_language_documents: learningLanguageDocuments,
       learning_language_explanation: learningLanguageExplanation,
       learning_language_video_id: learningLanguageVideoId,
