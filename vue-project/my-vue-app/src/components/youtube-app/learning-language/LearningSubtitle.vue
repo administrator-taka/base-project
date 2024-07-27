@@ -4,14 +4,22 @@
     <CreateBaseLanguage
       @createBaseLanguage="getBaseLanguageList()"
     ></CreateBaseLanguage>
-    <div v-if="baseLanguages.length">
+    <div v-if="baseLanguages">
       <h2>ベース言語一覧</h2>
       <div
         v-for="(baseLanguage, index) in baseLanguages"
         :key="index"
         class="m-2"
       >
-        <JsonTable :data="baseLanguage" />
+        <RangeSelector
+          @range-selected="goToBaseLanguagePage(baseLanguage.baseLanguageId)"
+        >
+          <div class="m-3">
+            <!-- TODO:モーダル修正後に削除 -->
+            <div style="height: 1rem"></div>
+            <JsonTable :data="baseLanguage" />
+          </div>
+        </RangeSelector>
       </div>
     </div>
   </div>
@@ -24,15 +32,18 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { showErrorToast } from '@/utils/toast-service'
 import CreateBaseLanguage from '@/components/youtube-app/learning-language/CreateBaseLanguage.vue'
+import RangeSelector from '@/components/common/button/RangeSelector.vue'
+import router from '@/router'
 
 export default {
   components: {
     JsonTable,
     DropdownSelect,
-    CreateBaseLanguage
+    CreateBaseLanguage,
+    RangeSelector
   },
   setup() {
-    const baseLanguages = ref([])
+    const baseLanguages = ref()
 
     const getBaseLanguageList = async () => {
       await learningLanguageMemoryRepository
@@ -49,10 +60,13 @@ export default {
     onMounted(() => {
       getBaseLanguageList()
     })
-
+    const goToBaseLanguagePage = (baseLanguageId: string) => {
+      router.push(`/base-language/${baseLanguageId}`)
+    }
     return {
       baseLanguages,
-      getBaseLanguageList
+      getBaseLanguageList,
+      goToBaseLanguagePage
     }
   }
 }
