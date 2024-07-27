@@ -178,7 +178,7 @@ class LearningLanguageService:
             last_updated=timezone.now()  # 現在の日時を設定
         )
 
-    def create_learning_language(self, base_language_id, language_code, documents, explanation, video_id, timestamp_ms):
+    def create_learning_language(self, base_language_id, language_code, documents, explanation, video_id, timestamp_ms=0):
         # BaseLanguage インスタンスを取得
         base_language = BaseLanguage.objects.get(base_language_id=base_language_id)
 

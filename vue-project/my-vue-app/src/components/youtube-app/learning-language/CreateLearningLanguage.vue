@@ -1,22 +1,7 @@
 <template>
   <div>
-    <h2>新しいベース言語を作成</h2>
+    <h2>新しい学習言語を作成</h2>
     <form @submit.prevent="createLanguage">
-      <div class="col-md-6">
-        <DropdownSelect
-          :options="languageCode"
-          v-model="selectedLanguageCode"
-        />
-      </div>
-      <div class="col-md-6">
-        <input
-          v-model="newDocuments"
-          type="text"
-          class="form-control"
-          placeholder="ドキュメント"
-          required
-        />
-      </div>
       <div class="col-md-6">
         <DropdownSelect
           :options="languageCode"
@@ -54,46 +39,45 @@
           placeholder="学習言語タイムスタンプ (ms)"
         />
       </div>
-      <label>
-        <input type="checkbox" v-model="newIsPublished" />
-        公開する
-      </label>
       <button type="submit" class="btn btn-primary m-2">作成</button>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent } from 'vue'
+import { ref, defineComponent } from 'vue'
 import learningLanguageMemoryRepository from '@/api/repository/learning-language-memory-repository'
 import JsonTable from '@/components/common/table/JsonTable.vue'
-import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
+import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   components: {
     JsonTable,
     DropdownSelect
   },
-  emits: ['createBaseLanguage'],
+  emits: ['createLearningLanguage'],
   setup(props, { emit }) {
-    const newDocuments = ref('')
-    const newIsPublished = ref(false)
     const learningLanguageDocuments = ref('')
     const learningLanguageExplanation = ref('')
     const learningLanguageVideoId = ref('')
-    const learningLanguageTimestampMs = ref<number>()
+    const learningLanguageTimestampMs = ref()
     const languageCode = YouTubeLanguageLabel
-    const selectedLanguageCode = ref<string>(YouTubeLanguage.JAPANESE)
     const selectedLearningLanguageCode = ref<string>(YouTubeLanguage.KOREAN)
 
+    const route = useRoute()
+
+    const baseLanguageId = ref<string>(
+      typeof route.params.baseLanguageId === 'string'
+        ? route.params.baseLanguageId
+        : ''
+    )
     const createLanguage = async () => {
       await learningLanguageMemoryRepository
-        .createBaseLanguage(
-          selectedLanguageCode.value,
-          newDocuments.value,
-          newIsPublished.value,
+        .createLearningLanguage(
+          baseLanguageId.value,
           selectedLearningLanguageCode.value,
           learningLanguageDocuments.value,
           learningLanguageExplanation.value,
@@ -102,8 +86,8 @@ export default defineComponent({
         )
         .then((response) => {
           console.log(response)
-          showSuccessToast('字幕ベース言語更新')
-          emit('createBaseLanguage')
+          showSuccessToast('字幕学習言語更新')
+          emit('createLearningLanguage')
         })
         .catch((error) => {
           showErrorToast(error)
@@ -111,15 +95,12 @@ export default defineComponent({
     }
 
     return {
-      newDocuments,
-      newIsPublished,
       learningLanguageDocuments,
       learningLanguageExplanation,
       learningLanguageVideoId,
       learningLanguageTimestampMs,
       createLanguage,
       languageCode,
-      selectedLanguageCode,
       selectedLearningLanguageCode
     }
   }
