@@ -115,5 +115,16 @@ export default {
         console.error('API実行結果エラー:', error)
         throw error
       })
-  }
+  },
+  async updateChannelSubtitles(
+    channelId: string
+  ) {
+    return youtubeAppApiClient
+      .get(`/channel/${channelId}/update_channel_subtitles`)
+      .then((response: AxiosResponse) => toCamelCase(response.data))
+      .catch((error: string) => {
+        console.error('API実行結果エラー:', error)
+        throw error
+      })
+  },
 }

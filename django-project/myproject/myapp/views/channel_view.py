@@ -172,3 +172,16 @@ def update_translation_language(request, channel_id):
     }
 
     return JsonResponse(data=data, status=200)
+
+
+@api_view(['GET'])
+def update_channel_subtitles(request, channel_id):
+    youtube_download_service = ChannelService()
+    youtube_download_service.update_channel_subtitles(channel_id)
+    # JSONレスポンスを作成
+    data = {
+        "status": 0
+    }
+
+    return JsonResponse(data=data, status=200)
+

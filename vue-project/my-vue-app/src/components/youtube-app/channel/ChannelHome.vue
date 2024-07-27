@@ -44,6 +44,10 @@
           <button @click="downloadChannelSubtitles" class="btn btn-danger m-2">
             <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
           </button>
+          <h2>字幕更新情報更新</h2>
+          <button @click="updateChannelSubtitles" class="btn btn-danger m-2">
+            <i class="bi bi-exclamation-triangle"></i> 字幕をダウンロード
+          </button>
         </div>
       </div>
       <JsonTable v-if="channelData" :data="channelData" />
@@ -201,6 +205,20 @@ export default {
         })
     }
 
+    const updateChannelSubtitles = async () => {
+      channelRepository
+        .updateChannelSubtitles(channelStore.channelId)
+        .then((response) => {
+          console.log(response)
+          getChannelData()
+          getChannelVideoList()
+          showSuccessToast('チャンネル字幕更新処理')
+        })
+        .catch((error) => {
+          showErrorToast(error)
+        })
+    }
+
     const goToVideoPage = (videoId: string) => {
       router.push(`/video/${videoId}`)
     }
@@ -233,7 +251,8 @@ export default {
       selectedLanguageCodeList,
       selectedLanguageCode,
       channelStore,
-      subtitleListLanguages
+      subtitleListLanguages,
+      updateChannelSubtitles
     }
   }
 }

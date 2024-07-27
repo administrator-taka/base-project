@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from myapp.views.channel_view import get_channel_data, search_word, download_channel_subtitles, \
-    update_translation_language, get_channel_video_list, get_channel_list, search_multiple_word, calculate_channel_word
+    update_translation_language, get_channel_video_list, get_channel_list, search_multiple_word, calculate_channel_word, \
+    update_channel_subtitles
 from myapp.views.learning_language import get_learning_subtitle_text_list, get_favorite_subtitle_text_list, \
     create_base_language, get_base_language_list, get_base_language_detail, update_base_language, delete_base_language, \
     get_learning_language_detail, update_learning_language, delete_learning_language, create_learning_language
@@ -30,6 +31,8 @@ urlpatterns = [
     path("channel/<str:channel_id>/search_multiple_word", search_multiple_word, name="search_multiple_word"),
     path("channel/<str:channel_id>/update_translation_language", update_translation_language,
          name="update_translation_language"),
+    path("channel/<str:channel_id>/update_channel_subtitles", update_channel_subtitles,
+         name="update_channel_subtitles"),
     path("video/<str:video_id>", get_video_data, name="get_video_data"),
     path("video/<str:video_id>/download_video_subtitle", download_video_subtitle, name="download_video_subtitle"),
     path("subtitle/<str:subtitle_text_id>", get_subtitle_text_data, name="get_subtitle_text_data"),

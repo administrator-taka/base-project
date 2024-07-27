@@ -76,6 +76,12 @@ class TestAPIEndpoints(unittest.TestCase):
         response = requests.post(url, json=data)
         FileHandler.format_json_print(response.json())
 
+    def test_update_channel_subtitles(self):
+        channel_id = TEST_YOUTUBE_CHANNEL_ID
+        url = f"{self.base_url}channel/{channel_id}/update_channel_subtitles"
+        response = requests.get(url)
+        FileHandler.format_json_print(response.json())
+
     def test_get_video_data(self):
         video_id = TEST_YOUTUBE_VIDEO_ID
         url = f"{self.base_url}video/{video_id}"
