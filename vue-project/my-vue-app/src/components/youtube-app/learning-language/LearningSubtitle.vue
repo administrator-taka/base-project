@@ -27,6 +27,38 @@
             required
           />
         </div>
+        <div class="col-md-6">
+          <input
+            v-model="learningLanguageDocuments"
+            type="text"
+            class="form-control"
+            placeholder="学習言語ドキュメント"
+          />
+        </div>
+        <div class="col-md-6">
+          <input
+            v-model="learningLanguageExplanation"
+            type="text"
+            class="form-control"
+            placeholder="学習言語説明"
+          />
+        </div>
+        <div class="col-md-6">
+          <input
+            v-model="learningLanguageVideoId"
+            type="text"
+            class="form-control"
+            placeholder="学習言語動画ID"
+          />
+        </div>
+        <div class="col-md-6">
+          <input
+            v-model="learningLanguageTimestampMs"
+            type="number"
+            class="form-control"
+            placeholder="学習言語タイムスタンプ (ms)"
+          />
+        </div>
         <label>
           <input type="checkbox" v-model="newIsPublished" />
           公開する
@@ -53,9 +85,12 @@ export default {
   setup() {
     const baseLanguages = ref([])
 
-    const newLanguageCode = ref('')
     const newDocuments = ref('')
     const newIsPublished = ref(false)
+    const learningLanguageDocuments = ref('')
+    const learningLanguageExplanation = ref('')
+    const learningLanguageVideoId = ref('')
+    const learningLanguageTimestampMs = ref<number>()
     const languageCode = YouTubeLanguageLabel
     const selectedLanguageCode = ref<string>(YouTubeLanguage.KOREAN)
     const getBaseLanguageList = async () => {
@@ -73,9 +108,13 @@ export default {
     const createLanguage = async () => {
       await learningLanguageMemoryRepository
         .createBaseLanguage(
-          newLanguageCode.value,
+          selectedLanguageCode.value,
           newDocuments.value,
-          newIsPublished.value
+          newIsPublished.value,
+          learningLanguageDocuments.value,
+          learningLanguageExplanation.value,
+          learningLanguageVideoId.value,
+          learningLanguageTimestampMs.value
         )
         .then((response) => {
           getBaseLanguageList()
@@ -92,9 +131,12 @@ export default {
 
     return {
       baseLanguages,
-      newLanguageCode,
       newDocuments,
       newIsPublished,
+      learningLanguageDocuments,
+      learningLanguageExplanation,
+      learningLanguageVideoId,
+      learningLanguageTimestampMs,
       createLanguage,
       languageCode,
       selectedLanguageCode
