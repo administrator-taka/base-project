@@ -3,6 +3,7 @@ import TestHome from '@/components/test-service/TestHome.vue'
 import YouTubeAppHome from '@/components/youtube-app/YouTubeAppHome.vue'
 import LearningLanguageMemory from '@/components/youtube-app/learning-language/LearningLanguageMemory.vue'
 import LearningSubtitleLanguage from '@/components/youtube-app/learning-language/LearningSubtitleLanguage.vue'
+import BaseLanguage from '@/components/youtube-app/learning-language/BaseLanguage.vue'
 import TopComponent from '@/components/TopComponent.vue'
 import ChannelHome from '@/components/youtube-app/channel/ChannelHome.vue'
 import VideoHome from '@/components/youtube-app/video/VideoHome.vue'
@@ -48,6 +49,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/learning-subtitle-language',
     name: 'LearningSubtitleLanguage',
     component: LearningSubtitleLanguage
+  },
+  {
+    path: '/learning-subtitle-language/:baseLanguageId',
+    name: 'BaseLanguage',
+    component: BaseLanguage
   }
 ]
 

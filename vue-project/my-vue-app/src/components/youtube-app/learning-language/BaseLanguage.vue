@@ -1,28 +1,7 @@
 <template>
   <div>
     <main class="main-content">
-      <h1>ベース言語管理</h1>
-      <CreateBaseLanguage
-        @createBaseLanguage="getBaseLanguageList()"
-      ></CreateBaseLanguage>
-      <div v-if="baseLanguages">
-        <h2>ベース言語一覧</h2>
-        <div
-          v-for="(baseLanguage, index) in baseLanguages"
-          :key="index"
-          class="m-2"
-        >
-          <RangeSelector
-            @range-selected="goToBaseLanguagePage(baseLanguage.baseLanguageId)"
-          >
-            <div class="m-3">
-              <!-- TODO:モーダル修正後に削除 -->
-              <div style="height: 1rem"></div>
-              <JsonTable :data="baseLanguage" />
-            </div>
-          </RangeSelector>
-        </div>
-      </div>
+      <h1>学習言語管理</h1>
     </main>
   </div>
 </template>
@@ -63,7 +42,7 @@ export default {
       getBaseLanguageList()
     })
     const goToBaseLanguagePage = (baseLanguageId: string) => {
-      router.push(`/learning-subtitle-language/${baseLanguageId}`)
+      router.push(`/base-language/${baseLanguageId}`)
     }
     return {
       baseLanguages,
