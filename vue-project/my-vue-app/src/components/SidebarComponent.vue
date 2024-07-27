@@ -25,7 +25,10 @@ export default {
       { name: 'Test Home', routeName: 'TestHome' },
       { name: 'YouTubeアプリページ', routeName: 'YouTubeAppHome' },
       { name: '言語学習記録ページ', routeName: 'LearningLanguageMemory' },
-      { name: '字幕言語学習記録ページ', routeName: 'LearningSubtitleLanguage' }
+      {
+        name: '字幕言語学習記録ページ',
+        routeName: 'SubtitleLanguageManagement'
+      }
       // 他のリンク情報をここに追加
     ])
 
