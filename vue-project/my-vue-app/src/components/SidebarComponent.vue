@@ -24,7 +24,8 @@ export default {
       { name: 'Home', routeName: 'TopComponent' },
       { name: 'Test Home', routeName: 'TestHome' },
       { name: 'YouTubeアプリページ', routeName: 'YouTubeAppHome' },
-      { name: '言語学習記録ページ', routeName: 'LearningLanguageMemory' }
+      { name: '言語学習記録ページ', routeName: 'LearningLanguageMemory' },
+      { name: '字幕言語学習記録ページ', routeName: 'LearningSubtitleLanguage' }
       // 他のリンク情報をここに追加
     ])
 

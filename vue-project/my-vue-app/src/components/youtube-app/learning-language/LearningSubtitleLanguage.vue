@@ -1,27 +1,29 @@
 <template>
   <div>
-    <h1>ベース言語管理</h1>
-    <CreateBaseLanguage
-      @createBaseLanguage="getBaseLanguageList()"
-    ></CreateBaseLanguage>
-    <div v-if="baseLanguages">
-      <h2>ベース言語一覧</h2>
-      <div
-        v-for="(baseLanguage, index) in baseLanguages"
-        :key="index"
-        class="m-2"
-      >
-        <RangeSelector
-          @range-selected="goToBaseLanguagePage(baseLanguage.baseLanguageId)"
+    <main class="main-content">
+      <h1>ベース言語管理</h1>
+      <CreateBaseLanguage
+        @createBaseLanguage="getBaseLanguageList()"
+      ></CreateBaseLanguage>
+      <div v-if="baseLanguages">
+        <h2>ベース言語一覧</h2>
+        <div
+          v-for="(baseLanguage, index) in baseLanguages"
+          :key="index"
+          class="m-2"
         >
-          <div class="m-3">
-            <!-- TODO:モーダル修正後に削除 -->
-            <div style="height: 1rem"></div>
-            <JsonTable :data="baseLanguage" />
-          </div>
-        </RangeSelector>
+          <RangeSelector
+            @range-selected="goToBaseLanguagePage(baseLanguage.baseLanguageId)"
+          >
+            <div class="m-3">
+              <!-- TODO:モーダル修正後に削除 -->
+              <div style="height: 1rem"></div>
+              <JsonTable :data="baseLanguage" />
+            </div>
+          </RangeSelector>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
