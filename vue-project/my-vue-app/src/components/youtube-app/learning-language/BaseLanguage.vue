@@ -2,8 +2,9 @@
   <div>
     <main class="main-content">
       <h1>学習言語管理</h1>
-      <JsonTable :data="baseLanguage"></JsonTable>
-      <!-- <JsonTable :data="baseLanguage.learningLanguageData"></JsonTable> -->
+      <div v-if="baseLanguage">
+        <JsonTable :data="baseLanguage"></JsonTable>
+      </div>
     </main>
   </div>
 </template>
