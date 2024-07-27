@@ -1,4 +1,5 @@
 from myapp.applications.util.code.youtube_language import YouTubeLanguage
+from myapp.applications.util.custom_error import CustomError
 from myapp.models import SubtitleLearningMemory, BaseLanguage, LearningLanguage
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -78,15 +79,6 @@ class LearningLanguageService:
         # ベース言語IDでフィルタリングされた学習言語のリストを取得
         learning_languages = LearningLanguage.objects.filter(base_language_id=base_language_id)
 
-        # ベース言語の情報を辞書型で格納
-        base_language_data = {
-            'base_language_id': base_language.base_language_id,
-            'language_code': base_language.language_code,
-            'documents': base_language.documents,
-            'is_published': base_language.is_published,
-            'last_updated': base_language.last_updated
-        }
-
         # 学習言語の情報を辞書型のリストとして格納
         learning_languages_data = [
             {
@@ -100,12 +92,17 @@ class LearningLanguageService:
             }
             for lang in learning_languages
         ]
-
-        # 辞書型のデータを統合して返す
-        return {
-            'base_language': base_language_data,
+        # ベース言語の情報を辞書型で格納
+        base_language_data = {
+            'base_language_id': base_language.base_language_id,
+            'language_code': base_language.language_code,
+            'documents': base_language.documents,
+            'is_published': base_language.is_published,
+            'last_updated': base_language.last_updated,
             'learning_language_data': learning_languages_data
         }
+
+        return base_language_data
 
     def get_learning_language_detail(self, learning_language_id):
         learning_language = LearningLanguage.objects.get(learning_language_id=learning_language_id)
@@ -121,9 +118,13 @@ class LearningLanguageService:
         }
 
     # 新しいベース言語を作成し、関連する学習言語も一つ作成するメソッド
-    def create_base_language(self, user_id, language_code, documents, is_published,learning_language_code,
+    def create_base_language(self, user_id, language_code, documents, is_published, learning_language_code,
                              learning_language_documents='', learning_language_explanation='',
                              learning_language_video_id='', learning_language_timestamp_ms=0):
+
+        if language_code == learning_language_code:
+            raise CustomError("ベース言語と学習言語は違う言語にしてください。")
+
         # 新しいベース言語をデータベースに作成
         base_language = BaseLanguage.objects.create(
             base_language_id=uuid.uuid4(),  # UUIDを生成

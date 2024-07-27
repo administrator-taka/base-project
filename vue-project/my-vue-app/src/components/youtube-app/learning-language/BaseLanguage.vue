@@ -2,6 +2,8 @@
   <div>
     <main class="main-content">
       <h1>学習言語管理</h1>
+      <JsonTable :data="baseLanguage"></JsonTable>
+      <!-- <JsonTable :data="baseLanguage.learningLanguageData"></JsonTable> -->
     </main>
   </div>
 </template>
@@ -15,6 +17,7 @@ import { showErrorToast } from '@/utils/toast-service'
 import CreateBaseLanguage from '@/components/youtube-app/learning-language/CreateBaseLanguage.vue'
 import RangeSelector from '@/components/common/button/RangeSelector.vue'
 import router from '@/router'
+import { useRoute } from 'vue-router'
 
 export default {
   components: {
@@ -24,14 +27,19 @@ export default {
     RangeSelector
   },
   setup() {
-    const baseLanguages = ref()
-
+    const route = useRoute()
+    const baseLanguageId = ref<string>(
+      typeof route.params.baseLanguageId === 'string'
+        ? route.params.baseLanguageId
+        : ''
+    )
+    const baseLanguage = ref()
     const getBaseLanguageList = async () => {
       await learningLanguageMemoryRepository
-        .getBaseLanguageList()
+        .getBaseLanguageDetail(baseLanguageId.value)
         .then((response) => {
           console.log(response)
-          baseLanguages.value = response.baseLanguageList
+          baseLanguage.value = response.baseLanguageDetail
         })
         .catch((error) => {
           showErrorToast(error)
@@ -45,9 +53,8 @@ export default {
       router.push(`/base-language/${baseLanguageId}`)
     }
     return {
-      baseLanguages,
       getBaseLanguageList,
-      goToBaseLanguagePage
+      baseLanguage
     }
   }
 }
