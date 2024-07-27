@@ -3,7 +3,27 @@
     <main class="main-content">
       <h1>学習言語管理</h1>
       <div v-if="baseLanguage">
-        <JsonTable :data="baseLanguage"></JsonTable>
+        <JsonTable :data="baseLanguage.baseLanguageData"></JsonTable>
+        <div
+          v-for="(
+            learningLanguage, index
+          ) in baseLanguage.learningLanguagesData"
+          :key="index"
+        >
+          <RangeSelector
+            @range-selected="
+              goToLearningLanguagePage(learningLanguage.learningLanguageId)
+            "
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            <div class="m-3">
+              <!-- TODO:モーダル修正後に削除 -->
+              <div style="height: 1rem"></div>
+              <JsonTable :data="learningLanguage" />
+            </div>
+          </RangeSelector>
+        </div>
       </div>
     </main>
   </div>
@@ -50,12 +70,13 @@ export default {
     onMounted(() => {
       getBaseLanguageList()
     })
-    const goToBaseLanguagePage = (baseLanguageId: string) => {
-      router.push(`/base-language/${baseLanguageId}`)
+    const goToLearningLanguagePage = (learningLanguageId: string) => {
+      router.push(`/learning-subtitle-language/${learningLanguageId}`)
     }
     return {
       getBaseLanguageList,
-      baseLanguage
+      baseLanguage,
+      goToLearningLanguagePage
     }
   }
 }

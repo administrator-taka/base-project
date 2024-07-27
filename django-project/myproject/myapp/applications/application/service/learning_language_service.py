@@ -79,6 +79,15 @@ class LearningLanguageService:
         # ベース言語IDでフィルタリングされた学習言語のリストを取得
         learning_languages = LearningLanguage.objects.filter(base_language_id=base_language_id)
 
+        # ベース言語の情報を辞書型で格納
+        base_language_data = {
+            'base_language_id': base_language.base_language_id,
+            'language_code': base_language.language_code,
+            'documents': base_language.documents,
+            'is_published': base_language.is_published,
+            'last_updated': base_language.last_updated,
+        }
+
         # 学習言語の情報を辞書型のリストとして格納
         learning_languages_data = [
             {
@@ -92,17 +101,12 @@ class LearningLanguageService:
             }
             for lang in learning_languages
         ]
-        # ベース言語の情報を辞書型で格納
-        base_language_data = {
-            'base_language_id': base_language.base_language_id,
-            'language_code': base_language.language_code,
-            'documents': base_language.documents,
-            'is_published': base_language.is_published,
-            'last_updated': base_language.last_updated,
-            'learning_language_data': learning_languages_data
-        }
 
-        return base_language_data
+        # 統合したデータを返す
+        return {
+            'base_language_data': base_language_data,
+            'learning_languages_data': learning_languages_data
+        }
 
     def get_learning_language_detail(self, learning_language_id):
         learning_language = LearningLanguage.objects.get(learning_language_id=learning_language_id)

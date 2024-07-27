@@ -63,7 +63,7 @@ export default {
       getBaseLanguageList()
     })
     const goToBaseLanguagePage = (baseLanguageId: string) => {
-      router.push(`/learning-subtitle-language/${baseLanguageId}`)
+      router.push(`/base-subtitle-language/${baseLanguageId}`)
     }
     return {
       baseLanguages,

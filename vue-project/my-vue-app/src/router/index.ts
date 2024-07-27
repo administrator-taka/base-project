@@ -46,12 +46,12 @@ const routes: Array<RouteRecordRaw> = [
     component: LearningLanguageMemory
   },
   {
-    path: '/learning-subtitle-language',
+    path: '/subtitle-language',
     name: 'LearningSubtitleLanguage',
     component: LearningSubtitleLanguage
   },
   {
-    path: '/learning-subtitle-language/:baseLanguageId',
+    path: '/base-subtitle-language/:baseLanguageId',
     name: 'BaseLanguage',
     component: BaseLanguage
   }
