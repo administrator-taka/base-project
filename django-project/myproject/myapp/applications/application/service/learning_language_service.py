@@ -71,7 +71,7 @@ class LearningLanguageService:
                 'base_language_id': base_language.base_language_id,
                 'base_language_code': base_language.language_code,
                 'base_documents': base_language.documents,
-                'base_last_updated': base_language.last_updated
+                # 'base_last_updated': base_language.last_updated
             }
 
             # ベース言語のlanguage_codeを使用して、対応する学習言語をフィルタリング
@@ -84,13 +84,13 @@ class LearningLanguageService:
             # 学習言語の情報を辞書型のリストとして格納
             for lang in learning_languages:
                 learning_language_data = {
-                    'learning_language_id': lang.learning_language_id,
+                    # 'learning_language_id': lang.learning_language_id,
                     'learning_language_code': lang.language_code,
                     'learning_documents': lang.documents,
                     'learning_explanation': lang.explanation,
-                    'learning_video_id': lang.video_id,
-                    'learning_timestamp_ms': lang.timestamp_ms,
-                    'learning_last_updated': lang.last_updated
+                    # 'learning_video_id': lang.video_id,
+                    # 'learning_timestamp_ms': lang.timestamp_ms,
+                    # 'learning_last_updated': lang.last_updated
                 }
 
                 # ベース言語の情報と学習言語の情報を統合してリストに追加

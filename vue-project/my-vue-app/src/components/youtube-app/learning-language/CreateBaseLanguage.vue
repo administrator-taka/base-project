@@ -32,12 +32,11 @@
         />
       </div>
       <div class="col-md-6">
-        <input
+        <textarea
           v-model="learningLanguageExplanation"
-          type="text"
           class="form-control"
           placeholder="学習言語説明"
-        />
+        ></textarea>
       </div>
       <div class="col-md-6">
         <input
