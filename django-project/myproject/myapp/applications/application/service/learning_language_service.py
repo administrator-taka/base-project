@@ -57,20 +57,47 @@ class LearningLanguageService:
         return learning_subtitle_list
 
     # 指定されたユーザーのベース言語のリストを取得するメソッド
-    def get_base_language_list(self, user_id):
+    def get_base_language_list(self, user_id, language_code=None):
         # 指定されたユーザーIDでフィルタリングし、最終更新日時の降順で並び替え
         base_languages = BaseLanguage.objects.filter(user_id=user_id).order_by('-last_updated')
-        # 結果を辞書型のリストとして格納
-        result = [
-            {
+
+        # 結果を格納するリスト
+        result = []
+
+        # 各ベース言語に対して学習言語の詳細を取得
+        for base_language in base_languages:
+            # ベース言語の情報を辞書型で格納
+            base_language_data = {
                 'base_language_id': base_language.base_language_id,
-                'language_code': base_language.language_code,
-                'documents': base_language.documents,
-                'last_updated': base_language.last_updated
+                'base_language_code': base_language.language_code,
+                'base_documents': base_language.documents,
+                'base_last_updated': base_language.last_updated
             }
-            for base_language in base_languages
-        ]
-        return result  # 辞書型のリストを返す
+
+            # ベース言語のlanguage_codeを使用して、対応する学習言語をフィルタリング
+            learning_languages = LearningLanguage.objects.filter(
+                base_language_id=base_language.base_language_id)
+            # language_code が指定されている場合、フィルタリング
+            if language_code:
+                learning_languages = learning_languages.filter(language_code=language_code)
+
+            # 学習言語の情報を辞書型のリストとして格納
+            for lang in learning_languages:
+                learning_language_data = {
+                    'learning_language_id': lang.learning_language_id,
+                    'learning_language_code': lang.language_code,
+                    'learning_documents': lang.documents,
+                    'learning_explanation': lang.explanation,
+                    'learning_video_id': lang.video_id,
+                    'learning_timestamp_ms': lang.timestamp_ms,
+                    'learning_last_updated': lang.last_updated
+                }
+
+                # ベース言語の情報と学習言語の情報を統合してリストに追加
+                combined_data = {**base_language_data, **learning_language_data}
+                result.append(combined_data)
+
+        return result
 
     # 指定されたベース言語IDに対応するベース言語と学習言語の詳細を取得するメソッド
     def get_base_language_detail(self, base_language_id):
