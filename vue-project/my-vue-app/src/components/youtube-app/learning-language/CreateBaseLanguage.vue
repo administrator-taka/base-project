@@ -117,7 +117,7 @@ export default defineComponent({
       timestamp: number
     }) => {
       learningLanguageVideoId.value = details.videoId
-      learningLanguageTimestampMs.value = details.timestamp
+      learningLanguageTimestampMs.value = details.timestamp * 1000
     }
     return {
       newDocuments,
