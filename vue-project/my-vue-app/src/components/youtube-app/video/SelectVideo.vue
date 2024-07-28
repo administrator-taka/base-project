@@ -28,7 +28,7 @@ import { ref, watch, defineComponent } from 'vue'
 import router from '@/router'
 
 export default defineComponent({
-  setup() {
+  setup(_, { emit }) {
     const youtubeUrl = ref('')
     const videoId = ref('')
     const timestamp = ref<number | null>(null)
@@ -47,17 +47,10 @@ export default defineComponent({
       const timestampMatch = url.match(/[?&]t=(\d+)/)
       timestamp.value = timestampMatch ? parseInt(timestampMatch[1], 10) : null
 
-      if (videoId.value) {
-        console.log(`取得した動画ID: ${videoId.value}`)
-      } else {
-        console.error('動画IDが取得できませんでした')
-      }
-
-      if (timestamp.value !== null) {
-        console.log(`取得したタイムスタンプ: ${timestamp.value} 秒`)
-      } else {
-        console.log('タイムスタンプがありません')
-      }
+      emit('update:videoDetails', {
+        videoId: videoId.value,
+        timestamp: timestamp.value
+      })
     }
 
     const goToVideoPage = (videoId: string) => {

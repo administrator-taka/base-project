@@ -1,6 +1,8 @@
 <template>
   <div>
     <h2>新しいベース言語を作成</h2>
+    <SelectVideo @update:videoDetails="updateVideoDetails" />
+
     <form @submit.prevent="createLanguage">
       <div class="col-md-6">
         <DropdownSelect
@@ -70,11 +72,12 @@ import JsonTable from '@/components/common/table/JsonTable.vue'
 import { YouTubeLanguage, YouTubeLanguageLabel } from '@/enums/youtube-language'
 import DropdownSelect from '@/components/common/dropdown/DropdownSelect.vue'
 import { showErrorToast, showSuccessToast } from '@/utils/toast-service'
-
+import SelectVideo from '@/components/youtube-app/video/SelectVideo.vue'
 export default defineComponent({
   components: {
     JsonTable,
-    DropdownSelect
+    DropdownSelect,
+    SelectVideo
   },
   emits: ['createBaseLanguage'],
   setup(props, { emit }) {
@@ -109,7 +112,13 @@ export default defineComponent({
           showErrorToast(error)
         })
     }
-
+    const updateVideoDetails = (details: {
+      videoId: string
+      timestamp: number
+    }) => {
+      learningLanguageVideoId.value = details.videoId
+      learningLanguageTimestampMs.value = details.timestamp
+    }
     return {
       newDocuments,
       newIsPublished,
@@ -120,7 +129,8 @@ export default defineComponent({
       createLanguage,
       languageCode,
       selectedLanguageCode,
-      selectedLearningLanguageCode
+      selectedLearningLanguageCode,
+      updateVideoDetails
     }
   }
 })
