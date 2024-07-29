@@ -434,7 +434,7 @@ class ChannelService:
         # TODO:字幕の追加状況確認メソッド追加
         # self.insert_or_update_latest_subtitle_info(channel_id)
 
-        playlist_videos = VideoDetail.objects.filter(channel_id=channel_id)
+        playlist_videos = VideoDetail.objects.filter(channel_id=channel_id).order_by('-published_at')
 
         # ログ出力用
         total_videos = len(playlist_videos)
